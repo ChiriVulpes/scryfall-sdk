@@ -15,7 +15,7 @@ const rateLimit = 100;
 let lastQuery = 0;
 
 function sleep (ms: number) {
-	return new Promise(resolve => setTimeout(ms, resolve));
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function queryApi<T>(apiPath: string | number | (string | number)[], query?: { [key: string]: any }) {
