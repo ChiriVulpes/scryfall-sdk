@@ -1,0 +1,10 @@
+.vscode/
+src/
+out/tests/
+
+.gitattributes
+.gitignore
+.travis.yml
+gulpfile.js
+tsconfig.json
+tslint.json

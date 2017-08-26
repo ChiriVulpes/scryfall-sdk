@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "es2015",
+		"outDir": "out/",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"removeComments": true,
+		"declaration": true
+	}
+}
