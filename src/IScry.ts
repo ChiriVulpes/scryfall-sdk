@@ -29,7 +29,6 @@ export enum Layout {
 }
 
 export interface CardFace {
-	object: "card_face";
 	name: string;
 	mana_cost: string | null;
 	type_line: string;
@@ -185,10 +184,6 @@ export interface Set {
 	set_type: keyof typeof SetType;
 }
 
-export interface Catalog {
-	data: string[];
-}
-
 export interface CardSymbol {
 	symbol: string;
 	loose_variant: string;
@@ -207,4 +202,23 @@ export interface ScryError {
 	type: string | null;
 	details: string;
 	warnings: string[] | null;
+}
+
+export interface ManaCost {
+	cost: string;
+	cmc: number;
+	colors: (keyof typeof Color)[];
+	colorless: boolean;
+	monocolored: boolean;
+	multicolored: boolean;
+}
+
+export interface HomepageLink {
+	id: number;
+	created_at: string;
+	updated_at: string;
+	priority: number;
+	text: string;
+	uri: string;
+	badge: string;
 }

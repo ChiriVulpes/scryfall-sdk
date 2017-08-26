@@ -2,98 +2,133 @@
 
 import { expect } from "chai";
 
-import Magic = require("../Magic");
+import Scry = require("../Scry");
 
 
-describe("Magic", function () {
+describe("Scry", function () {
 	this.timeout(5000);
 
 	describe("Cards", () => {
-		it("find", async () => {
-			const card = await Magic.Cards.find("08618f8d5ebdc0c4d381ad11f0563dfebb21f4ee");
+		it("by id", async () => {
+			const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
 			expect(card.name).eq("Blood Scrivener");
 		});
-		it("where", async () => {
-			const cards = await Magic.Cards.where({
-				name: `"Murder"`
+		describe("by name,", () => {
+			it("exact", async () => {
+				const card = await Scry.Cards.byName("Blood Scrivener");
+				expect(card.name).eq("Blood Scrivener");
 			});
-			expect(cards.length).gte(3);
-			for (const card of cards) {
-				expect(card.name).eq("Murder");
-			}
+			it("fuzzy", async () => {
+				const card = await Scry.Cards.byName("Bliid Scrivener", true);
+				expect(card.name).eq("Blood Scrivener");
+			});
 		});
-		it("all", (done) => {
-			const results: Magic.Card[] = [];
-			Magic.Cards.all({ name: "Doom Blade", pageSize: 3 }).on("data", (card) => {
-				expect(card.name).eq("Doom Blade");
+		it("by set", async () => {
+			const card = await Scry.Cards.bySet("dgm", "22");
+			expect(card.name).eq("Blood Scrivener");
+		});
+		it("by multiverse id", async () => {
+			const card = await Scry.Cards.byMultiverseId(369030);
+			expect(card.name).eq("Blood Scrivener");
+		});
+		it("by mtgo id", async () => {
+			const card = await Scry.Cards.byMtgoId(48338);
+			expect(card.name).eq("Blood Scrivener");
+		});
+
+		it("search", (done) => {
+			const results: Scry.Card[] = [];
+			Scry.Cards.search("type:planeswalker").on("data", (card) => {
+				expect(card.type_line).satisfies((type: string) => type.startsWith("Planeswalker"));
 				results.push(card);
 			}).on("end", () => {
-				expect(results.length).gte(8);
+				expect(results.length).gte(97);
 				done();
 			});
 		});
-		it("all-cancel", (done) => {
-			const results: Magic.Card[] = [];
-			const emitter = Magic.Cards.all({ name: "Doom Blade", pageSize: 3 });
-			emitter.on("data", (card) => {
-				expect(card.name).eq("Doom Blade");
-				results.push(card);
-				if (results.length == 5) emitter.cancel();
-			}).on("end", () => {
-				throw new Error("Did not expect to reach this point");
-			}).on("cancel", () => {
-				expect(results.length).eq(5);
-				done();
+		it("all (cancel after 427 cards)", async () => {
+			return new Promise((resolve, reject) => {
+				let needCount = 427;
+				const emitter = Scry.Cards.all();
+				emitter.on("data", (card) => {
+					needCount--;
+					if (needCount == 0) emitter.cancel();
+				}).on("end", () => {
+					reject(new Error("Did not expect to reach this point"));
+				}).on("cancel", () => {
+					expect(needCount).eq(0);
+					resolve();
+				});
 			});
+		}).timeout(10000);
+		it("random", async () => {
+			const card = await Scry.Cards.random();
+			expect(card).not.undefined;
+		});
+		it("autocomplete name", async () => {
+			const cardNames = await Scry.Cards.autoCompleteName("bloodsc");
+			expect(cardNames).include("Blood Scrivener");
 		});
 	});
 
 	describe("Sets", () => {
-		it("find", async () => {
-			const set = await Magic.Sets.find("HOU");
+		it("by code", async () => {
+			const set = await Scry.Sets.byCode("hou");
 			expect(set.name).eq("Hour of Devastation");
 		});
-		it("where", async () => {
-			const sets = await Magic.Sets.where({
-				block: `Kaladesh`
-			});
-			expect(sets.length).eq(2);
-			for (const set of sets) {
-				expect(set.block).eq("Kaladesh");
-			}
-		});
-		it("all", (done) => {
-			let count = 0;
-			Magic.Sets.all({}).on("data", () => count++).on("end", () => {
-				expect(count).eq(210);
-				done();
-			});
-		});
-		it("booster", async () => {
-			const booster = await Magic.Sets.generateBooster("HOU");
-			expect(booster.length).gte(10).lt(30); // might as well be vague
-			for (const card of booster) {
-				expect(card.set).eq("HOU");
-			}
+		it("all", async () => {
+			const sets = await Scry.Sets.all();
+			expect(sets.length).gte(394);
 		});
 	});
 
-	describe("Archive", () => {
-		it("types", async () => {
-			const types = await Magic.Types.all();
-			expect(types.length).gte(13);
+	describe("Symbology", () => {
+		it("all", async () => {
+			const symbology = await Scry.Symbology.all();
+			expect(symbology.length).gte(63);
 		});
-		it("subtypes", async () => {
-			const types = await Magic.Subtypes.all();
-			expect(types.length).gte(348);
+		it("parse mana cost", async () => {
+			const manacost = await Scry.Symbology.parseMana("2ww");
+			expect(manacost.cost).eq("{2}{W}{W}");
 		});
-		it("supertypes", async () => {
-			const types = await Magic.Supertypes.all();
-			expect(types.length).gte(5);
+	});
+
+	describe("Catalog", () => {
+		it("card names", async () => {
+			const result = await Scry.Catalog.cardNames();
+			expect(result.length).gte(17562);
 		});
-		it("formats", async () => {
-			const formats = await Magic.Formats.all();
-			expect(formats.length).gte(36);
+		it("creature types", async () => {
+			const result = await Scry.Catalog.creatureTypes();
+			expect(result.length).gte(236);
+		});
+		it("land types", async () => {
+			const result = await Scry.Catalog.landTypes();
+			expect(result.length).gte(13);
+		});
+		it("planeswalker types", async () => {
+			const result = await Scry.Catalog.planeswalkerTypes();
+			expect(result.length).gte(35);
+		});
+		it("word bank", async () => {
+			const result = await Scry.Catalog.wordBank();
+			expect(result.length).gte(12317);
+		});
+		it("powers", async () => {
+			const result = await Scry.Catalog.powers();
+			expect(result.length).gte(26);
+		});
+		it("toughnesses", async () => {
+			const result = await Scry.Catalog.toughnesses();
+			expect(result.length).gte(28);
+		});
+		it("loyalties", async () => {
+			const result = await Scry.Catalog.loyalties();
+			expect(result.length).gte(7);
+		});
+		it("homepage links", async () => {
+			const result = await Scry.homepageLinks();
+			expect(result).satisfies(Array.isArray);
 		});
 	});
 });
