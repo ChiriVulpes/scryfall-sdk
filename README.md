@@ -5,7 +5,7 @@
 
 A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
-As of July 31st, 2017, all features of https://magicthegathering.io/ are supported.
+As of August 26th, 2017, all features of https://scryfall.com/docs/api-methods are supported.
 
 
 ## Installation
