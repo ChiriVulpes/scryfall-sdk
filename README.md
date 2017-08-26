@@ -1,9 +1,9 @@
-# mtg-sdk-typescript
+# scryfall-sdk
 [![npm](https://img.shields.io/npm/v/mtgsdk-ts.svg?style=flat-square)](https://www.npmjs.com/package/mtgsdk-ts)
-[![GitHub issues](https://img.shields.io/github/issues/Yuudaari/mtg-sdk-typescript.svg?style=flat-square)](https://github.com/Yuudaari/mtg-sdk-typescript)
-[![Travis](https://img.shields.io/travis/Yuudaari/mtg-sdk-typescript.svg?style=flat-square)](https://travis-ci.org/Yuudaari/mtg-sdk-typescript)
+[![GitHub issues](https://img.shields.io/github/issues/Yuudaari/scryfall-sdk.svg?style=flat-square)](https://github.com/Yuudaari/scryfall-sdk)
+[![Travis](https://img.shields.io/travis/Yuudaari/scryfall-sdk.svg?style=flat-square)](https://travis-ci.org/Yuudaari/scryfall-sdk)
 
-An sdk for https://magicthegathering.io/ written in Typescript. Works for JavaScript and TypeScript development.
+A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
 As of July 31st, 2017, all features of https://magicthegathering.io/ are supported.
 
@@ -11,132 +11,206 @@ As of July 31st, 2017, all features of https://magicthegathering.io/ are support
 ## Installation
 
 ```bat
-npm install mtgsdk-ts
+npm install scryfall-sdk
 ```
 
 ## Examples
 In the following examples, requiring the package is assumed.
 ```ts
-import Magic = require("mtgsdk-ts");
+import Scry = require("scryfall-sdk");
 ```
 
-### `Cards.find (id: string): Promise<Card>;` 
+### `Cards.byId (id: string): Promise<Card>;` 
 
 Gets a single card from its ID.
 
 ```ts
-Magic.Cards.find("08618f8d5ebdc0c4d381ad11f0563dfebb21f4ee").then(result => console.log(result.name)); // Blood Scrivener
+Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.name)); // Blood Scrivener
 ```
 
+### `Cards.byName (name: string, fuzzy = false): Promise<Card>;` 
 
-### `Cards.where (filter: CardFilter): Promise<Card[]>;`
+Gets a card based on its name. Supports fuzzy searching, by 1-2 replacements/translations.
 
-Gets multiple cards. Truncated to 100 cards. If more than 100 cards are needed, see `Cards.all` below.
-
-In the following example, the cards are filtered by name. To see all options, visit [the API documentation](https://docs.magicthegathering.io/#api_v1cards_list).
 ```ts
-Magic.Cards.where({name: "Nicol"}).then(results => {
-	for (const card of results) console.log(card.name);
-});
+Scry.Cards.byName("Blood Scrivener").then(result => console.log(result.name)); // Blood Scrivener
+Scry.Cards.byName("Bliid Scrivener", true).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
+### `Cards.bySet (code: string, collectorId: string): Promise<Card>;` 
 
-### `Cards.all (filter: CardFilter): MagicEmitter<Card>;`
+Gets a card based on its set and collector id.
 
-Gets all cards. You can set the number of cards to include in each "page" of results, and the page to start on (the first page is 1, not 0). [See here for more information about the MagicEmitter](#magicemittert).
-
-In the following example, the cards are filtered by type. To see all options, visit [the API documentation](https://docs.magicthegathering.io/#api_v1cards_list).
 ```ts
-Magic.Cards.all({type: "Planeswalker", page: 2, pageSize: 30}).on("data", card => {
+Scry.Cards.bySet("dgm", "22").then(result => console.log(result.name)); // Blood Scrivener
+```
+
+### `Cards.byMultiverseId (id: number): Promise<Card>;` 
+
+Gets a card based on its multiverse id.
+
+```ts
+Scry.Cards.byMultiverseId(369030).then(result => console.log(result.name)); // Blood Scrivener
+```
+
+### `Cards.byMtgoId (id: number): Promise<Card>;` 
+
+Gets a card based on its MTGO (sometimes called "Cat") id.
+
+```ts
+Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Scrivener
+```
+
+### `Cards.search (query: string): MagicEmitter<Card>;` 
+
+Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
+
+```ts
+Scry.Cards.search("type:planeswalker").on("data", card => {
 	console.log(card.name); 
 }).on("end", () => {
 	console.log("done");
 });
 ```
 
-### `Sets.find (id: string): Promise<Set>;` 
+### `Cards.all (): MagicEmitter<Card>;` 
 
-Gets a single set from its ID.
+From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-all-cards): 
+
+Scryfall currently has 35,627 cards. This represents more than 150 MB of JSON data, beware your memory and storage limits if you are downloading the entire database.
+
+Every card type is returned, including planar cards, schemes, Vanguard cards, tokens, emblems, and funny cards.
 
 ```ts
-Magic.Sets.find("HOU").then(result => console.log(result.name)); // Hour of Devastation
-```
-
-
-### `Sets.where (block: SetFilter): Promise<Set[]>;`
-
-Gets multiple sets.
-
-In the following example, the sets are filtered by block. To see all options, visit [the API documentation](https://docs.magicthegathering.io/#api_v1sets_list).
-```ts
-Magic.Sets.where({block: "Kaladesh"}).then(results => {
-	for (const set of results) console.log(set.name);
-});
-```
-
-
-### `Sets.all (filter: SetFilter): MagicEmitter<Set>;`
-
-Gets all sets. You can set the number of sets to include in each "page" of results, and the page to start on (the first page is 1, not 0). [See here for more information about the MagicEmitter](#magicemittert).
-
-In the following example, the sets are not filtered, but can be. To see all options, visit [the API documentation](https://docs.magicthegathering.io/#api_v1sets_list).
-```ts
-Magic.Sets.all({page: 5, pageSize: 30}).on("data", set => {
-	console.log(set.name);
+Scry.Cards.all().on("data", card => {
+	console.log(card.name); 
 }).on("end", () => {
 	console.log("done");
 });
 ```
 
-### `Sets.generateBooster (id: string): Promise<Card[]>;` 
+### `Cards.random (id: number): Promise<Card>;` 
 
-Generates a booster from the cards of a set.
+Gets a random card.
 
 ```ts
-Magic.Sets.generateBooster("HOU").then(result => {
-	for (const card of result) console.log(card.name);
+Scry.Cards.random().then(result => console.log(result.name));
+```
+
+### `Cards.autoCompleteName (name: string): Promise<string[]>;` 
+
+From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-autocomplete):
+
+Returns [an array] containing up to 25 full card names that could be autocompletions of the given string parameter q.
+
+This method is designed for creating assistive UI elements that allow users to free-type card names.
+The names are sorted with the nearest match first.
+
+Spaces, punctuation, and capitalization are ignored.
+
+If q is less than 2 characters long, or if no names match, the Catalog will contain 0 items (instead of returning any errors).
+
+```ts
+Scry.Cards.autoCompleteName("bloodsc").then((results) => {
+	for (const result of results) {
+		console.log(result);
+		// Bloodscent
+		// Blood Scrivener
+		// Bloodscale Prowler
+		// Burning-Tree Bloodscale
+		// Ghor-Clan Bloodscale
+	}
 });
 ```
 
+### `Sets.byCode (code: number): Promise<Set>;` 
 
-### `Types.all (): Promise<string[]>;` 
-
-Gets a list of all Types that have been printed.
+Gets a set by its code.
 
 ```ts
-Magic.Types.all().then(result => {
-	for (const type of result) console.log(type);
-});
+Scry.Sets.byCode("hou").then(set => console.log(set.name)); // Hour of Devastation
 ```
 
-### `Subtypes.all (): Promise<string[]>;` 
+### `Sets.all (): Promise<Set[]>;` 
 
-Gets a list of all Subtypes that have been printed.
+Gets all sets.
 
 ```ts
-Magic.Subtypes.all().then(result => {
-	for (const type of result) console.log(type);
-});
+Scry.Sets.all().then(result => console.log(result.length)); // 394
 ```
 
-### `Supertypes.all (): Promise<string[]>;` 
+### `Symbology.all (): Promise<CardSymbol[]>;` 
 
-Gets a list of all Supertypes that have been printed.
+Gets all [card symbols](https://scryfall.com/docs/api-overview#type-card-symbol).
 
 ```ts
-Magic.Supertypes.all().then(result => {
-	for (const type of result) console.log(type);
-});
+Scry.Symbology.all().then(result => console.log(result.length)); // 63
 ```
 
-### `Formats.all (): Promise<string[]>;` 
+### `Symbology.parseMana (mana: string): Promise<ManaCost>;` 
 
-Gets a list of all official Formats.
+From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-parse-mana): 
+
+Parses the given mana cost parameter and returns Scryfall’s interpretation.
+
+The server understands most community shorthand for mana costs (such as `2WW` for `{2}{W}{W}`). Symbols can also be out of order, lowercase, or have multiple colorless costs (such as `2{g}2` for `{4}{G}`).
 
 ```ts
-Magic.Formats.all().then(result => {
-	for (const format of result) console.log(format);
-});
+Scry.Symbology.parseMana("7wg").then(result => console.log(result.cost)); // {7}{W}{G}
+```
+
+### `Catalog.cardNames (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.cardNames().then(result => console.log(result.length)); // 17562
+```
+
+### `Catalog.creatureTypes (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.creatureTypes().then(result => console.log(result.length)); // 236
+```
+
+### `Catalog.landTypes (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.landTypes().then(result => console.log(result.length)); // 13
+```
+
+### `Catalog.planeswalkerTypes (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.planeswalkerTypes().then(result => console.log(result.length)); // 35
+```
+
+### `Catalog.wordBank (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.wordBank().then(result => console.log(result.length)); // 12317
+```
+
+### `Catalog.powers (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.powers().then(result => console.log(result.length)); // 26
+```
+
+### `Catalog.toughnesses (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.toughnesses().then(result => console.log(result.length)); // 28
+```
+
+### `Catalog.loyalties (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.loyalties().then(result => console.log(result.length)); // 7
+```
+
+### `Catalog.homepageLinks (): Promise<string[]>;` 
+
+```ts
+Scry.Catalog.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
 ## `MagicEmitter<T>`
@@ -161,14 +235,17 @@ Adds a listener for when the emitter errors. This method returns the emitter obj
 
 Cancels emitting data. Only emits the "cancel" event, not the "end" event.
 
+### `MagicEmitter.waitForAll(): Promise<T[]>;
+
+Returns a promise for an Array of T, fulfilled after the end event is emitted.
 
 ## Contributing
 
 Thanks for wanting to help out! Here's the setup you'll have to do:
 ```bat
-git clone https://github.com/Yuudaari/mtg-sdk-typescript
+git clone https://github.com/Yuudaari/scryfall-sdk
 git clone https://github.com/Yuudaari/tslint.json
-cd mtg-sdk-typescript
+cd scryfall-sdk
 npm install
 ```
 You can now make changes to the repository. 

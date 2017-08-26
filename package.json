@@ -1,22 +1,22 @@
 {
-	"name": "mtgsdk-ts",
-	"version": "1.1.2",
+	"name": "scryfall-sdk",
+	"version": "1.0.0",
 	
 	"dependencies": {
 		"request-promise": "4.2.1",
 		"request": "2.81.0"
 	},
-	"main": "./out/Magic.js",
-	"types": "./out/Magic.d.ts",
+	"main": "./out/Scry.js",
+	"types": "./out/Scry.d.ts",
 	
-	"description": "An sdk for https://magicthegathering.io/ written in Typescript. Works for JavaScript and TypeScript development.",
+	"description": "A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.",
 	"keywords": [
-		"magic", "magic-the-gathering", "gathering", "api", "mtgsdk", "typescript", "card", "cards"
+		"magic", "magic-the-gathering", "gathering", "api", "mtgsdk", "typescript", "card", "cards", "scryfall", "scry"
 	],
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/aarilight/mtg-sdk-typescript"
+		"url": "https://github.com/yuudaari/scryfall-sdk"
 	},
 	
 	"devDependencies": {
