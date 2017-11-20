@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import request = require("request-promise");
 
 export * from "./IScry";
-import { Card, Set, List, CardSymbol, ManaCost, HomepageLink } from "./IScry";
+import { Card, CardSymbol, HomepageLink, List, ManaCost, Set } from "./IScry";
 
 
 // the path to the api
@@ -34,7 +34,7 @@ async function queryApi<T>(apiPath: string | number | (string | number)[], query
 	return request({
 		uri: `${endpoint}/${apiPath}`,
 		json: true,
-		qs: query
+		qs: query,
 	}) as any as Promise<T>;
 }
 
@@ -44,29 +44,29 @@ export class MagicEmitter<T> extends EventEmitter {
 		return this._cancelled;
 	}
 
-	on (event: "data", listener: (data: T) => any): this;
-	on (event: "end", listener: () => any): this;
-	on (event: "cancel", listener: () => any): this;
-	on (event: "error", listener: (err: Error) => any): this;
-	on (event: string, listener: (...args: any[]) => any) {
+	public on (event: "data", listener: (data: T) => any): this;
+	public on (event: "end", listener: () => any): this;
+	public on (event: "cancel", listener: () => any): this;
+	public on (event: "error", listener: (err: Error) => any): this;
+	public on (event: string, listener: (...args: any[]) => any) {
 		super.on(event, listener);
 		return this;
 	}
 
-	emit (event: "data", data: T): boolean;
-	emit (event: "end"): boolean;
-	emit (event: "cancel"): boolean;
-	emit (event: "error", error: Error): boolean;
-	emit (event: string, ...data: any[]) {
+	public emit (event: "data", data: T): boolean;
+	public emit (event: "end"): boolean;
+	public emit (event: "cancel"): boolean;
+	public emit (event: "error", error: Error): boolean;
+	public emit (event: string, ...data: any[]) {
 		return super.emit(event, ...data);
 	}
 
-	cancel () {
+	public cancel () {
 		this._cancelled = true;
 		this.emit("cancel");
 	}
 
-	async waitForAll () {
+	public async waitForAll () {
 		return new Promise<T[]>((resolve, reject) => {
 			const results: T[] = [];
 			this.on("data", (result) => {
@@ -80,7 +80,7 @@ export class MagicEmitter<T> extends EventEmitter {
 export module Cards {
 	export async function byName (name: string, fuzzy = false) {
 		return queryApi<Card>("cards/named", {
-			[fuzzy ? "fuzzy" : "exact"]: name
+			[fuzzy ? "fuzzy" : "exact"]: name,
 		});
 	}
 

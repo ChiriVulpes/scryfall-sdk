@@ -39,8 +39,9 @@ describe("Scry", function () {
 		it("search", (done) => {
 			const results: Scry.Card[] = [];
 			Scry.Cards.search("type:planeswalker").on("data", (card) => {
-				expect(card.type_line).satisfies((type: string) => type.startsWith("Planeswalker"));
 				results.push(card);
+				if (card.layout !== "normal") return;
+				expect(card.type_line).satisfies((type: string) => type.startsWith("Legendary Planeswalker") || type.startsWith("Planeswalker"));
 			}).on("end", () => {
 				expect(results.length).gte(97);
 				done();
@@ -60,7 +61,7 @@ describe("Scry", function () {
 					resolve();
 				});
 			});
-		}).timeout(10000);
+		}).timeout(15000);
 		it("random", async () => {
 			const card = await Scry.Cards.random();
 			expect(card).not.undefined;
