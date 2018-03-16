@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import request = require("request-promise");
 
 export * from "./IScry";
-import { Card, CardSymbol, HomepageLink, List, ManaCost, Set } from "./IScry";
+import { Card, CardSymbol, HomepageLink, List, ManaCost, Set, Ruling } from "./IScry";
 
 
 // the path to the api
@@ -166,20 +166,32 @@ export module Catalog {
 		return (await queryApi<ApiCatalog>("catalog/card-names")).data;
 	}
 
-	export async function creatureTypes () {
-		return (await queryApi<ApiCatalog>("catalog/creature-types")).data;
+	export async function wordBank () {
+		return (await queryApi<ApiCatalog>("catalog/word-bank")).data;
 	}
 
-	export async function landTypes () {
-		return (await queryApi<ApiCatalog>("catalog/land-types")).data;
+	export async function creatureTypes () {
+		return (await queryApi<ApiCatalog>("catalog/creature-types")).data;
 	}
 
 	export async function planeswalkerTypes () {
 		return (await queryApi<ApiCatalog>("catalog/planeswalker-types")).data;
 	}
 
-	export async function wordBank () {
-		return (await queryApi<ApiCatalog>("catalog/word-bank")).data;
+	export async function landTypes () {
+		return (await queryApi<ApiCatalog>("catalog/land-types")).data;
+	}
+
+	export async function artifactTypes () {
+		return (await queryApi<ApiCatalog>("catalog/artifact-types")).data;
+	}
+
+	export async function enchantmentTypes () {
+		return (await queryApi<ApiCatalog>("catalog/enchantment-types")).data;
+	}
+
+	export async function spellTypes () {
+		return (await queryApi<ApiCatalog>("catalog/spell-types")).data;
 	}
 
 	export async function powers () {
@@ -193,8 +205,31 @@ export module Catalog {
 	export async function loyalties () {
 		return (await queryApi<ApiCatalog>("catalog/loyalties")).data;
 	}
+
+	export async function watermarks () {
+		return (await queryApi<ApiCatalog>("catalog/watermarks")).data;
+	}
 }
 
 export async function homepageLinks () {
 	return (await queryApi<List<HomepageLink>>("homepage-links")).data;
+}
+
+export module Rulings {
+
+	export async function byId (id: string) {
+		return (await queryApi<List<Ruling>>(["cards", id, "rulings"])).data;
+	}
+
+	export async function bySet (setCode: string, collectorNumber: string) {
+		return (await queryApi<List<Ruling>>(["cards", setCode, collectorNumber, "rulings"])).data;
+	}
+
+	export async function byMultiverseId (id: number) {
+		return (await queryApi<List<Ruling>>(["cards/multiverse", id, "rulings"])).data;
+	}
+
+	export async function byMtgoId (id: number) {
+		return (await queryApi<List<Ruling>>(["cards/mtgo", id, "rulings"])).data;
+	}
 }

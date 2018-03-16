@@ -5,22 +5,73 @@
 
 A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
-As of August 26th, 2017, all features of https://scryfall.com/docs/api-methods are supported.
+As of [March 16th, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue!
+
+See [support readme](./SUPPORT.md).
 
 
-## Installation
+## Table of Contents
+- [Installation](#installation-)
+- [Usage](#usage-)
+- [Cards](#cards-)
+  - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
+  - [`Cards.byName (name: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-fuzzy--false-promisecard-)
+  - [`Cards.bySet (code: string, collectorId: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-string-promisecard-)
+  - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
+  - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
+  - [`Cards.search (query: string): MagicEmitter<Card>;` ](#cardssearch-query-string-magicemittercard-)
+  - [`Cards.all (): MagicEmitter<Card>;` ](#cardsall--magicemittercard-)
+  - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
+  - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
+- [Sets](#sets-)
+  - [`Sets.byCode (code: number): Promise<Set>;` ](#setsbycode-code-number-promiseset-)
+  - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
+- [Rulings](#rulings-)
+  - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promisecard-)
+  - [`Rulings.bySet (code: string, collectorId: string): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectorid-string-promisecard-)
+  - [`Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` ](#rulingsbymultiverseid-id-number-promisecard-)
+  - [`Rulings.byMtgoId (id: number): Promise<Ruling[]>;` ](#rulingsbymtgoid-id-number-promisecard-)
+- [Symbology](#symbology-)
+  - [`Symbology.all (): Promise<CardSymbol[]>;`](#symbologyall--promisecardsymbol-)
+  - [`Symbology.parseMana (mana: string): Promise<ManaCost>;` ](#symbologyparsemana-mana-string-promisemanacost-)
+- [Catalogs](#catalogs-)
+  - [`Catalog.cardNames (): Promise<string[]>;` ](#catalogcardnames--promisestring-)
+  - [`Catalog.wordBank (): Promise<string[]>;`](#catalogwordbank--promisestring-)
+  - [`Catalog.creatureTypes (): Promise<string[]>;`  ](#catalogcreaturetypes--promisestring-)
+  - [`Catalog.planeswalkerTypes (): Promise<string[]>;` ](#catalogplaneswalkertypes--promisestring-)
+  - [`Catalog.landTypes (): Promise<string[]>;`](#cataloglandtypes--promisestring-)
+  - [`Catalog.artifactTypes (): Promise<string[]>;` ](#catalogartifacttypes--promisestring-)
+  - [`Catalog.enchantmentTypes (): Promise<string[]>;` ](#catalogenchantmenttypes--promisestring-)
+  - [`Catalog.spellTypes (): Promise<string[]>;` ](#catalogspelltypes--promisestring-)
+  - [`Catalog.powers (): Promise<string[]>;` ](#catalogpowers--promisestring-)
+  - [`Catalog.toughnesses (): Promise<string[]>;`](#catalogtoughnesses--promisestring-)
+  - [`Catalog.loyalties (): Promise<string[]>;`  ](#catalogloyalties--promisestring-)
+  - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
+- [Misc](#misc-)
+  - [`homepageLinks (): Promise<string[]>;`](#cataloghomepagelinks--promisestring-)
+- [Contributing](#contributing-)
+- [MIT License](#mit-license-)
+  
+
+## Installation [🡅](#table-of-contents)
 
 ```bat
 npm install scryfall-sdk
 ```
 
-## Examples
-In the following examples, requiring the package is assumed.
+
+## Usage [🡅](#table-of-contents)
+
+In the documentation below, requiring the package is assumed.
 ```ts
 import Scry = require("scryfall-sdk");
 ```
 
-### `Cards.byId (id: string): Promise<Card>;` 
+
+
+## Cards [🡅](#table-of-contents)
+
+### `Cards.byId (id: string): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a single card from its ID.
 
@@ -28,7 +79,7 @@ Gets a single card from its ID.
 Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.byName (name: string, fuzzy = false): Promise<Card>;` 
+### `Cards.byName (name: string, fuzzy = false): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its name. Supports fuzzy searching, by 1-2 replacements/translations.
 
@@ -37,7 +88,7 @@ Scry.Cards.byName("Blood Scrivener").then(result => console.log(result.name)); /
 Scry.Cards.byName("Bliid Scrivener", true).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.bySet (code: string, collectorId: string): Promise<Card>;` 
+### `Cards.bySet (code: string, collectorId: string): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its set and collector id.
 
@@ -45,7 +96,7 @@ Gets a card based on its set and collector id.
 Scry.Cards.bySet("dgm", "22").then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.byMultiverseId (id: number): Promise<Card>;` 
+### `Cards.byMultiverseId (id: number): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its multiverse id.
 
@@ -53,7 +104,7 @@ Gets a card based on its multiverse id.
 Scry.Cards.byMultiverseId(369030).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.byMtgoId (id: number): Promise<Card>;` 
+### `Cards.byMtgoId (id: number): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its MTGO (sometimes called "Cat") id.
 
@@ -61,7 +112,7 @@ Gets a card based on its MTGO (sometimes called "Cat") id.
 Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.search (query: string): MagicEmitter<Card>;` 
+### `Cards.search (query: string): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
 
@@ -73,7 +124,7 @@ Scry.Cards.search("type:planeswalker").on("data", card => {
 });
 ```
 
-### `Cards.all (): MagicEmitter<Card>;` 
+### `Cards.all (): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-all-cards): 
 
@@ -89,7 +140,7 @@ Scry.Cards.all().on("data", card => {
 });
 ```
 
-### `Cards.random (id: number): Promise<Card>;` 
+### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a random card.
 
@@ -97,7 +148,7 @@ Gets a random card.
 Scry.Cards.random().then(result => console.log(result.name));
 ```
 
-### `Cards.autoCompleteName (name: string): Promise<string[]>;` 
+### `Cards.autoCompleteName (name: string): Promise<string[]>;` [🡅](#table-of-contents)
 
 From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-autocomplete):
 
@@ -123,7 +174,10 @@ Scry.Cards.autoCompleteName("bloodsc").then((results) => {
 });
 ```
 
-### `Sets.byCode (code: number): Promise<Set>;` 
+
+## Sets [🡅](#table-of-contents)
+
+### `Sets.byCode (code: number): Promise<Set>;` [🡅](#table-of-contents)
 
 Gets a set by its code.
 
@@ -131,7 +185,7 @@ Gets a set by its code.
 Scry.Sets.byCode("hou").then(set => console.log(set.name)); // Hour of Devastation
 ```
 
-### `Sets.all (): Promise<Set[]>;` 
+### `Sets.all (): Promise<Set[]>;` [🡅](#table-of-contents)
 
 Gets all sets.
 
@@ -139,7 +193,46 @@ Gets all sets.
 Scry.Sets.all().then(result => console.log(result.length)); // 394
 ```
 
-### `Symbology.all (): Promise<CardSymbol[]>;` 
+
+
+## Rulings [🡅](#table-of-contents)
+
+### `Rulings.byId (id: string): Promise<Ruling[]>;` [🡅](#table-of-contents)
+
+Gets the rulings for a single card from its ID.
+
+```ts
+Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.length)); // 2
+```
+
+### `Rulings.bySet (code: string, collectorId: string): Promise<Ruling[]>;` [🡅](#table-of-contents)
+
+Gets the rulings for a card based on its set and collector id.
+
+```ts
+Scry.Rulings.bySet("dgm", "22").then(result => console.log(result.length)); // 2
+```
+
+### `Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
+
+Gets the rulings for a card based on its multiverse id.
+
+```ts
+Scry.Rulings.byMultiverseId(369030).then(result => console.log(result.length)); // 2
+```
+
+### `Rulings.byMtgoId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
+
+Gets the rulings for a card based on its MTGO (sometimes called "Cat") id.
+
+```ts
+Scry.Rulings.byMtgoId(48338).then(result => console.log(result.length)); // 2
+```
+
+
+## Symbology [🡅](#table-of-contents)
+
+### `Symbology.all (): Promise<CardSymbol[]>;` [🡅](#table-of-contents)
 
 Gets all [card symbols](https://scryfall.com/docs/api-overview#type-card-symbol).
 
@@ -147,7 +240,7 @@ Gets all [card symbols](https://scryfall.com/docs/api-overview#type-card-symbol)
 Scry.Symbology.all().then(result => console.log(result.length)); // 63
 ```
 
-### `Symbology.parseMana (mana: string): Promise<ManaCost>;` 
+### `Symbology.parseMana (mana: string): Promise<ManaCost>;` [🡅](#table-of-contents)
 
 From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-parse-mana): 
 
@@ -159,61 +252,93 @@ The server understands most community shorthand for mana costs (such as `2WW` fo
 Scry.Symbology.parseMana("7wg").then(result => console.log(result.cost)); // {7}{W}{G}
 ```
 
-### `Catalog.cardNames (): Promise<string[]>;` 
+
+## Catalogs [🡅](#table-of-contents)
+
+### `Catalog.cardNames (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.cardNames().then(result => console.log(result.length)); // 17562
+Scry.Catalog.cardNames().then(result => console.log(result.length)); // 18059
 ```
 
-### `Catalog.creatureTypes (): Promise<string[]>;` 
+### `Catalog.wordBank (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.creatureTypes().then(result => console.log(result.length)); // 236
+Scry.Catalog.wordBank().then(result => console.log(result.length)); // 12892
 ```
 
-### `Catalog.landTypes (): Promise<string[]>;` 
+### `Catalog.creatureTypes (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.Catalog.creatureTypes().then(result => console.log(result.length)); // 242
+```
+
+### `Catalog.planeswalkerTypes (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.Catalog.planeswalkerTypes().then(result => console.log(result.length)); // 42
+```
+
+### `Catalog.landTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
 Scry.Catalog.landTypes().then(result => console.log(result.length)); // 13
 ```
 
-### `Catalog.planeswalkerTypes (): Promise<string[]>;` 
+### `Catalog.artifactTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.planeswalkerTypes().then(result => console.log(result.length)); // 35
+Scry.Catalog.artifactTypes().then(result => console.log(result.length)); // 6
 ```
 
-### `Catalog.wordBank (): Promise<string[]>;` 
+### `Catalog.enchantmentTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.wordBank().then(result => console.log(result.length)); // 12317
+Scry.Catalog.enchantmentTypes().then(result => console.log(result.length)); // 5
 ```
 
-### `Catalog.powers (): Promise<string[]>;` 
+### `Catalog.spellTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.powers().then(result => console.log(result.length)); // 26
+Scry.Catalog.spellTypes().then(result => console.log(result.length)); // 2
 ```
 
-### `Catalog.toughnesses (): Promise<string[]>;` 
+### `Catalog.powers (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.toughnesses().then(result => console.log(result.length)); // 28
+Scry.Catalog.powers().then(result => console.log(result.length)); // 33
 ```
 
-### `Catalog.loyalties (): Promise<string[]>;` 
+### `Catalog.toughnesses (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.loyalties().then(result => console.log(result.length)); // 7
+Scry.Catalog.toughnesses().then(result => console.log(result.length)); // 35
 ```
 
-### `Catalog.homepageLinks (): Promise<string[]>;` 
+### `Catalog.loyalties (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.homepageLinks().then(result => console.log(result.length)); // 4
+Scry.Catalog.loyalties().then(result => console.log(result.length)); // 9
 ```
 
-## `MagicEmitter<T>`
+### `Catalog.watermarks (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
+```
+
+
+## Misc [🡅](#table-of-contents)
+
+### `homepageLinks (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.homepageLinks().then(result => console.log(result.length)); // 4
+```
+
+
+
+## `MagicEmitter<T>` [🡅](#table-of-contents)
 
 ### `MagicEmitter.on(event: "data", listener: (data: T) => any): MagicEmitter;`
 
@@ -235,11 +360,14 @@ Adds a listener for when the emitter errors. This method returns the emitter obj
 
 Cancels emitting data. Only emits the "cancel" event, not the "end" event.
 
-### `MagicEmitter.waitForAll(): Promise<T[]>;
+### `MagicEmitter.waitForAll(): Promise<T[]>;`
 
 Returns a promise for an Array of T, fulfilled after the end event is emitted.
 
-## Contributing
+
+
+
+## Contributing [🡅](#table-of-contents)
 
 Thanks for wanting to help out! Here's the setup you'll have to do:
 ```bat
@@ -277,6 +405,7 @@ Thanks again!
 
 
 
-## MIT License
 
-[Copyright 2017 Mackenzie McClane](./LICENSE)
+## MIT License [🡅](#table-of-contents)
+
+[Copyright 2017-2018 Mackenzie McClane](./LICENSE)

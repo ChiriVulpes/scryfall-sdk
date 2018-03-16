@@ -93,6 +93,25 @@ describe("Scry", function () {
 		});
 	});
 
+	describe("Rulings", () => {
+		it("by id", async () => {
+			const rulings = await Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			expect(rulings.length).eq(2);
+		});
+		it("by set", async () => {
+			const rulings = await Scry.Rulings.bySet("dgm", "22");
+			expect(rulings.length).eq(2);
+		});
+		it("by multiverse id", async () => {
+			const rulings = await Scry.Rulings.byMultiverseId(369030);
+			expect(rulings.length).eq(2);
+		});
+		it("by mtgo id", async () => {
+			const rulings = await Scry.Rulings.byMtgoId(48338);
+			expect(rulings.length).eq(2);
+		});
+	});
+
 	describe("Symbology", () => {
 		it("all", async () => {
 			const symbology = await Scry.Symbology.all();
@@ -107,39 +126,56 @@ describe("Scry", function () {
 	describe("Catalog", () => {
 		it("card names", async () => {
 			const result = await Scry.Catalog.cardNames();
-			expect(result.length).gte(17562);
+			expect(result.length).gte(18059);
+		});
+		it("word bank", async () => {
+			const result = await Scry.Catalog.wordBank();
+			expect(result.length).gte(12892);
 		});
 		it("creature types", async () => {
 			const result = await Scry.Catalog.creatureTypes();
-			expect(result.length).gte(236);
+			expect(result.length).gte(242);
+		});
+		it("planeswalker types", async () => {
+			const result = await Scry.Catalog.planeswalkerTypes();
+			expect(result.length).gte(42);
 		});
 		it("land types", async () => {
 			const result = await Scry.Catalog.landTypes();
 			expect(result.length).gte(13);
 		});
-		it("planeswalker types", async () => {
-			const result = await Scry.Catalog.planeswalkerTypes();
-			expect(result.length).gte(35);
+		it("artifact types", async () => {
+			const result = await Scry.Catalog.artifactTypes();
+			expect(result.length).gte(6);
 		});
-		it("word bank", async () => {
-			const result = await Scry.Catalog.wordBank();
-			expect(result.length).gte(12317);
+		it("enchantment types", async () => {
+			const result = await Scry.Catalog.enchantmentTypes();
+			expect(result.length).gte(5);
+		});
+		it("spell types", async () => {
+			const result = await Scry.Catalog.spellTypes();
+			expect(result.length).gte(2);
 		});
 		it("powers", async () => {
 			const result = await Scry.Catalog.powers();
-			expect(result.length).gte(26);
+			expect(result.length).gte(33);
 		});
 		it("toughnesses", async () => {
 			const result = await Scry.Catalog.toughnesses();
-			expect(result.length).gte(28);
+			expect(result.length).gte(35);
 		});
 		it("loyalties", async () => {
 			const result = await Scry.Catalog.loyalties();
-			expect(result.length).gte(7);
+			expect(result.length).gte(9);
 		});
-		it("homepage links", async () => {
-			const result = await Scry.homepageLinks();
-			expect(result).satisfies(Array.isArray);
+		it("watermarks", async () => {
+			const result = await Scry.Catalog.watermarks();
+			expect(result.length).gte(50);
 		});
+	});
+
+	it("homepage links", async () => {
+		const result = await Scry.homepageLinks();
+		expect(result).satisfies(Array.isArray);
 	});
 });
