@@ -104,22 +104,22 @@ export module Cards {
 		return queryApi<Card>("cards/random");
 	}
 
+	async function getPage<T>(emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1) {
+		const results = await queryApi<List<T>>(apiPath, { ...query, page });
+		for (const card of results.data) {
+			emitter.emit("data", card);
+		}
+		if (results.has_more) {
+			if (!emitter.cancelled) getPage(emitter, apiPath, query, page + 1).catch(err => emitter.emit("error", err));
+		} else {
+			emitter.emit("end");
+		}
+	}
+
 	export function search (search: string) {
 		const emitter = new MagicEmitter<Card>();
 
-		async function getPage (page = 0) {
-			const results = await queryApi<List<Card>>("cards/search", { q: search, page });
-			for (const card of results.data) {
-				emitter.emit("data", card);
-			}
-			if (results.has_more) {
-				if (!emitter.cancelled) getPage(page + 1);
-			} else {
-				emitter.emit("end");
-			}
-		}
-
-		getPage();
+		getPage(emitter, "cards/search", { q: search }).catch(err => emitter.emit("error", err));
 
 		return emitter;
 	}
@@ -127,19 +127,7 @@ export module Cards {
 	export function all () {
 		const emitter = new MagicEmitter<Card>();
 
-		async function getPage (page = 0) {
-			const results = await queryApi<List<Card>>("cards", { page });
-			for (const card of results.data) {
-				emitter.emit("data", card);
-			}
-			if (results.has_more) {
-				if (!emitter.cancelled) getPage(page + 1);
-			} else {
-				emitter.emit("end");
-			}
-		}
-
-		getPage();
+		getPage(emitter, "cards", {}).catch(err => emitter.emit("error", err));
 
 		return emitter;
 	}

@@ -36,7 +36,7 @@ describe("Scry", function () {
 			expect(card.name).eq("Blood Scrivener");
 		});
 
-		it("search", (done) => {
+		it("search", done => {
 			const results: Scry.Card[] = [];
 			Scry.Cards.search("type:planeswalker").on("data", (card) => {
 				results.push(card);
@@ -45,7 +45,17 @@ describe("Scry", function () {
 			}).on("end", () => {
 				expect(results.length).gte(97);
 				done();
-			});
+			}).on("error", done);
+		});
+		it("search by set", done => {
+			const results: Scry.Card[] = [];
+			Scry.Cards.search("s:kld").on("data", (card) => {
+				results.push(card);
+				expect(card.set).satisfies((set: string) => set == "kld");
+			}).on("end", () => {
+				expect(results.length).eq(264);
+				done();
+			}).on("error", done);
 		});
 		it("all (cancel after 427 cards)", async () => {
 			return new Promise((resolve, reject) => {
@@ -59,7 +69,7 @@ describe("Scry", function () {
 				}).on("cancel", () => {
 					expect(needCount).eq(0);
 					resolve();
-				});
+				}).on("error", reject);
 			});
 		}).timeout(15000);
 		it("random", async () => {
