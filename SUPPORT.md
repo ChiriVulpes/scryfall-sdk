@@ -2,7 +2,7 @@
 
 | Query | Result |
 | --- | --- |
-| [`/cards/named?{fuzzy|exact}=<card name>`](./README.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
+| [`/cards/named?{fuzzy\|exact}=<card name>`](./README.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
 | [`/cards/:id`](./README.md#cardsbyid-id-string-promisecard-) | Card |
 | [`/cards/:set/:collector_number`](./README.md#cardsbyset-code-string-collectorid-string-promisecard-) | Card |
 | [`/cards/multiverse/:multiverse_id`](./README.md#cardsbymultiverseid-id-number-promisecard-) | Card |
