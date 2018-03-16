@@ -13,10 +13,10 @@
 | [`/cards/autocomplete?q=<autocomplete to a card name>`](./README.md#cardsautocompletename-name-string-promisestring-) | Catalog |
 | [`/sets`](./README.md#setsall--promiseset-) | List<Set> |
 | [`/sets/:code`](./README.md#setsbycode-code-number-promiseset-) | Set |
-| [`/cards/multiverse/:id/rulings`](./README.md#rulingsbymultiverseid-id-number-promisecard-) | List<Ruling> |
-| [`/cards/mtgo/:id/rulings`](./README.md#rulingsbymtgoid-id-number-promisecard-) | List<Ruling> |
-| [`/cards/:code/:number/rulings`](./README.md#rulingsbyset-code-string-collectorid-string-promisecard-) | List<Ruling> |
-| [`/cards/:id/rulings`](./README.md#rulingsbyid-id-string-promisecard-) | List<Ruling> |
+| [`/cards/multiverse/:id/rulings`](./README.md#rulingsbymultiverseid-id-number-promiseruling-) | List<Ruling> |
+| [`/cards/mtgo/:id/rulings`](./README.md#rulingsbymtgoid-id-number-promiseruling-) | List<Ruling> |
+| [`/cards/:code/:number/rulings`](./README.md#rulingsbyset-code-string-collectorid-string-promiseruling-) | List<Ruling> |
+| [`/cards/:id/rulings`](./README.md#rulingsbyid-id-string-promiseruling-) | List<Ruling> |
 | [`/symbology`](./README.md#symbologyall--promisecardsymbol-) | List<CardSymbol> |
 | [`/symbology/parse-mana?cost=<shorthand mana cost>`](./README.md#symbologyparsemana-mana-string-promisemanacost-) | ManaCost |
 | [`/catalog/card-names`](./README.md#catalogcardnames--promisestring-) | Catalog |
