@@ -19,7 +19,7 @@ See [support readme](./SUPPORT.md).
   - [`Cards.bySet (code: string, collectorId: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
-  - [`Cards.search (query: string): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
+  - [`Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
   - [`Cards.all (): MagicEmitter<Card>;` ](#cardsall--magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
