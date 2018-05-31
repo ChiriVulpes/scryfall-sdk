@@ -57,6 +57,9 @@ export class MagicEmitter<T> extends EventEmitter {
 		this.on("end", () => {
 			this._ended = true;
 		});
+		this.on("cancel", () => {
+			this._ended = true;
+		});
 	}
 
 	public on (event: "data", listener: (data: T) => any): this;
@@ -91,19 +94,15 @@ export class MagicEmitter<T> extends EventEmitter {
 		});
 	}
 
-	public async waitForNext (): Promise<T | undefined> {
-		if (this._ended) {
-			return Promise.resolve(undefined);
-		}
-
-		return new Promise<T>(resolve => {
-			this.once("data", resolve);
-		});
-	}
-
 	public async *[Symbol.asyncIterator] () {
+		const unyielded: T[] = [];
+		this.on("data", data => unyielded.push(data));
 		while (!this._ended) {
-			yield await this.waitForNext();
+			await new Promise(resolve => this.on("data", resolve));
+			let data: T | undefined;
+			while (data = unyielded.shift()) {
+				yield data;
+			}
 		}
 	}
 

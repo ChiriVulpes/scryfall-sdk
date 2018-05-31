@@ -44,10 +44,11 @@ describe("Scry", function () {
 		it("search", async () => {
 			const results: Scry.Card[] = [];
 			for await (const card of Scry.Cards.search("type:planeswalker").all()) {
-				results.push(card);
 				if (card.layout !== "normal") {
 					return;
 				}
+
+				results.push(card);
 
 				expect(card.type_line)
 					.satisfies((type: string) => type.startsWith("Legendary Planeswalker") || type.startsWith("Planeswalker"));

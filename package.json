@@ -35,12 +35,14 @@
 		"gulp-mocha": "6.0.0",
 		"chai": "4.1.2",
 		"ts-node": "6.0.5",
+		"del": "3.0.0",
 		"@types/node": "10.1.4",
 		"@types/request-promise": "4.1.41",
 		"@types/gulp-mocha": "0.0.32",
 		"@types/chai": "4.1.3",
 		"@types/gulp": "4.0.5",
 		"@types/gulp-plumber": "0.0.32",
-		"@types/merge2": "1.1.4"
+		"@types/merge2": "1.1.4",
+		"@types/del": "3.0.1"
 	}
 }

@@ -1,18 +1,23 @@
+import * as del from "del";
 import { dest, series, src, task, watch } from "gulp";
 import * as mocha from "gulp-mocha";
 import * as plumber from "gulp-plumber";
 import * as typescript from "gulp-typescript";
 import * as merge from "merge2";
 
-task("build", series(compile, test));
+task("build", series(clean, compile, test));
 
 task("watch", series("build", () => {
 	watch("./src/**/*.ts", series("build"));
 }));
 
+async function clean () {
+	await del("out");
+}
+
 let project: typescript.Project;
 function compile () {
-	project = project || typescript.createProject("tsconfig.json");
+	project = project || typescript.createProject("./src/tsconfig.json");
 
 	const result = project.src()
 		.pipe(plumber())

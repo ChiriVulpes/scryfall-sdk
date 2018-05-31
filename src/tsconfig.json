@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es2015",
+		"outDir": "../out/",
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"forceConsistentCasingInFileNames": true,
@@ -9,5 +10,8 @@
 		"noUnusedLocals": true,
 		"removeComments": true,
 		"declaration": true
-	}
+	},
+	"include": [
+		"**/*.ts"
+	]
 }
