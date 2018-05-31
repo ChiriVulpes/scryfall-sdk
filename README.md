@@ -396,7 +396,6 @@ npm install
 ```
 You can now make changes to the repository. 
 
-```
 To compile, then test:
 ```bat
 gulp build
