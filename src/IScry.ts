@@ -30,25 +30,35 @@ export enum Layout {
 
 export interface CardFace {
 	name: string;
-	mana_cost: string | null;
+	printed_name: string;
 	type_line: string;
-	oracle_text: string | null;
-	power: string | null;
-	toughness: string | null;
+	printed_type_line: string;
+	oracle_text?: string | null;
+	printed_text: string;
+	mana_cost: string | null;
+	colors: (keyof typeof Color)[];
+	color_indicator?: (keyof typeof Color)[] | null;
+	power?: string | null;
+	toughness?: string | null;
+	loyalty?: string | null;
+	flavor_text?: string | null;
+	illustration_id?: string | null;
+	image_uris?: ImageUris | null;
 }
 
 export enum Format {
 	standard,
+	future,
+	frontier,
 	modern,
 	legacy,
-	vintage,
-	commander,
 	pauper,
-	frontier,
+	vintage,
 	penny,
-	duel,
+	commander,
 	"1v1",
-	future,
+	duel,
+	brawl,
 }
 
 export enum Legality {
@@ -75,24 +85,26 @@ export enum Rarity {
 	mythic,
 }
 
-// enums can't have all numeric names, so we build our own enum,
-export const Frame: {[key in "1993" | "2003" | "2015" | "future"]: number } = {
-	"1993": 0,
-	"2003": 1,
-	"2015": 2,
-	future: 3,
+// enums can't have all numeric names, so we build our own enum
+// tslint:disable-next-line variable-name
+export const Frame: { [key in "1993" | "2003" | "2015" | "Future"]: number } = {
+	1993: 0,
+	2003: 1,
+	2015: 2,
+	Future: 3,
 
 	0: "1993",
 	1: "2003",
 	2: "2015",
-	3: "future",
+	3: "Future",
 } as any;
 
 export enum Border {
 	black,
-	white,
-	silver,
+	borderless,
 	gold,
+	silver,
+	white,
 }
 
 export interface ImageUris {
@@ -100,53 +112,99 @@ export interface ImageUris {
 	normal: string;
 	large: string;
 	png: string;
+	art_crop: string;
+	border_crop: string;
 }
 
 export interface Card {
+	// core fields
+	id: string;
+	oracle_id: string;
+	multiverse_ids?: number[] | null;
+	mtgo_id?: number | null;
+	mtgo_foil_id?: number | null;
+	uri: string;
+	scryfall_uri: string;
+	prints_search_uri: string;
+	rulings_uri: string;
+
+	// gameplay fields
 	name: string;
-	mana_cost: string | null;
-	cmc: number;
-	type_line: string | null;
-	oracle_text: string | null;
-	power: string | null;
-	toughness: string | null;
-	loyalty: string | null;
-	hand_modifier: string;
-	life_modifier: string;
-	colors: (keyof typeof Color)[];
-	color_identity: (keyof typeof Color)[];
 	layout: keyof typeof Layout;
-	card_faces?: CardFace[];
+	cmc: number;
+	type_line?: string | null;
+	oracle_text?: string | null;
+	mana_cost?: string;
+	power?: string | null;
+	toughness?: string | null;
+	loyalty?: string | null;
+	life_modifier?: string | null;
+	hand_modifier?: string | null;
+	colors: (keyof typeof Color)[];
+	color_indicator?: (keyof typeof Color)[] | null;
+	color_identity: (keyof typeof Color)[];
+	all_parts?: CardPart[] | null;
+	card_faces?: CardFace[] | null;
 	legalities: Legalities;
 	reserved: boolean;
+	foil: boolean;
+	nonfoil: boolean;
+	oversized: boolean;
+	edhrec_rank?: number | null;
 
-	// print fields,
-	id: string;
-	multiverse_id: number | null;
-	mtgo_id: number | null;
+	// print fields
 	set: string;
 	set_name: string;
-	collector_number: string | null;
+	collector_number: string;
+	set_search_uri: string;
+	scryfall_set_uri: string;
+	image_uris?: ImageUris | null;
+	highres_image: boolean;
+	printed_name: string;
+	printed_type_line: string;
+	printed_text: string;
 	reprint: boolean;
-	all_parts: CardPart[];
-	rarity: keyof typeof Rarity;
 	digital: boolean;
-	watermark?: string;
-	flavor_text?: string;
-	artist: string;
+	rarity: keyof typeof Rarity;
+	flavor_text?: string | null;
+	artist?: string | null;
+	illustration_id?: string | null;
 	frame: keyof typeof Frame;
-	border: keyof typeof Border;
+	full_art: boolean;
+	watermark?: string | null;
+	border_color: keyof typeof Border;
+	story_spotlight_number?: number | null;
+	story_spotlight_uri?: string | null;
 	timeshifted: boolean;
 	colorshifted: boolean;
 	futureshifted: boolean;
+
+	// not described on scryfall api but present in results
 	usd: number | null;
 	eur: number | null;
 	tix: number | null;
-	scryfall_uri: string;
-	image_uri: string | null;
-	image_uris: ImageUris;
-	related_uris: string[];
-	purchase_uris: string[];
+	related_uris: RelatedUris;
+	purchase_uris: PurchaseUris;
+}
+
+export interface RelatedUris {
+	gatherer?: string;
+	tcgplayer_decks?: string;
+	edhrec?: string;
+	mtgtop8?: string;
+	[key: string]: string;
+}
+
+export interface PurchaseUris {
+	amazon?: string;
+	ebay?: string;
+	tcgplayer?: string;
+	magiccardmarket?: string;
+	cardhoarder?: string;
+	card_kingdom?: string;
+	mtgo_traders?: string;
+	coolstuffinc?: string;
+	[key: string]: string;
 }
 
 export enum SetType {
@@ -227,4 +285,41 @@ export interface Ruling {
 	source: string;
 	published_at: string;
 	comment: string;
+}
+
+export enum UniqueStrategy {
+	cards,
+	art,
+	prints,
+}
+
+export enum Sort {
+	name,
+	set,
+	released,
+	rarity,
+	color,
+	usd,
+	tix,
+	eur,
+	cmc,
+	power,
+	toughness,
+	edhrec,
+	artist,
+}
+
+export enum SortDirection {
+	auto,
+	asc,
+	desc,
+}
+
+export interface SearchOptions {
+	unique?: keyof typeof UniqueStrategy;
+	order?: keyof typeof Sort;
+	dir?: keyof typeof SortDirection;
+	include_extras?: boolean;
+	include_multilingual?: boolean;
+	page?: number;
 }

@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
-import request = require("request-promise");
+import * as request from "request-promise";
 
 export * from "./IScry";
-import { Card, CardSymbol, HomepageLink, List, ManaCost, Set, Ruling } from "./IScry";
+import { Card, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchOptions, Set } from "./IScry";
 
 
 // the path to the api
@@ -19,12 +19,15 @@ function sleep (ms: number) {
 }
 
 async function queryApi<T>(apiPath: string | number | (string | number)[], query?: { [key: string]: any }) {
-	if (Array.isArray(apiPath)) apiPath = apiPath.join("/");
+	if (Array.isArray(apiPath)) {
+		apiPath = apiPath.join("/");
+	}
 
 	const now = Date.now();
 	const timeSinceLastQuery = now - lastQuery;
 	if (timeSinceLastQuery >= rateLimit) {
 		lastQuery = now;
+
 	} else {
 		const timeUntilNextQuery = rateLimit - timeSinceLastQuery;
 		lastQuery += timeUntilNextQuery;
@@ -32,16 +35,28 @@ async function queryApi<T>(apiPath: string | number | (string | number)[], query
 	}
 
 	return request({
-		uri: `${endpoint}/${apiPath}`,
 		json: true,
 		qs: query,
+		uri: `${endpoint}/${apiPath}`,
 	}) as any as Promise<T>;
 }
 
 export class MagicEmitter<T> extends EventEmitter {
+	private _ended = false;
+	public get ended () {
+		return this._ended;
+	}
+
 	private _cancelled = false;
-	get cancelled () {
+	public get cancelled () {
 		return this._cancelled;
+	}
+
+	public constructor() {
+		super();
+		this.on("end", () => {
+			this._ended = true;
+		});
 	}
 
 	public on (event: "data", listener: (data: T) => any): this;
@@ -69,11 +84,31 @@ export class MagicEmitter<T> extends EventEmitter {
 	public async waitForAll () {
 		return new Promise<T[]>((resolve, reject) => {
 			const results: T[] = [];
-			this.on("data", (result) => {
+			this.on("data", result => {
 				results.push(result);
 			});
 			this.on("end", () => resolve(results));
 		});
+	}
+
+	public async waitForNext (): Promise<T | undefined> {
+		if (this._ended) {
+			return Promise.resolve(undefined);
+		}
+
+		return new Promise<T>(resolve => {
+			this.once("data", resolve);
+		});
+	}
+
+	public async *[Symbol.asyncIterator] () {
+		while (!this._ended) {
+			yield await this.waitForNext();
+		}
+	}
+
+	public all () {
+		return this[Symbol.asyncIterator]();
 	}
 }
 
@@ -109,17 +144,21 @@ export module Cards {
 		for (const card of results.data) {
 			emitter.emit("data", card);
 		}
+
 		if (results.has_more) {
-			if (!emitter.cancelled) getPage(emitter, apiPath, query, page + 1).catch(err => emitter.emit("error", err));
+			if (!emitter.cancelled) {
+				getPage(emitter, apiPath, query, page + 1).catch(err => emitter.emit("error", err));
+			}
+
 		} else {
 			emitter.emit("end");
 		}
 	}
 
-	export function search (search: string) {
+	export function search (query: string, options?: SearchOptions) {
 		const emitter = new MagicEmitter<Card>();
 
-		getPage(emitter, "cards/search", { q: search }).catch(err => emitter.emit("error", err));
+		getPage(emitter, "cards/search", { q: query, ...options }).catch(err => emitter.emit("error", err));
 
 		return emitter;
 	}

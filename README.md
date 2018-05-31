@@ -5,7 +5,7 @@
 
 A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
-As of [March 16th, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue!
+As of [May 30th, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue!
 
 See [support readme](./SUPPORT.md).
 
@@ -19,7 +19,7 @@ See [support readme](./SUPPORT.md).
   - [`Cards.bySet (code: string, collectorId: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
-  - [`Cards.search (query: string): MagicEmitter<Card>;` ](#cardssearch-query-string-magicemittercard-)
+  - [`Cards.search (query: string): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
   - [`Cards.all (): MagicEmitter<Card>;` ](#cardsall--magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
@@ -113,7 +113,7 @@ Gets a card based on its MTGO (sometimes called "Cat") id.
 Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.search (query: string): MagicEmitter<Card>;` [🡅](#table-of-contents)
+### `Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
 
@@ -124,6 +124,10 @@ Scry.Cards.search("type:planeswalker").on("data", card => {
 	console.log("done");
 });
 ```
+
+For information on how to provide extra options, see the [`/get/cards/search` page](https://scryfall.com/docs/api/cards/search) on Scryfall. You can also reference the `SearchOptions` interface in [`IScry.ts`](./src/IScry.ts)
+
+This query returns a [`MagicEmitter`](#magicemittert-).
 
 ### `Cards.all (): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
@@ -140,6 +144,8 @@ Scry.Cards.all().on("data", card => {
 	console.log("done");
 });
 ```
+
+This query returns a [`MagicEmitter`](#magicemittert-).
 
 ### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
 
@@ -365,6 +371,17 @@ Cancels emitting data. Only emits the "cancel" event, not the "end" event.
 
 Returns a promise for an Array of T, fulfilled after the end event is emitted.
 
+### `MagicEmitter.all(): AsyncIterableIterator<T>;`
+
+Returns an async iterator that will yield each T when it receives it.
+
+Example usage: 
+
+```ts
+for await (const card of Scry.Cards.search("type:planeswalker").all()) {
+    console.log(card.name);
+}
+```
 
 
 
@@ -379,17 +396,10 @@ npm install
 ```
 You can now make changes to the repository. 
 
-To compile:
-```bat
-gulp ts
-```
-To test:
-```bat
-gulp mocha
 ```
 To compile, then test:
 ```bat
-gulp compile-test
+gulp build
 ```
 To compile and then test on every file change:
 ```bat

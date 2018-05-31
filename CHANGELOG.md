@@ -1,11 +1,10 @@
-# v1.0.0 (August 26th, 2017)
-Initial release
+# v1.2.0 (May 30th, 2018)
+Misc updates. Now using a Typescript Gulp file and Gulp@4.0
 
-# v1.0.1 (November 20th, 2017)
-Fixed broken tests, some code cleanup
-
-# v1.0.2 (March 16th, 2018)
-Fixed an issue that caused the first page of results to be duplicated. How did I miss that for so long?
+New features:
+- [Search options](./README.md#cardssearch-query-string-options-searchoptions-magicemittercard-)
+- [`MagicEmitter.all()`](./README.md#magicemitterall-asynciterableiteratort-)
+- Updated [`IScry.ts`](./src/IScry.ts) with new/updated card fields.
 
 # v1.1.0 (March 16th, 2018)
 New features:
@@ -19,3 +18,12 @@ New features:
   - [`Catalog.enchantmentTypes (): Promise<string[]>;` ](./README.md#catalogenchantmenttypes--promisestring-)
   - [`Catalog.spellTypes (): Promise<string[]>;` ](./README.md#catalogspelltypes--promisestring-)
   - [`Catalog.watermarks (): Promise<string[]>;` ](./README.md#catalogwatermarks--promisestring-)
+
+# v1.0.2 (March 16th, 2018)
+Fixed an issue that caused the first page of results to be duplicated. How did I miss that for so long?
+
+# v1.0.1 (November 20th, 2017)
+Fixed broken tests, some code cleanup
+
+# v1.0.0 (August 26th, 2017)
+Initial release

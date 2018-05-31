@@ -4,25 +4,20 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "gulp",
-			"task": "ts",
-			"problemMatcher": [
-				"$gulp-tsc"
-			]
-		},
-		{
-			"type": "gulp",
-			"task": "mocha",
+			"label": "Build",
+			"type": "shell",
+			"command": "gulp watch",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"problemMatcher": []
 		},
 		{
-			"type": "gulp",
-			"task": "watch",
-			"problemMatcher": []
-		},
-		{
-			"type": "gulp",
-			"task": "compile-test",
+			"label": "Build",
+			"type": "shell",
+			"command": "gulp build",
+			"group": "build",
 			"problemMatcher": []
 		}
 	]
