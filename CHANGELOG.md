@@ -3,7 +3,7 @@ Misc updates. Now using a Typescript Gulp file and Gulp@4.0
 
 New features:
 - [Search options](./README.md#cardssearch-query-string-options-searchoptions-magicemittercard-)
-- [`MagicEmitter.all()`](./README.md#magicemitterall-asynciterableiteratort-)
+- [`MagicEmitter.all()`](./README.md#magicemitterall-asynciterableiteratort)
 - Updated [`IScry.ts`](./src/IScry.ts) with new/updated card fields.
 
 # v1.1.0 (March 16th, 2018)
