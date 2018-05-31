@@ -7,7 +7,7 @@ before_script:
   - npm install -g gulp-cli
   
 script:
-  - gulp compile-test
+  - gulp build
   
 notifications:
   email:
