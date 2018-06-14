@@ -18,7 +18,7 @@ function sleep (ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function queryApi<T>(apiPath: string | number | (string | number)[], query?: { [key: string]: any }) {
+async function queryApi<T> (apiPath: string | number | (string | number)[], query?: { [key: string]: any }) {
 	if (Array.isArray(apiPath)) {
 		apiPath = apiPath.join("/");
 	}
@@ -34,11 +34,13 @@ async function queryApi<T>(apiPath: string | number | (string | number)[], query
 		await sleep(timeUntilNextQuery);
 	}
 
-	return request({
+	const result = await request({
 		json: true,
 		qs: query,
 		uri: `${endpoint}/${apiPath}`,
-	}) as any as Promise<T>;
+	}).catch(() => { }) as any as Promise<T>;
+
+	return result || { data: [] } as any;
 }
 
 export class MagicEmitter<T> extends EventEmitter {
@@ -91,6 +93,7 @@ export class MagicEmitter<T> extends EventEmitter {
 				results.push(result);
 			});
 			this.on("end", () => resolve(results));
+			this.on("error", reject);
 		});
 	}
 
@@ -138,7 +141,7 @@ export module Cards {
 		return queryApi<Card>("cards/random");
 	}
 
-	async function getPage<T>(emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1) {
+	async function getPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1) {
 		const results = await queryApi<List<T>>(apiPath, { ...query, page });
 		for (const card of results.data) {
 			emitter.emit("data", card);

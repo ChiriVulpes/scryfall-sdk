@@ -1,6 +1,11 @@
 /// <reference types="mocha" />
 
-import { expect } from "chai";
+import * as chai from "chai";
+const expect = chai.expect;
+/*
+import * as chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+*/
 
 import * as Scry from "../Scry";
 
@@ -55,6 +60,11 @@ describe("Scry", function () {
 			}
 
 			expect(results.length).gte(97);
+		});
+
+		it("search waitForAll", async () => {
+			const matches = await Scry.Cards.search("!smoker").waitForAll();
+			expect(matches.length).eq(0);
 		});
 
 		it("search by set", done => {
