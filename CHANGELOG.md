@@ -1,3 +1,6 @@
+# v1.2.1 (June 14th, 2018)
+Fixed `waitForAll` throwing an uncatchable promise rejection error.
+
 # v1.2.0 (May 30th, 2018)
 Misc updates. Now using a Typescript Gulp file and Gulp@4.0
 
