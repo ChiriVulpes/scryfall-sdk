@@ -5,7 +5,7 @@
 
 A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
-As of [May 30th, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue!
+As of [July 31st, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue!
 
 See [support readme](./SUPPORT.md).
 
@@ -139,7 +139,7 @@ For information on how to provide extra options, see the [`/get/cards/search` pa
 
 This query returns a [`MagicEmitter`](#magicemittert-).
 
-### `Cards.all (page = 0): MagicEmitter<Card>;` [🡅](#table-of-contents)
+### `Cards.all (page = 1): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 From the [Scryfall documentation](https://scryfall.com/docs/api/cards/all): 
 
@@ -156,6 +156,12 @@ Scry.Cards.all().on("data", card => {
 ```
 
 This query returns a [`MagicEmitter`](#magicemittert-).
+
+The page parameter is the page of results that the query will begin at. A page is 175 cards, and cannot be changed. To get only the one page you requested, you can do the following:
+
+```ts
+const cardsFromPage15 = await Scry.Cards.all(15).cancelAfterPage().waitForAll();
+```
 
 ### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
 
