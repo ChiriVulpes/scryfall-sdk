@@ -16,9 +16,10 @@ See [support readme](./SUPPORT.md).
 - [Cards](#cards-)
   - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
   - [`Cards.byName (name: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-fuzzy--false-promisecard-)
-  - [`Cards.bySet (code: string, collectorId: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-string-promisecard-)
+  - [`Cards.bySet (code: string, collectorId: number, lang?: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-number-lang-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
+  - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
   - [`Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
   - [`Cards.all (): MagicEmitter<Card>;` ](#cardsall--magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
@@ -89,12 +90,13 @@ Scry.Cards.byName("Blood Scrivener").then(result => console.log(result.name)); /
 Scry.Cards.byName("Bliid Scrivener", true).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.bySet (code: string, collectorId: string): Promise<Card>;` [🡅](#table-of-contents)
+### `Cards.bySet (setCode: string, collectorNumber: number, lang?: string): Promise<Card>;` [🡅](#table-of-contents)
 
-Gets a card based on its set and collector id.
+Gets a card based on its set and collector id. You can use the optional `lang` argument to get cards in another language. See the [Scryfall Documentation for a list of all languages](https://scryfall.com/docs/api/languages).
 
 ```ts
-Scry.Cards.bySet("dgm", "22").then(result => console.log(result.name)); // Blood Scrivener
+Scry.Cards.bySet("dgm", 22).then(result => console.log(result.name + ", " + result.printed_name)); // Blood Scrivener, undefined
+Scry.Cards.bySet("dgm", 22, "ja").then(result => console.log(result.name + ", " + result.printed_name)); // Blood Scrivener, 血の公証人
 ```
 
 ### `Cards.byMultiverseId (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -113,6 +115,14 @@ Gets a card based on its MTGO (sometimes called "Cat") id.
 Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Scrivener
 ```
 
+### `Cards.byArenaId (id: number): Promise<Card>;` [🡅](#table-of-contents)
+
+Gets a card based on its MTG Arena id.
+
+```ts
+Scry.Cards.byArenaId(67330).then(result => console.log(result.name)); // Yargle, Glutton of Urborg
+```
+
 ### `Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
@@ -129,11 +139,11 @@ For information on how to provide extra options, see the [`/get/cards/search` pa
 
 This query returns a [`MagicEmitter`](#magicemittert-).
 
-### `Cards.all (): MagicEmitter<Card>;` [🡅](#table-of-contents)
+### `Cards.all (page = 0): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
-From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-all-cards): 
+From the [Scryfall documentation](https://scryfall.com/docs/api/cards/all): 
 
-Scryfall currently has 35,627 cards. This represents more than 150 MB of JSON data, beware your memory and storage limits if you are downloading the entire database.
+Scryfall currently has 191,325 cards, and this endpoint has 1094 pages. This represents more than 400 MB of JSON data: beware your memory and storage limits if you are downloading the entire database.
 
 Every card type is returned, including planar cards, schemes, Vanguard cards, tokens, emblems, and funny cards.
 

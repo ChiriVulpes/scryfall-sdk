@@ -32,7 +32,7 @@ describe("Scry", function () {
 		});
 
 		it("by set", async () => {
-			const card = await Scry.Cards.bySet("dgm", "22");
+			const card = await Scry.Cards.bySet("dgm", 22);
 			expect(card.name).eq("Blood Scrivener");
 		});
 
@@ -44,6 +44,16 @@ describe("Scry", function () {
 		it("by mtgo id", async () => {
 			const card = await Scry.Cards.byMtgoId(48338);
 			expect(card.name).eq("Blood Scrivener");
+		});
+
+		it("by arena id", async () => {
+			const card = await Scry.Cards.byArenaId(67330);
+			expect(card.name).eq("Yargle, Glutton of Urborg");
+		});
+
+		it("in lang", async () => {
+			const card = await Scry.Cards.bySet("dom", 1, "ja");
+			expect(card.printed_name).eq("ウルザの後継、カーン");
 		});
 
 		it("search", async () => {
@@ -99,6 +109,30 @@ describe("Scry", function () {
 					resolve();
 				}).on("error", reject);
 			});
+		}).timeout(15000);
+
+		it("should support pagination of all", async () => {
+			let firstPageCard: Scry.Card;
+			let secondPageCard: Scry.Card;
+
+			await Promise.all([
+				new Promise((resolve, reject) => {
+					const emitter = Scry.Cards.all();
+					emitter.on("data", card => (firstPageCard = card, emitter.cancel()))
+						.on("end", () => reject(new Error("Did not expect to reach this point")))
+						.on("cancel", resolve)
+						.on("error", reject);
+				}),
+				new Promise((resolve, reject) => {
+					const emitter = Scry.Cards.all(2).cancelAfterPage();
+					emitter.on("data", card => secondPageCard = card)
+						.on("end", () => reject(new Error("Did not expect to reach this point")))
+						.on("cancel", resolve)
+						.on("error", reject);
+				}),
+			]);
+
+			expect(firstPageCard.id).not.eq(secondPageCard.id);
 		}).timeout(15000);
 
 		it("random", async () => {

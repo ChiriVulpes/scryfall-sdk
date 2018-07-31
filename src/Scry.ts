@@ -18,7 +18,9 @@ function sleep (ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function queryApi<T> (apiPath: string | number | (string | number)[], query?: { [key: string]: any }) {
+type TOrArrayOfT<T> = T | T[];
+
+async function queryApi<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }): Promise<T> {
 	if (Array.isArray(apiPath)) {
 		apiPath = apiPath.join("/");
 	}
@@ -38,7 +40,7 @@ async function queryApi<T> (apiPath: string | number | (string | number)[], quer
 		json: true,
 		qs: query,
 		uri: `${endpoint}/${apiPath}`,
-	}).catch(() => { }) as any as Promise<T>;
+	}).catch(() => { });
 
 	return result || { data: [] } as any;
 }
@@ -52,6 +54,11 @@ export class MagicEmitter<T> extends EventEmitter {
 	private _cancelled = false;
 	public get cancelled () {
 		return this._cancelled;
+	}
+
+	private _willCancelAfterPage = false;
+	public get willCancelAfterPage () {
+		return this._willCancelAfterPage;
 	}
 
 	public constructor() {
@@ -84,6 +91,12 @@ export class MagicEmitter<T> extends EventEmitter {
 	public cancel () {
 		this._cancelled = true;
 		this.emit("cancel");
+		return this;
+	}
+
+	public cancelAfterPage () {
+		this._willCancelAfterPage = true;
+		return this;
 	}
 
 	public async waitForAll () {
@@ -125,8 +138,8 @@ export module Cards {
 		return queryApi<Card>(["cards", id]);
 	}
 
-	export async function bySet (setCode: string, collectorNumber: string) {
-		return queryApi<Card>(["cards", setCode, collectorNumber]);
+	export async function bySet (setCode: string, collectorNumber: number, lang?: string) {
+		return queryApi<Card>(["cards", setCode, collectorNumber, lang]);
 	}
 
 	export async function byMultiverseId (id: number) {
@@ -137,24 +150,30 @@ export module Cards {
 		return queryApi<Card>(["cards/mtgo", id]);
 	}
 
+	export async function byArenaId (id: number) {
+		return queryApi<Card>(["cards/arena", id]);
+	}
+
 	export async function random () {
 		return queryApi<Card>("cards/random");
 	}
 
-	async function getPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1) {
+	async function getPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
 		const results = await queryApi<List<T>>(apiPath, { ...query, page });
 		for (const card of results.data) {
+			if (emitter.cancelled) break;
 			emitter.emit("data", card);
 		}
 
 		if (results.has_more) {
 			if (!emitter.cancelled) {
-				getPage(emitter, apiPath, query, page + 1).catch(err => emitter.emit("error", err));
+				if (emitter.willCancelAfterPage) emitter.cancel();
+				else return getPage(emitter, apiPath, query, page + 1)
+					.catch(err => { emitter.emit("error", err); });
 			}
-
-		} else {
-			emitter.emit("end");
 		}
+
+		emitter.emit("end");
 	}
 
 	export function search (query: string, options?: SearchOptions) {
@@ -165,10 +184,14 @@ export module Cards {
 		return emitter;
 	}
 
-	export function all () {
+	/**
+	 * Returns a MagicEmitter of every card in the Scryfall database.
+	 * @param page The page to start on. Defaults to `1`, for first page. A page is 175 cards.
+	 */
+	export function all (page = 1) {
 		const emitter = new MagicEmitter<Card>();
 
-		getPage(emitter, "cards", {}).catch(err => emitter.emit("error", err));
+		getPage(emitter, "cards", {}, page).catch(err => emitter.emit("error", err));
 
 		return emitter;
 	}

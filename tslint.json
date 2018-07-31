@@ -1,5 +1,9 @@
 {
 	"extends": [
 		"../tslint.json/tslint.json"
-	]
+	],
+	"rules": {
+		"ban-comma-operator": false,
+		"curly": false
+	}
 }

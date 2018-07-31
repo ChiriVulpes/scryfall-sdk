@@ -4,9 +4,10 @@
 | --- | --- |
 | [`/cards/named?{fuzzy\|exact}=<card name>`](./README.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
 | [`/cards/:id`](./README.md#cardsbyid-id-string-promisecard-) | Card |
-| [`/cards/:set/:collector_number`](./README.md#cardsbyset-code-string-collectorid-string-promisecard-) | Card |
+| [`/cards/:set/:collector_number(/:lang)`](./README.md#cardsbyset-code-string-collectorid-number-lang-string-promisecard-) | Card |
 | [`/cards/multiverse/:multiverse_id`](./README.md#cardsbymultiverseid-id-number-promisecard-) | Card |
 | [`/cards/mtgo/:mtgo_id`](./README.md#cardsbymtgoid-id-number-promisecard-) | Card |
+| [`/cards/arena/:id`](./README.md#cardsbyarenaid-id-number-promisecard-) | Card |
 | [`/cards/random`](./README.md#cardsrandom-id-number-promisecard-) | Card |
 | [`/cards/search?q=<https://scryfall.com/docs/reference>`](./README.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
 | [`/cards?page=:page`](./README.md#cardsall--magicemittercard-) | List\<Card\> |

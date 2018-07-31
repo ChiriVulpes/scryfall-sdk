@@ -120,6 +120,7 @@ export interface Card {
 	// core fields
 	id: string;
 	oracle_id: string;
+	arena_id?: number;
 	multiverse_ids?: number[] | null;
 	mtgo_id?: number | null;
 	mtgo_foil_id?: number | null;
