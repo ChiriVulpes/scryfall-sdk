@@ -2,37 +2,37 @@
 
 | Query | Result |
 | --- | --- |
-| [`/cards/named?{fuzzy\|exact}=<card name>`](./README.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
-| [`/cards/:id`](./README.md#cardsbyid-id-string-promisecard-) | Card |
-| [`/cards/:set/:collector_number(/:lang)`](./README.md#cardsbyset-code-string-collectorid-number-lang-string-promisecard-) | Card |
-| [`/cards/multiverse/:multiverse_id`](./README.md#cardsbymultiverseid-id-number-promisecard-) | Card |
-| [`/cards/mtgo/:mtgo_id`](./README.md#cardsbymtgoid-id-number-promisecard-) | Card |
-| [`/cards/arena/:id`](./README.md#cardsbyarenaid-id-number-promisecard-) | Card |
-| [`/cards/random`](./README.md#cardsrandom-id-number-promisecard-) | Card |
-| [`/cards/search?q=<https://scryfall.com/docs/reference>`](./README.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
-| [`/cards?page=:page`](./README.md#cardsall-page--1-magicemittercard-) | List\<Card\> |
-| [`/cards/autocomplete?q=<autocomplete to a card name>`](./README.md#cardsautocompletename-name-string-promisestring-) | Catalog |
-| [`/sets`](./README.md#setsall--promiseset-) | List\<Set\> |
-| [`/sets/:code`](./README.md#setsbycode-code-number-promiseset-) | Set |
-| [`/cards/multiverse/:id/rulings`](./README.md#rulingsbymultiverseid-id-number-promiseruling-) | List\<Ruling\> |
-| [`/cards/mtgo/:id/rulings`](./README.md#rulingsbymtgoid-id-number-promiseruling-) | List\<Ruling\> |
-| [`/cards/:code/:number/rulings`](./README.md#rulingsbyset-code-string-collectorid-string-promiseruling-) | List\<Ruling\> |
-| [`/cards/:id/rulings`](./README.md#rulingsbyid-id-string-promiseruling-) | List\<Ruling\> |
-| [`/symbology`](./README.md#symbologyall--promisecardsymbol-) | List\<CardSymbol\> |
-| [`/symbology/parse-mana?cost=<shorthand mana cost>`](./README.md#symbologyparsemana-mana-string-promisemanacost-) | ManaCost |
-| [`/catalog/card-names`](./README.md#catalogcardnames--promisestring-) | Catalog |
-| [`/catalog/word-bank`](./README.md#catalogwordbank--promisestring-) | Catalog |
-| [`/catalog/creature-types`](./README.md#catalogcreaturetypes--promisestring-) | Catalog |
-| [`/catalog/planeswalker-types`](./README.md#catalogplaneswalkertypes--promisestring-) | Catalog |
-| [`/catalog/land-types`](./README.md#cataloglandtypes--promisestring-) | Catalog |
-| [`/catalog/artifact-types`](./README.md#catalogartifacttypes--promisestring-) | Catalog |
-| [`/catalog/enchantment-types`](./README.md#catalogenchantmenttypes--promisestring-) | Catalog |
-| [`/catalog/spell-types`](./README.md#catalogspelltypes--promisestring-) | Catalog |
-| [`/catalog/powers`](./README.md#catalogpowers--promisestring-) | Catalog |
-| [`/catalog/toughnesses`](./README.md#catalogtoughnesses--promisestring-) | Catalog |
-| [`/catalog/loyalties`](./README.md#catalogloyalties--promisestring-) | Catalog |
-| [`/catalog/watermarks`](./README.md#catalogwatermarks--promisestring-) | Catalog |
-| [`/homepage-links`](./README.md#cataloghomepagelinks--promisestring-) | List\<HomepageLink\> |
+| [`/cards/named?{fuzzy\|exact}=<card name>`](./DOCUMENTATION.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
+| [`/cards/:id`](./DOCUMENTATION.md#cardsbyid-id-string-promisecard-) | Card |
+| [`/cards/:set/:collector_number(/:lang)`](./DOCUMENTATION.md#cardsbyset-code-string-collectorid-number-lang-string-promisecard-) | Card |
+| [`/cards/multiverse/:multiverse_id`](./DOCUMENTATION.md#cardsbymultiverseid-id-number-promisecard-) | Card |
+| [`/cards/mtgo/:mtgo_id`](./DOCUMENTATION.md#cardsbymtgoid-id-number-promisecard-) | Card |
+| [`/cards/arena/:id`](./DOCUMENTATION.md#cardsbyarenaid-id-number-promisecard-) | Card |
+| [`/cards/random`](./DOCUMENTATION.md#cardsrandom-id-number-promisecard-) | Card |
+| [`/cards/search?q=<https://scryfall.com/docs/reference>`](./DOCUMENTATION.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
+| [`/cards?page=:page`](./DOCUMENTATION.md#cardsall-page--1-magicemittercard-) | List\<Card\> |
+| [`/cards/autocomplete?q=<autocomplete to a card name>`](./DOCUMENTATION.md#cardsautocompletename-name-string-promisestring-) | Catalog |
+| [`/sets`](./DOCUMENTATION.md#setsall--promiseset-) | List\<Set\> |
+| [`/sets/:code`](./DOCUMENTATION.md#setsbycode-code-number-promiseset-) | Set |
+| [`/cards/multiverse/:id/rulings`](./DOCUMENTATION.md#rulingsbymultiverseid-id-number-promiseruling-) | List\<Ruling\> |
+| [`/cards/mtgo/:id/rulings`](./DOCUMENTATION.md#rulingsbymtgoid-id-number-promiseruling-) | List\<Ruling\> |
+| [`/cards/:code/:number/rulings`](./DOCUMENTATION.md#rulingsbyset-code-string-collectorid-string-promiseruling-) | List\<Ruling\> |
+| [`/cards/:id/rulings`](./DOCUMENTATION.md#rulingsbyid-id-string-promiseruling-) | List\<Ruling\> |
+| [`/symbology`](./DOCUMENTATION.md#symbologyall--promisecardsymbol-) | List\<CardSymbol\> |
+| [`/symbology/parse-mana?cost=<shorthand mana cost>`](./DOCUMENTATION.md#symbologyparsemana-mana-string-promisemanacost-) | ManaCost |
+| [`/catalog/card-names`](./DOCUMENTATION.md#catalogcardnames--promisestring-) | Catalog |
+| [`/catalog/word-bank`](./DOCUMENTATION.md#catalogwordbank--promisestring-) | Catalog |
+| [`/catalog/creature-types`](./DOCUMENTATION.md#catalogcreaturetypes--promisestring-) | Catalog |
+| [`/catalog/planeswalker-types`](./DOCUMENTATION.md#catalogplaneswalkertypes--promisestring-) | Catalog |
+| [`/catalog/land-types`](./DOCUMENTATION.md#cataloglandtypes--promisestring-) | Catalog |
+| [`/catalog/artifact-types`](./DOCUMENTATION.md#catalogartifacttypes--promisestring-) | Catalog |
+| [`/catalog/enchantment-types`](./DOCUMENTATION.md#catalogenchantmenttypes--promisestring-) | Catalog |
+| [`/catalog/spell-types`](./DOCUMENTATION.md#catalogspelltypes--promisestring-) | Catalog |
+| [`/catalog/powers`](./DOCUMENTATION.md#catalogpowers--promisestring-) | Catalog |
+| [`/catalog/toughnesses`](./DOCUMENTATION.md#catalogtoughnesses--promisestring-) | Catalog |
+| [`/catalog/loyalties`](./DOCUMENTATION.md#catalogloyalties--promisestring-) | Catalog |
+| [`/catalog/watermarks`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/homepage-links`](./DOCUMENTATION.md#cataloghomepagelinks--promisestring-) | List\<HomepageLink\> |
 
 
 ## Todo:
