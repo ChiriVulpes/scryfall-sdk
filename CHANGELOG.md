@@ -3,7 +3,7 @@
 
 # v1.3.0 (July 31st, 2018)
 - Added an optional `page` parameter to `Cards.all()`, defaulting to `1`. To get only the one page, you can call `cancelAfterPage()` on the resulting `MagicEmitter`.
-- Added an optional `lang` parameter to [`Cards.bySet()`](./DOCUMENTATION.md#cardsbyset-code-string-collectorid-number-lang-string-promisecard-). See the [Scryfall Documentation for a list of valid languages](https://scryfall.com/docs/api/languages). 
+- Added an optional `lang` parameter to [`Cards.bySet()`](./DOCUMENTATION.md#cardsbyset-setcode-string-collectorid-number-lang-string-promisecard-). See the [Scryfall Documentation for a list of valid languages](https://scryfall.com/docs/api/languages). 
 - Added support for [`/cards/arena/:id`](./DOCUMENTATION.md#cardsbyarenaid-id-number-promisecard-)
 
 # v1.2.1 (June 14th, 2018)

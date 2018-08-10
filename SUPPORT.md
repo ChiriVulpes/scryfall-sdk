@@ -4,7 +4,7 @@
 | --- | --- |
 | [`/cards/named?{fuzzy\|exact}=<card name>`](./DOCUMENTATION.md#cardsbyname-name-string-fuzzy--false-promisecard-) | Card |
 | [`/cards/:id`](./DOCUMENTATION.md#cardsbyid-id-string-promisecard-) | Card |
-| [`/cards/:set/:collector_number(/:lang)`](./DOCUMENTATION.md#cardsbyset-code-string-collectorid-number-lang-string-promisecard-) | Card |
+| [`/cards/:set/:collector_number(/:lang)`](./DOCUMENTATION.md#cardsbyset-setcode-string-collectorid-number-lang-string-promisecard-) | Card |
 | [`/cards/multiverse/:multiverse_id`](./DOCUMENTATION.md#cardsbymultiverseid-id-number-promisecard-) | Card |
 | [`/cards/mtgo/:mtgo_id`](./DOCUMENTATION.md#cardsbymtgoid-id-number-promisecard-) | Card |
 | [`/cards/arena/:id`](./DOCUMENTATION.md#cardsbyarenaid-id-number-promisecard-) | Card |

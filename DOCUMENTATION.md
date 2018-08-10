@@ -3,7 +3,7 @@
 - [Cards](#cards-)
   - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
   - [`Cards.byName (name: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-fuzzy--false-promisecard-)
-  - [`Cards.bySet (code: string, collectorId: number, lang?: string): Promise<Card>;` ](#cardsbyset-code-string-collectorid-number-lang-string-promisecard-)
+  - [`Cards.bySet (code: string, collectorId: number, lang?: string): Promise<Card>;` ](#cardsbyset-setcode-string-collectorid-number-lang-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
