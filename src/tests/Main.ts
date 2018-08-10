@@ -17,43 +17,51 @@ describe("Scry", function () {
 		it("by id", async () => {
 			const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
 			expect(card.name).eq("Blood Scrivener");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		describe("by name,", () => {
 			it("exact", async () => {
 				const card = await Scry.Cards.byName("Blood Scrivener");
 				expect(card.name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
 			});
 
 			it("fuzzy", async () => {
 				const card = await Scry.Cards.byName("Bliid Scrivener", true);
 				expect(card.name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
 			});
 		});
 
 		it("by set", async () => {
 			const card = await Scry.Cards.bySet("dgm", 22);
 			expect(card.name).eq("Blood Scrivener");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by multiverse id", async () => {
 			const card = await Scry.Cards.byMultiverseId(369030);
 			expect(card.name).eq("Blood Scrivener");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by mtgo id", async () => {
 			const card = await Scry.Cards.byMtgoId(48338);
 			expect(card.name).eq("Blood Scrivener");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by arena id", async () => {
 			const card = await Scry.Cards.byArenaId(67330);
 			expect(card.name).eq("Yargle, Glutton of Urborg");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("in lang", async () => {
 			const card = await Scry.Cards.bySet("dom", 1, "ja");
 			expect(card.printed_name).eq("ウルザの後継、カーン");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("search", async () => {
@@ -67,14 +75,17 @@ describe("Scry", function () {
 
 				expect(card.type_line)
 					.satisfies((type: string) => type.startsWith("Legendary Planeswalker") || type.startsWith("Planeswalker"));
+				expect(Scry.error()).eq(undefined);
 			}
 
 			expect(results.length).gte(97);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("search waitForAll", async () => {
 			const matches = await Scry.Cards.search("!smoker").waitForAll();
 			expect(matches.length).eq(0);
+			expect(Scry.error()).not.eq(undefined);
 		});
 
 		it("search by set", done => {
@@ -82,12 +93,15 @@ describe("Scry", function () {
 			Scry.Cards.search("s:kld", { order: "cmc" }).on("data", card => {
 				if (results.length) {
 					expect(card.cmc).gte(results[results.length - 1].cmc);
+					expect(Scry.error()).eq(undefined);
 				}
 
 				results.push(card);
 				expect(card.set).satisfies((set: string) => set == "kld");
+				expect(Scry.error()).eq(undefined);
 			}).on("end", () => {
 				expect(results.length).eq(264);
+				expect(Scry.error()).eq(undefined);
 				done();
 			}).on("error", done);
 		});
@@ -106,6 +120,7 @@ describe("Scry", function () {
 					reject(new Error("Did not expect to reach this point"));
 				}).on("cancel", () => {
 					expect(needCount).eq(0);
+					expect(Scry.error()).eq(undefined);
 					resolve();
 				}).on("error", reject);
 			});
@@ -133,16 +148,25 @@ describe("Scry", function () {
 			]);
 
 			expect(firstPageCard.id).not.eq(secondPageCard.id);
+			expect(Scry.error()).eq(undefined);
 		}).timeout(15000);
 
 		it("random", async () => {
 			const card = await Scry.Cards.random();
 			expect(card).not.eq(undefined);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("autocomplete name", async () => {
 			const cardNames = await Scry.Cards.autoCompleteName("bloodsc");
 			expect(cardNames).include("Blood Scrivener");
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("should return an empty array on an invalid search", async () => {
+			const result = await Scry.Cards.search("cmc>cmc").cancelAfterPage().waitForAll();
+			expect(result.length).eq(0);
+			expect(Scry.error()).not.eq(undefined);
 		});
 	});
 
@@ -150,11 +174,13 @@ describe("Scry", function () {
 		it("by code", async () => {
 			const set = await Scry.Sets.byCode("hou");
 			expect(set.name).eq("Hour of Devastation");
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("all", async () => {
 			const sets = await Scry.Sets.all();
 			expect(sets.length).gte(394);
+			expect(Scry.error()).eq(undefined);
 		});
 	});
 
@@ -162,21 +188,25 @@ describe("Scry", function () {
 		it("by id", async () => {
 			const rulings = await Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
 			expect(rulings.length).eq(2);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by set", async () => {
 			const rulings = await Scry.Rulings.bySet("dgm", "22");
 			expect(rulings.length).eq(2);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by multiverse id", async () => {
 			const rulings = await Scry.Rulings.byMultiverseId(369030);
 			expect(rulings.length).eq(2);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by mtgo id", async () => {
 			const rulings = await Scry.Rulings.byMtgoId(48338);
 			expect(rulings.length).eq(2);
+			expect(Scry.error()).eq(undefined);
 		});
 	});
 
@@ -184,11 +214,13 @@ describe("Scry", function () {
 		it("all", async () => {
 			const symbology = await Scry.Symbology.all();
 			expect(symbology.length).gte(63);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("parse mana cost", async () => {
 			const manacost = await Scry.Symbology.parseMana("2ww");
 			expect(manacost.cost).eq("{2}{W}{W}");
+			expect(Scry.error()).eq(undefined);
 		});
 	});
 
@@ -196,66 +228,79 @@ describe("Scry", function () {
 		it("card names", async () => {
 			const result = await Scry.Catalog.cardNames();
 			expect(result.length).gte(18059);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("word bank", async () => {
 			const result = await Scry.Catalog.wordBank();
 			expect(result.length).gte(12892);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("creature types", async () => {
 			const result = await Scry.Catalog.creatureTypes();
 			expect(result.length).gte(242);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("planeswalker types", async () => {
 			const result = await Scry.Catalog.planeswalkerTypes();
 			expect(result.length).gte(42);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("land types", async () => {
 			const result = await Scry.Catalog.landTypes();
 			expect(result.length).gte(13);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("artifact types", async () => {
 			const result = await Scry.Catalog.artifactTypes();
 			expect(result.length).gte(6);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("enchantment types", async () => {
 			const result = await Scry.Catalog.enchantmentTypes();
 			expect(result.length).gte(5);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("spell types", async () => {
 			const result = await Scry.Catalog.spellTypes();
 			expect(result.length).gte(2);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("powers", async () => {
 			const result = await Scry.Catalog.powers();
 			expect(result.length).gte(33);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("toughnesses", async () => {
 			const result = await Scry.Catalog.toughnesses();
 			expect(result.length).gte(35);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("loyalties", async () => {
 			const result = await Scry.Catalog.loyalties();
 			expect(result.length).gte(9);
+			expect(Scry.error()).eq(undefined);
 		});
 
 		it("watermarks", async () => {
 			const result = await Scry.Catalog.watermarks();
 			expect(result.length).gte(50);
+			expect(Scry.error()).eq(undefined);
 		});
 	});
 
 	it("homepage links", async () => {
 		const result = await Scry.homepageLinks();
 		expect(result).satisfies(Array.isArray);
+		expect(Scry.error()).eq(undefined);
 	});
 });

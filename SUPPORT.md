@@ -10,7 +10,7 @@
 | [`/cards/arena/:id`](./README.md#cardsbyarenaid-id-number-promisecard-) | Card |
 | [`/cards/random`](./README.md#cardsrandom-id-number-promisecard-) | Card |
 | [`/cards/search?q=<https://scryfall.com/docs/reference>`](./README.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
-| [`/cards?page=:page`](./README.md#cardsall--magicemittercard-) | List\<Card\> |
+| [`/cards?page=:page`](./README.md#cardsall-page--1-magicemittercard-) | List\<Card\> |
 | [`/cards/autocomplete?q=<autocomplete to a card name>`](./README.md#cardsautocompletename-name-string-promisestring-) | Catalog |
 | [`/sets`](./README.md#setsall--promiseset-) | List\<Set\> |
 | [`/sets/:code`](./README.md#setsbycode-code-number-promiseset-) | Set |

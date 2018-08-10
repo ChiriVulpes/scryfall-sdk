@@ -324,3 +324,10 @@ export interface SearchOptions {
 	include_multilingual?: boolean;
 	page?: number;
 }
+
+export interface SearchError {
+	code: string;
+	status: 400;
+	warnings: string[];
+	details: string;
+}

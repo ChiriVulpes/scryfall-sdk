@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import * as request from "request-promise";
 
 export * from "./IScry";
-import { Card, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchOptions, Set } from "./IScry";
+import { Card, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchError, SearchOptions, Set } from "./IScry";
 
 
 // the path to the api
@@ -20,6 +20,15 @@ function sleep (ms: number) {
 
 type TOrArrayOfT<T> = T | T[];
 
+let lastError: SearchError | undefined;
+
+/**
+ * Returns the last error thrown while querying.
+ */
+export function error (): SearchError | undefined {
+	return lastError;
+}
+
 async function queryApi<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }): Promise<T> {
 	if (Array.isArray(apiPath)) {
 		apiPath = apiPath.join("/");
@@ -36,11 +45,17 @@ async function queryApi<T> (apiPath: TOrArrayOfT<string | number>, query?: { [ke
 		await sleep(timeUntilNextQuery);
 	}
 
+	let err: SearchError | undefined;
+
 	const result = await request({
 		json: true,
 		qs: query,
 		uri: `${endpoint}/${apiPath}`,
-	}).catch(() => { });
+	}).catch(({ response }) => {
+		err = response.body;
+	});
+
+	lastError = err;
 
 	return result || { data: [] } as any;
 }

@@ -21,7 +21,7 @@ See [support readme](./SUPPORT.md).
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
   - [`Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
-  - [`Cards.all (): MagicEmitter<Card>;` ](#cardsall--magicemittercard-)
+  - [`Cards.all (page = 1): MagicEmitter<Card>;` ](#cardsall-page--1-magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
 - [Sets](#sets-)
@@ -50,7 +50,8 @@ See [support readme](./SUPPORT.md).
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
-- [`MagicEmitter<T>`](#magicemittert-)
+  - [`MagicEmitter<T>`](#magicemittert-)
+  - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
 - [Contributing](#contributing-)
 - [MIT License](#mit-license-)
   
@@ -360,8 +361,7 @@ Scry.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
 
-
-## `MagicEmitter<T>` [🡅](#table-of-contents)
+### `MagicEmitter<T>` [🡅](#table-of-contents)
 
 ### `MagicEmitter.on(event: "data", listener: (data: T) => any): MagicEmitter;`
 
@@ -398,6 +398,13 @@ for await (const card of Scry.Cards.search("type:planeswalker").all()) {
     console.log(card.name);
 }
 ```
+
+
+### `error (): SearchError | undefined;` [🡅](#table-of-contents)
+
+Returns the error returned by the last API call, or undefined if there was no error. 
+
+Note: The "last error" is reset for every page in a multi-page call — this means that using `.waitForAll()` or similar may throw out errors from previous pages.
 
 
 
