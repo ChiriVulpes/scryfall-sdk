@@ -2,8 +2,8 @@
 - [Usage](#usage-)
 - [Cards](#cards-)
   - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
-  - [`Cards.byName (name: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-fuzzy--false-promisecard-)
-  - [`Cards.bySet (code: string, collectorId: number, lang?: string): Promise<Card>;` ](#cardsbyset-setcode-string-collectorid-number-lang-string-promisecard-)
+  - [`Cards.byName (name: string, set?: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-set-string-fuzzy--false-promisecard-)
+  - [`Cards.bySet (code: string, collectorId: number, lang?: string): Promise<Card>;`](#cardsbyset-setcode-string-collectorid-number-lang-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
@@ -61,13 +61,15 @@ Gets a single card from its ID.
 Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.name)); // Blood Scrivener
 ```
 
-### `Cards.byName (name: string, fuzzy = false): Promise<Card>;` [🡅](#table-of-contents)
+### `Cards.byName (name: string, set?: string, fuzzy = false): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its name. Supports fuzzy searching, by 1-2 replacements/translations.
 
 ```ts
 Scry.Cards.byName("Blood Scrivener").then(result => console.log(result.name)); // Blood Scrivener
 Scry.Cards.byName("Bliid Scrivener", true).then(result => console.log(result.name)); // Blood Scrivener
+Scry.Cards.byName("Loxodon Warhammer", "MRD").then(result => console.log(result.name, result.set)); // Loxodon Warhammer, mrd
+Scry.Cards.byName("Warhammer", "MRD", true).then(result => console.log(result.name, result.set)); // Loxodon Warhammer, mrd
 ```
 
 ### `Cards.bySet (setCode: string, collectorNumber: number, lang?: string): Promise<Card>;` [🡅](#table-of-contents)

@@ -1,3 +1,6 @@
+# v1.3.2 (September 16th, 2018)
+- Added support for filtering [`Cards.byName()`](./DOCUMENTATION.md#cardsbyname-name-string-set-string-fuzzy--false-promisecard-) by set. [#10](https://github.com/Yuudaari/scryfall-sdk/pull/10) Thanks [dantolini](https://github.com/dantolini)!
+
 # v1.3.1 (August 10th, 2018)
 - [Added `error()`, allowing you to access the error returned by the last API call.](./DOCUMENTATION.md#error--searcherror--undefined-)
 
