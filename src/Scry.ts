@@ -143,9 +143,10 @@ export class MagicEmitter<T> extends EventEmitter {
 }
 
 export module Cards {
-	export async function byName (name: string, fuzzy = false) {
+	export async function byName (name: string, fuzzy = false, set?: string) {
 		return queryApi<Card>("cards/named", {
 			[fuzzy ? "fuzzy" : "exact"]: name,
+			"set": set,
 		});
 	}
 

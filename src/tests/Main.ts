@@ -32,6 +32,12 @@ describe("Scry", function () {
 				expect(card.name).eq("Blood Scrivener");
 				expect(Scry.error()).eq(undefined);
 			});
+
+			it("set", async () => {
+				const card = await Scry.Cards.byName("Warhammer", true, "MRD");
+				expect(card.set).eq("mrd");
+				expect(Scry.error()).eq(undefined);
+			});
 		});
 
 		it("by set", async () => {
