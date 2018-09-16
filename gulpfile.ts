@@ -7,8 +7,9 @@ import * as merge from "merge2";
 
 task("build", series(clean, compile, test));
 
-task("watch", series("build", () => {
+task("watch", series("build", (cb) => {
 	watch("./src/**/*.ts", series("build"));
+	cb();
 }));
 
 async function clean () {

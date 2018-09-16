@@ -33,8 +33,16 @@ describe("Scry", function () {
 				expect(Scry.error()).eq(undefined);
 			});
 
-			it("set", async () => {
-				const card = await Scry.Cards.byName("Warhammer", true, "MRD");
+			it("with set filter", async () => {
+				const card = await Scry.Cards.byName("Loxodon Warhammer", "MRD");
+				expect(card.name).eq("Loxodon Warhammer");
+				expect(card.set).eq("mrd");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("fuzzy with set filter", async () => {
+				const card = await Scry.Cards.byName("Warhammer", "MRD", true);
+				expect(card.name).eq("Loxodon Warhammer");
 				expect(card.set).eq("mrd");
 				expect(Scry.error()).eq(undefined);
 			});

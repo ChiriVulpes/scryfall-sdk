@@ -143,10 +143,17 @@ export class MagicEmitter<T> extends EventEmitter {
 }
 
 export module Cards {
-	export async function byName (name: string, fuzzy = false, set?: string) {
+	export async function byName (name: string, fuzzy?: boolean): Promise<Card>;
+	export async function byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
+	export async function byName (name: string, set?: string | boolean, fuzzy: boolean = false) {
+		if (typeof set === "boolean") {
+			fuzzy = set;
+			set = undefined;
+		}
+
 		return queryApi<Card>("cards/named", {
 			[fuzzy ? "fuzzy" : "exact"]: name,
-			"set": set,
+			set
 		});
 	}
 
