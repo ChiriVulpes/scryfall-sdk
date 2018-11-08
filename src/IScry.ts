@@ -193,7 +193,7 @@ export interface RelatedUris {
 	tcgplayer_decks?: string;
 	edhrec?: string;
 	mtgtop8?: string;
-	[key: string]: string;
+	[key: string]: string | undefined;
 }
 
 export interface PurchaseUris {
@@ -205,7 +205,7 @@ export interface PurchaseUris {
 	card_kingdom?: string;
 	mtgo_traders?: string;
 	coolstuffinc?: string;
-	[key: string]: string;
+	[key: string]: string | undefined;
 }
 
 export enum SetType {

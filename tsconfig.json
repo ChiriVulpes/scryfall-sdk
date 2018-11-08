@@ -4,10 +4,12 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": true,
-		"noImplicitThis": true,
-		"noUnusedLocals": true,
 		"removeComments": true,
-		"declaration": true
+		"declaration": true,
+		"strict": true,
+        "strictPropertyInitialization": false,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false
 	}
 }

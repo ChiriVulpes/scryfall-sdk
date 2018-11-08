@@ -1,3 +1,6 @@
+# v1.3.3 (November 8th, 2018)
+- Fixed `RelatedUris` and `PurchaseUris` throwing errors in some configurations.
+
 # v1.3.2 (September 16th, 2018)
 - Added support for filtering [`Cards.byName()`](./DOCUMENTATION.md#cardsbyname-name-string-set-string-fuzzy--false-promisecard-) by set. [#10](https://github.com/Yuudaari/scryfall-sdk/pull/10) Thanks [dantolini](https://github.com/dantolini)!
 
