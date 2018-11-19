@@ -15,7 +15,7 @@ npm install scryfall-sdk
 ```
 
 
-## [`Documentatation`](./DOCUMENTATION.md)
+## [`Documentation`](./DOCUMENTATION.md)
 
 
 ## Contributing
