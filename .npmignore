@@ -5,6 +5,6 @@ out/tests/
 .gitattributes
 .gitignore
 .travis.yml
-gulpfile.js
+gulpfile.ts
 tsconfig.json
 tslint.json
