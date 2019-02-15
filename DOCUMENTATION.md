@@ -15,8 +15,8 @@
   - [`Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;`](#cardscollection-collection-cardidentifier-magicemittercard-)
 - [Sets](#sets-)
   - [`Sets.byCode (code: string): Promise<Set>;` ](#setsbycode-code-string-promiseset-)
-  - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-code-string-promiseset-)
-  - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-code-number-promiseset-)
+  - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-id-string-promiseset-)
+  - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-id-number-promiseset-)
   - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
 - [Rulings](#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promiseruling-)
@@ -304,6 +304,14 @@ Gets the rulings for a card based on its MTGO (sometimes called "Cat") id.
 
 ```ts
 Scry.Rulings.byMtgoId(48338).then(result => console.log(result.length)); // 2
+```
+
+### `Rulings.byArenaId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
+
+Gets the rulings for a card based on its Arena id.
+
+```ts
+Scry.Rulings.byArenaId(67204).then(result => console.log(result.length)); // 3
 ```
 
 

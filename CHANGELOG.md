@@ -1,10 +1,10 @@
 # v1.4.0 (February 14th, 2019)
 - Added [`Cards.collection(...identifiers: CardIdentifier[])`](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-)
-- Added `Cards.byTcgPlayerId(id: number)`
-- Added `Sets.byId(id: string)`
-- Added `Sets.byTcgPlayerId(id: number)`
-- Added `Rulings.byArenaId(id: number)`
-- Added `Catalog.artistNames()`
+- Added [`Cards.byTcgPlayerId(id: number)`](./DOCUMENTATION.md#cardsbytcgplayerid-id-number-promisecard-)
+- Added [`Sets.byId(id: string)`](./DOCUMENTATION.md#setsbyid-id-string-promiseset-)
+- Added [`Sets.byTcgPlayerId(id: number)`](./DOCUMENTATION.md#setsbytcgplayerid-id-number-promiseset-)
+- Added [`Rulings.byArenaId(id: number)`](./DOCUMENTATION.md#rulingsbyarenaid-id-number-promiseruling-)
+- Added [`Catalog.artistNames()`](./DOCUMENTATION.md#catalogartistnames--promisestring-)
 - Added `"done"` event to the `MagicEmitter`, which is fired when the emitter ends, errors, or is cancelled.
 - Fixed a potential security issue (low severity; Scryfall would have to intentionally have served corrupted data or an attacker would have to intercept the data from Scryfall).
 
