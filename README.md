@@ -5,7 +5,7 @@
 
 A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
 
-As of [August 10th, 2018](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue! See [support readme](./SUPPORT.md).
+As of [February 14th, 2019](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue! See [support readme](./SUPPORT.md).
 
 
 ## Installation
