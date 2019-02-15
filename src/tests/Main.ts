@@ -72,6 +72,12 @@ describe("Scry", function () {
 			expect(Scry.error()).eq(undefined);
 		});
 
+		it("by tcg player id", async () => {
+			const card = await Scry.Cards.byTcgPlayerId(1030);
+			expect(card.name).eq("Ankh of Mishra");
+			expect(Scry.error()).eq(undefined);
+		});
+
 		it("in lang", async () => {
 			const card = await Scry.Cards.bySet("dom", 1, "ja");
 			expect(card.printed_name).eq("ウルザの後継、カーン");
@@ -182,11 +188,101 @@ describe("Scry", function () {
 			expect(result.length).eq(0);
 			expect(Scry.error()).not.eq(undefined);
 		});
+
+		describe("Collection", () => {
+
+			it("by id", async () => {
+				const collection = [
+					Scry.CardIdentifier.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by multiverse id", async () => {
+				const collection = [
+					Scry.CardIdentifier.byMultiverseId(369030),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by mtgo id", async () => {
+				const collection = [
+					Scry.CardIdentifier.byMtgoId(48338),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by name", async () => {
+				const collection = [
+					Scry.CardIdentifier.byName("Blood Scrivener"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Blood Scrivener");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by name & set", async () => {
+				const collection = [
+					Scry.CardIdentifier.byName("Lightning Bolt", "prm"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Lightning Bolt");
+				expect(cards[0].set).eq("prm");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by set", async () => {
+				const collection = [
+					Scry.CardIdentifier.bySet("mrd", "150"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Chalice of the Void");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by multiverse id, 100 cards", async () => {
+				const collection = [];
+				for (let i = 1; i < 101; i++) {
+					collection.push(Scry.CardIdentifier.byMultiverseId(i));
+				}
+
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(100);
+				for (let i = 0; i < 100; i++) {
+					expect(cards[i].multiverse_ids).includes(i + 1);
+				}
+				expect(Scry.error()).eq(undefined);
+			});
+		});
 	});
 
 	describe("Sets", () => {
 		it("by code", async () => {
 			const set = await Scry.Sets.byCode("hou");
+			expect(set.name).eq("Hour of Devastation");
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("by id", async () => {
+			const set = await Scry.Sets.byId("65ff168b-bb94-47a5-a8f9-4ec6c213e768");
+			expect(set.name).eq("Hour of Devastation");
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("by tgc player id", async () => {
+			const set = await Scry.Sets.byTcgPlayerId(1934);
 			expect(set.name).eq("Hour of Devastation");
 			expect(Scry.error()).eq(undefined);
 		});
@@ -201,25 +297,31 @@ describe("Scry", function () {
 	describe("Rulings", () => {
 		it("by id", async () => {
 			const rulings = await Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
-			expect(rulings.length).eq(2);
+			expect(rulings.length).gte(2);
 			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by set", async () => {
 			const rulings = await Scry.Rulings.bySet("dgm", "22");
-			expect(rulings.length).eq(2);
+			expect(rulings.length).gte(2);
 			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by multiverse id", async () => {
 			const rulings = await Scry.Rulings.byMultiverseId(369030);
-			expect(rulings.length).eq(2);
+			expect(rulings.length).gte(2);
 			expect(Scry.error()).eq(undefined);
 		});
 
 		it("by mtgo id", async () => {
 			const rulings = await Scry.Rulings.byMtgoId(48338);
-			expect(rulings.length).eq(2);
+			expect(rulings.length).gte(2);
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("by arena id", async () => {
+			const rulings = await Scry.Rulings.byArenaId(67204);
+			expect(rulings.length).gte(3);
 			expect(Scry.error()).eq(undefined);
 		});
 	});
@@ -242,6 +344,12 @@ describe("Scry", function () {
 		it("card names", async () => {
 			const result = await Scry.Catalog.cardNames();
 			expect(result.length).gte(18059);
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("artist names", async () => {
+			const result = await Scry.Catalog.artistNames();
+			expect(result.length).gte(676);
 			expect(Scry.error()).eq(undefined);
 		});
 

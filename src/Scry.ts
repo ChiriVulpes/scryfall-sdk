@@ -1,8 +1,10 @@
 import { EventEmitter } from "events";
 import * as request from "request-promise";
 
+import {
+	Card, CardIdentifier, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchError, SearchOptions, Set,
+} from "./IScry";
 export * from "./IScry";
-import { Card, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchError, SearchOptions, Set } from "./IScry";
 
 
 // the path to the api
@@ -29,7 +31,12 @@ export function error (): SearchError | undefined {
 	return lastError;
 }
 
-async function queryApi<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }): Promise<T> {
+async function queryApi<T> (
+	apiPath: TOrArrayOfT<string | number>,
+	query?: { [key: string]: any },
+	post?: any,
+): Promise<T> {
+
 	if (Array.isArray(apiPath)) {
 		apiPath = apiPath.join("/");
 	}
@@ -48,7 +55,9 @@ async function queryApi<T> (apiPath: TOrArrayOfT<string | number>, query?: { [ke
 	let err: SearchError | undefined;
 
 	const result = await request({
+		body: post,
 		json: true,
+		method: post ? "POST" : "GET",
 		qs: query,
 		uri: `${endpoint}/${apiPath}`,
 	}).catch(({ response }) => {
@@ -76,7 +85,7 @@ export class MagicEmitter<T> extends EventEmitter {
 		return this._willCancelAfterPage;
 	}
 
-	public constructor() {
+	public constructor () {
 		super();
 		this.on("end", () => {
 			this._ended = true;
@@ -90,6 +99,7 @@ export class MagicEmitter<T> extends EventEmitter {
 	public on (event: "end", listener: () => any): this;
 	public on (event: "cancel", listener: () => any): this;
 	public on (event: "error", listener: (err: Error) => any): this;
+	public on (event: "done", listener: () => any): this;
 	public on (event: string, listener: (...args: any[]) => any) {
 		super.on(event, listener);
 		return this;
@@ -99,6 +109,7 @@ export class MagicEmitter<T> extends EventEmitter {
 	public emit (event: "end"): boolean;
 	public emit (event: "cancel"): boolean;
 	public emit (event: "error", error: Error): boolean;
+	public emit (event: "done"): boolean;
 	public emit (event: string, ...data: any[]) {
 		return super.emit(event, ...data);
 	}
@@ -153,7 +164,7 @@ export module Cards {
 
 		return queryApi<Card>("cards/named", {
 			[fuzzy ? "fuzzy" : "exact"]: name,
-			set
+			set,
 		});
 	}
 
@@ -177,6 +188,10 @@ export module Cards {
 		return queryApi<Card>(["cards/arena", id]);
 	}
 
+	export async function byTcgPlayerId (id: number) {
+		return queryApi<Card>(["cards/tcgplayer", id]);
+	}
+
 	export async function random () {
 		return queryApi<Card>("cards/random");
 	}
@@ -196,7 +211,8 @@ export module Cards {
 			}
 		}
 
-		emitter.emit("end");
+		if (!emitter.cancelled) emitter.emit("end");
+		emitter.emit("done");
 	}
 
 	export function search (query: string, options?: SearchOptions) {
@@ -222,6 +238,36 @@ export module Cards {
 	export async function autoCompleteName (name: string) {
 		return (await queryApi<ApiCatalog>("cards/autocomplete", { q: name })).data;
 	}
+
+	export function collection (...identifiers: CardIdentifier[]) {
+		const emitter = new MagicEmitter<Card>();
+
+		processCollection(emitter, identifiers);
+
+		return emitter;
+	}
+
+	async function processCollection (emitter: MagicEmitter<Card>, identifiers: CardIdentifier[]) {
+		for (let i = 0; i < identifiers.length; i += 75) {
+			if (emitter.cancelled) break;
+
+			// the api only supports a max collection size of 75, so we take the list of identifiers (any length)
+			// and split it into 75 card-max requests
+			const collectionSection = { identifiers: identifiers.slice(i, i + 75) };
+
+			const data = (await queryApi<List<Card>>("cards/collection", undefined, collectionSection)).data;
+
+			for (const card of data) {
+				emitter.emit("data", card);
+				if (emitter.cancelled) break;
+			}
+
+			if (emitter.willCancelAfterPage) emitter.cancel();
+		}
+
+		if (!emitter.cancelled) emitter.emit("end");
+		emitter.emit("done");
+	}
 }
 
 export module Sets {
@@ -231,6 +277,14 @@ export module Sets {
 
 	export async function byCode (code: string) {
 		return queryApi<Set>(["sets", code]);
+	}
+
+	export async function byId (id: string) {
+		return queryApi<Set>(["sets", id]);
+	}
+
+	export async function byTcgPlayerId (id: number) {
+		return queryApi<Set>(["sets/tcgplayer", id]);
 	}
 }
 
@@ -251,6 +305,10 @@ interface ApiCatalog {
 export module Catalog {
 	export async function cardNames () {
 		return (await queryApi<ApiCatalog>("catalog/card-names")).data;
+	}
+
+	export async function artistNames () {
+		return (await queryApi<ApiCatalog>("catalog/artist-names")).data;
 	}
 
 	export async function wordBank () {
@@ -308,8 +366,8 @@ export module Rulings {
 		return (await queryApi<List<Ruling>>(["cards", id, "rulings"])).data;
 	}
 
-	export async function bySet (setCode: string, collectorNumber: string) {
-		return (await queryApi<List<Ruling>>(["cards", setCode, collectorNumber, "rulings"])).data;
+	export async function bySet (setCode: string, collectorNumber: string | number) {
+		return (await queryApi<List<Ruling>>(["cards", setCode, `${collectorNumber}`, "rulings"])).data;
 	}
 
 	export async function byMultiverseId (id: number) {
@@ -318,5 +376,9 @@ export module Rulings {
 
 	export async function byMtgoId (id: number) {
 		return (await queryApi<List<Ruling>>(["cards/mtgo", id, "rulings"])).data;
+	}
+
+	export async function byArenaId (id: number) {
+		return (await queryApi<List<Ruling>>(["cards/arena", id, "rulings"])).data;
 	}
 }

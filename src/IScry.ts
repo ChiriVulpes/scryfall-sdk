@@ -214,11 +214,13 @@ export enum SetType {
 	masters,
 	masterpiece,
 	from_the_vault,
+	spellbook,
 	premium_deck,
 	duel_deck,
+	draft_innovation,
+	treasure_chest,
 	commander,
 	planechase,
-	conspiracy,
 	archenemy,
 	vanguard,
 	funny,
@@ -226,18 +228,22 @@ export enum SetType {
 	box,
 	promo,
 	token,
+	memorabilia,
 }
 
 export interface Set {
+	id: string;
 	code: string;
 	name: string;
-	released_at: string;
+	mtgo_code: string;
+	tcgplayer_id: number;
+	released_at?: string;
 	block_code?: string;
 	block?: string;
 	parent_set_code?: string;
 	card_count: number;
 	digital: boolean;
-	foil: boolean;
+	foil_only: boolean;
 	icon_svg_uri: string;
 	search_uri: string;
 	set_type: keyof typeof SetType;
@@ -330,4 +336,35 @@ export interface SearchError {
 	status: 400;
 	warnings: string[];
 	details: string;
+}
+
+export interface CardIdentifier {
+	id?: string;
+	mtgo_id?: number;
+	multiverse_id?: number;
+	name?: string;
+	set?: string;
+	collector_number?: string;
+}
+
+export module CardIdentifier {
+	export function byId (id: string): CardIdentifier {
+		return { id };
+	}
+
+	export function byMtgoId (id: number): CardIdentifier {
+		return { mtgo_id: id };
+	}
+
+	export function byMultiverseId (id: number): CardIdentifier {
+		return { multiverse_id: id };
+	}
+
+	export function byName (name: string, set?: string): CardIdentifier {
+		return { name, set };
+	}
+
+	export function bySet (set: string, collectorNumber: string | number): CardIdentifier {
+		return { collector_number: `${collectorNumber}`, set };
+	}
 }

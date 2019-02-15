@@ -4,6 +4,7 @@
 	],
 	"rules": {
 		"ban-comma-operator": false,
-		"curly": false
+		"curly": false,
+		"cyclomatic-complexity": [true, 7]
 	}
 }

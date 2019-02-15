@@ -7,23 +7,29 @@
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
+  - [`Cards.byTcgPlayerId (id: number): Promise<Card>;` ](#cardsbytcgplayerid-id-number-promisecard-)
   - [`Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions-magicemittercard-)
   - [`Cards.all (page = 1): MagicEmitter<Card>;` ](#cardsall-page--1-magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
+  - [`Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;`](#cardscollection-collection-cardidentifier-magicemittercard-)
 - [Sets](#sets-)
-  - [`Sets.byCode (code: number): Promise<Set>;` ](#setsbycode-code-number-promiseset-)
+  - [`Sets.byCode (code: string): Promise<Set>;` ](#setsbycode-code-string-promiseset-)
+  - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-code-string-promiseset-)
+  - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-code-number-promiseset-)
   - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
 - [Rulings](#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promiseruling-)
-  - [`Rulings.bySet (code: string, collectorId: string): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectorid-string-promiseruling-)
+  - [`Rulings.bySet (code: string, collectorId: string | number): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectorid-string-number-promiseruling-)
   - [`Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` ](#rulingsbymultiverseid-id-number-promiseruling-)
   - [`Rulings.byMtgoId (id: number): Promise<Ruling[]>;` ](#rulingsbymtgoid-id-number-promiseruling-)
+  - [`Rulings.byArenaId (id: number): Promise<Ruling[]>;` ](#rulingsbyarenaid-id-number-promiseruling-)
 - [Symbology](#symbology-)
   - [`Symbology.all (): Promise<CardSymbol[]>;`](#symbologyall--promisecardsymbol-)
   - [`Symbology.parseMana (mana: string): Promise<ManaCost>;` ](#symbologyparsemana-mana-string-promisemanacost-)
 - [Catalogs](#catalogs-)
   - [`Catalog.cardNames (): Promise<string[]>;` ](#catalogcardnames--promisestring-)
+  - [`Catalog.artistNames (): Promise<string[]>;` ](#catalogartistnames--promisestring-)
   - [`Catalog.wordBank (): Promise<string[]>;`](#catalogwordbank--promisestring-)
   - [`Catalog.creatureTypes (): Promise<string[]>;`  ](#catalogcreaturetypes--promisestring-)
   - [`Catalog.planeswalkerTypes (): Promise<string[]>;` ](#catalogplaneswalkertypes--promisestring-)
@@ -105,6 +111,14 @@ Gets a card based on its MTG Arena id.
 Scry.Cards.byArenaId(67330).then(result => console.log(result.name)); // Yargle, Glutton of Urborg
 ```
 
+### `Cards.byTcgPlayerId (id: number): Promise<Card>;` [🡅](#table-of-contents)
+
+Gets a card based on its TCG Player id.
+
+```ts
+Scry.Cards.byTcgPlayerId(1030).then(result => console.log(result.name)); // Ankh of Mishra
+```
+
 ### `Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
@@ -179,15 +193,73 @@ Scry.Cards.autoCompleteName("bloodsc").then((results) => {
 });
 ```
 
+### `Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;` [🡅](#table-of-contents)
+
+Takes a list of "card identifiers", which describe a card, and returns their actual card objects. 
+
+This method is useful for decks and even entire collections. Scryfall has a limit of 75 cards, but this API will split your request into multiple API calls, allowing requests of *as many cards as you want*.
+
+In order to assist with manual requests, this method comes with a new set of factories by the name `CardIdentifier`. These are:
+- `Scry.CardIdentifier.byId(id: string): CardIdentifier;`
+- `Scry.CardIdentifier.byMultiverseId(id: number): CardIdentifier;`
+- `Scry.CardIdentifier.byMtgoId(id: number): CardIdentifier;`
+- `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
+- `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
+- `Scry.CardIdentifier.bySet(set: string, collectorNumber: string | number): CardIdentifier;`
+
+Example:
+```ts
+const collection = [
+    Scry.CardIdentifier.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050"),
+    Scry.CardIdentifier.byMultiverseId(369030),
+    Scry.CardIdentifier.byMtgoId(48338),
+    Scry.CardIdentifier.byName("Blood Scrivener"),
+    Scry.CardIdentifier.byName("Lightning Bolt", "prm"),
+    Scry.CardIdentifier.bySet("mrd", "150"),
+];
+
+const cards = await Scry.Cards.collection(...collection).waitForAll();
+// every card identifier has been mapped to its real card object
+
+for (const card of cards) {
+    console.log(card.name);
+}
+// Blood Scrivener
+// Blood Scrivener
+// Blood Scrivener
+// Blood Scrivener
+// Lightning Bolt
+// Chalice of the Void
+```
+
+<sub>Excuse that most of these are the same card, I was lazy when writing these examples...</sub>
+
+
 
 ## Sets [🡅](#table-of-contents)
 
-### `Sets.byCode (code: number): Promise<Set>;` [🡅](#table-of-contents)
+### `Sets.byCode (code: string): Promise<Set>;` [🡅](#table-of-contents)
 
 Gets a set by its code.
 
 ```ts
 Scry.Sets.byCode("hou").then(set => console.log(set.name)); // Hour of Devastation
+```
+
+### `Sets.byId (id: string): Promise<Set>;` [🡅](#table-of-contents)
+
+Gets a set by its Scryfall ID.
+
+```ts
+Scry.Sets.byId("65ff168b-bb94-47a5-a8f9-4ec6c213e768").then(set => console.log(set.name)); // Hour of Devastation
+```
+
+### `Sets.byTcgPlayerId (id: number): Promise<Set>;` [🡅](#table-of-contents)
+
+Gets a set by its TCG Player ID, also known as the `groupId` on [TCGPlayer's API](https://docs.tcgplayer.com/docs).
+
+```ts
+Scry.Sets.byTcgPlayerId(1934).then(set => console.log(set.name)); // Hour of Devastation
 ```
 
 ### `Sets.all (): Promise<Set[]>;` [🡅](#table-of-contents)
@@ -210,7 +282,7 @@ Gets the rulings for a single card from its ID.
 Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.length)); // 2
 ```
 
-### `Rulings.bySet (code: string, collectorId: string): Promise<Ruling[]>;` [🡅](#table-of-contents)
+### `Rulings.bySet (code: string, collectorId: string | number): Promise<Ruling[]>;` [🡅](#table-of-contents)
 
 Gets the rulings for a card based on its set and collector id.
 
@@ -264,6 +336,12 @@ Scry.Symbology.parseMana("7wg").then(result => console.log(result.cost)); // {7}
 
 ```ts
 Scry.Catalog.cardNames().then(result => console.log(result.length)); // 18059
+```
+
+### `Catalog.artistNames (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.Catalog.artistNames().then(result => console.log(result.length)); // 676
 ```
 
 ### `Catalog.wordBank (): Promise<string[]>;` [🡅](#table-of-contents)
@@ -359,6 +437,10 @@ Adds a listener for when emitting data has been cancelled. This method returns t
 ### `MagicEmitter.on(event: "error", listener: (err: Error) => any): MagicEmitter;`
 
 Adds a listener for when the emitter errors. This method returns the emitter object.
+
+### `MagicEmitter.on(event: "done", listener: () => any): MagicEmitter;`
+
+Adds a listener for when the emitter is done: either after finishing, erroring, or being cancelled. This method returns the emitter object.
 
 ### `MagicEmitter.cancel(): void;`
 

@@ -1,3 +1,13 @@
+# v1.4.0 (February 14th, 2019)
+- Added [`Cards.collection(...identifiers: CardIdentifier[])`](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-)
+- Added `Cards.byTcgPlayerId(id: number)`
+- Added `Sets.byId(id: string)`
+- Added `Sets.byTcgPlayerId(id: number)`
+- Added `Rulings.byArenaId(id: number)`
+- Added `Catalog.artistNames()`
+- Added `"done"` event to the `MagicEmitter`, which is fired when the emitter ends, errors, or is cancelled.
+- Fixed a potential security issue (low severity; Scryfall would have to intentionally have served corrupted data or an attacker would have to intercept the data from Scryfall).
+
 # v1.3.3 (November 8th, 2018)
 - Fixed `RelatedUris` and `PurchaseUris` throwing errors in some configurations.
 
