@@ -51,4 +51,4 @@ Thanks again!
 
 ## MIT License
 
-[Copyright 2017-2018 Mackenzie McClane](./LICENSE)
+[Copyright 2017-2019 Mackenzie McClane](./LICENSE)
