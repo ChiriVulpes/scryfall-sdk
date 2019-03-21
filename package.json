@@ -2,8 +2,7 @@
 	"name": "scryfall-sdk",
 	"version": "1.4.0",
 	"dependencies": {
-		"request-promise": "4.2.3",
-		"request": "2.88.0"
+		"axios": "^0.18.0"
 	},
 	"main": "./out/Scry.js",
 	"types": "./out/Scry.d.ts",

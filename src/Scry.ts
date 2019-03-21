@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import * as request from "request-promise";
+import Axios from "axios";
 
 import {
 	Card, CardIdentifier, CardSymbol, HomepageLink, List, ManaCost, Ruling, SearchError, SearchOptions, Set,
@@ -54,19 +54,18 @@ async function queryApi<T> (
 
 	let err: SearchError | undefined;
 
-	const result = await request({
-		body: post,
-		json: true,
+	const result = await Axios.request({
+		data: post,
 		method: post ? "POST" : "GET",
-		qs: query,
-		uri: `${endpoint}/${apiPath}`,
+		params: query,
+		url: `${endpoint}/${apiPath}`
 	}).catch(({ response }) => {
-		err = response.body;
+		err = response.data;
 	});
 
 	lastError = err;
 
-	return result || { data: [] } as any;
+	return result ? result.data : ({ data: [] } as any);
 }
 
 export class MagicEmitter<T> extends EventEmitter {
