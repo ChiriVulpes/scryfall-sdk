@@ -1,49 +1,49 @@
 {
-  "name": "scryfall-sdk",
-  "version": "1.4.1",
-  "dependencies": {
-    "axios": "^0.18.0"
-  },
-  "main": "./out/Scry.js",
-  "types": "./out/Scry.d.ts",
-  "description": "A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.",
-  "keywords": [
-    "magic",
-    "magic-the-gathering",
-    "gathering",
-    "api",
-    "mtgsdk",
-    "typescript",
-    "card",
-    "cards",
-    "scryfall",
-    "scry"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yuudaari/scryfall-sdk"
-  },
-  "devDependencies": {
-    "gulp": "^4.0.0",
-    "gulp-plumber": "1.2.1",
-    "merge2": "1.2.3",
-    "typescript": "3.3.3",
-    "gulp-typescript": "5.0.0",
-    "mocha": "5.2.0",
-    "gulp-mocha": "6.0.0",
-    "chai": "4.2.0",
-    "chai-as-promised": "7.1.1",
-    "ts-node": "8.0.2",
-    "del": "3.0.0",
-    "@types/node": "11.9.4",
-    "@types/request-promise": "4.1.42",
-    "@types/gulp-mocha": "0.0.32",
-    "@types/chai": "4.1.7",
-    "@types/chai-as-promised": "7.1.0",
-    "@types/gulp": "4.0.5",
-    "@types/gulp-plumber": "0.0.32",
-    "@types/merge2": "1.1.4",
-    "@types/del": "3.0.1"
-  }
+	"name": "scryfall-sdk",
+	"version": "1.4.0",
+	"dependencies": {
+		"axios": "^0.18.0"
+	},
+	"main": "./out/Scry.js",
+	"types": "./out/Scry.d.ts",
+	"description": "A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.",
+	"keywords": [
+		"magic",
+		"magic-the-gathering",
+		"gathering",
+		"api",
+		"mtgsdk",
+		"typescript",
+		"card",
+		"cards",
+		"scryfall",
+		"scry"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yuudaari/scryfall-sdk"
+	},
+	"devDependencies": {
+		"gulp": "^4.0.0",
+		"gulp-plumber": "1.2.1",
+		"merge2": "1.2.3",
+		"typescript": "3.3.3",
+		"gulp-typescript": "5.0.0",
+		"mocha": "5.2.0",
+		"gulp-mocha": "6.0.0",
+		"chai": "4.2.0",
+		"chai-as-promised": "7.1.1",
+		"ts-node": "8.0.2",
+		"del": "3.0.0",
+		"@types/node": "11.9.4",
+		"@types/request-promise": "4.1.42",
+		"@types/gulp-mocha": "0.0.32",
+		"@types/chai": "4.1.7",
+		"@types/chai-as-promised": "7.1.0",
+		"@types/gulp": "4.0.5",
+		"@types/gulp-plumber": "0.0.32",
+		"@types/merge2": "1.1.4",
+		"@types/del": "3.0.1"
+	}
 }

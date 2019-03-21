@@ -54,15 +54,12 @@ async function queryApi<T> (
 
 	let err: SearchError | undefined;
 
-	const path = Array.isArray(apiPath)
-		? (apiPath = apiPath.join("/"))
-		: apiPath.toString();
-	const url = `${endpoint}/${path}`;
-
-	const result = await (post
-		? Axios.post(url, post, { params: query })
-		: Axios.get(url, { params: query })
-	).catch(({ response }) => {
+	const result = await Axios.request({
+		data: post,
+		method: post ? "POST" : "GET",
+		params: query,
+		url: `${endpoint}/${apiPath}`
+	}).catch(({ response }) => {
 		err = response.data;
 	});
 
