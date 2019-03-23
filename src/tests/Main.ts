@@ -444,7 +444,9 @@ describe("Scry", function () {
 			Scry.setRetry(3, 1000);
 			await Scry.Cards.byMultiverseId("bananas" as any);
 			expect(Scry.error()).not.eq(undefined);
-			expect(Date.now() - then).gt(3000);
+			expect(Date.now() - then).lt(1000);
 		});
+
+		// todo figure out tests for the "can retry" stuff that doesn't rely on enabling 404/400 errors
 	});
 });

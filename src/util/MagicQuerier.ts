@@ -9,7 +9,7 @@ const rateLimit = 100;
 
 let lastQuery = 0;
 
-function sleep (ms: number) {
+function sleep (ms = 0) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -37,16 +37,15 @@ export interface SearchError {
 
 export interface RetryStrategy {
 	attempts: number;
-	timeout: number;
+	timeout?: number;
+	// tslint:disable-next-line space-before-function-paren typescript autoformats this to remove the space
+	canRetry?(error: SearchError): boolean;
 }
 
 export default class MagicQuerier {
 	public static lastQuery = 0;
 	public static lastError: SearchError | undefined;
-	public static retry: RetryStrategy = {
-		attempts: 1,
-		timeout: 0,
-	};
+	public static retry: RetryStrategy = { attempts: 1 };
 
 	protected async query<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }, post?: any): Promise<T> {
 
@@ -58,7 +57,7 @@ export default class MagicQuerier {
 		let result: AxiosResponse | undefined;
 		for (let i = 0; i < MagicQuerier.retry.attempts; i++) {
 			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post));
-			if (result) break;
+			if (result || !this.canRetry(lastError)) break;
 			await sleep(MagicQuerier.retry.timeout);
 		}
 
@@ -110,5 +109,10 @@ export default class MagicQuerier {
 		}) || undefined;
 
 		return { result, lastError };
+	}
+
+	private canRetry (error: SearchError) {
+		if (error.code == "not_found" || error.code == "bad_request") return false;
+		return !MagicQuerier.retry.canRetry || MagicQuerier.retry.canRetry(error);
 	}
 }

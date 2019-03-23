@@ -1,4 +1,4 @@
-import MagicQuerier from "./util/MagicQuerier";
+import MagicQuerier, { SearchError } from "./util/MagicQuerier";
 
 export * from "./IScry";
 export * from "./api/Cards";
@@ -27,6 +27,6 @@ export function error () {
  * @param attempts The number of attempts that can be made (includes the initial call).
  * @param timeout The time that the query should wait before attempting the request again.
  */
-export function setRetry (attempts: number, timeout?: number) {
-	MagicQuerier.retry = { attempts, timeout: timeout || 0 };
+export function setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean) {
+	MagicQuerier.retry = { attempts, timeout, canRetry };
 }
