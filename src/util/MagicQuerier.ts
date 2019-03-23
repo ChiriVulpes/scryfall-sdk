@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 import MagicEmitter from "./MagicEmitter";
 
 // the path to the api
@@ -28,47 +28,41 @@ export interface ApiCatalog {
 }
 
 export interface SearchError {
+	object: "error";
 	code: string;
-	status: 400;
-	warnings: string[];
+	status: number;
 	details: string;
+	warnings?: string[];
+}
+
+export interface RetryStrategy {
+	attempts: number;
+	timeout: number;
 }
 
 export default class MagicQuerier {
 	public static lastQuery = 0;
 	public static lastError: SearchError | undefined;
+	public static retry: RetryStrategy = {
+		attempts: 1,
+		timeout: 0,
+	};
 
-	protected async query<T> (
-		apiPath: TOrArrayOfT<string | number>,
-		query?: { [key: string]: any },
-		post?: any,
-	): Promise<T> {
-
-		const now = Date.now();
-		const timeSinceLastQuery = now - lastQuery;
-		if (timeSinceLastQuery >= rateLimit) {
-			lastQuery = now;
-
-		} else {
-			const timeUntilNextQuery = rateLimit - timeSinceLastQuery;
-			lastQuery += timeUntilNextQuery;
-			await sleep(timeUntilNextQuery);
-		}
+	protected async query<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }, post?: any): Promise<T> {
 
 		if (Array.isArray(apiPath)) {
 			apiPath = apiPath.join("/");
 		}
 
-		MagicQuerier.lastError = undefined;
+		let lastError: SearchError | undefined;
+		let result: AxiosResponse | undefined;
+		for (let i = 0; i < MagicQuerier.retry.attempts; i++) {
+			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post));
+			if (result) break;
+			await sleep(MagicQuerier.retry.timeout);
+		}
 
-		const result = await Axios.request({
-			data: post,
-			method: post ? "POST" : "GET",
-			params: query,
-			url: `${endpoint}/${apiPath}`,
-		}).catch(({ response }: { response: { data: any } }) => {
-			MagicQuerier.lastError = response.data;
-		});
+		MagicQuerier.lastError = lastError;
 
 		return result ? result.data : ({ data: [] } as any);
 	}
@@ -90,5 +84,31 @@ export default class MagicQuerier {
 
 		if (!emitter.cancelled) emitter.emit("end");
 		emitter.emit("done");
+	}
+
+	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any) {
+		const now = Date.now();
+		const timeSinceLastQuery = now - lastQuery;
+		if (timeSinceLastQuery >= rateLimit) {
+			lastQuery = now;
+
+		} else {
+			const timeUntilNextQuery = rateLimit - timeSinceLastQuery;
+			lastQuery += timeUntilNextQuery;
+			await sleep(timeUntilNextQuery);
+		}
+
+		let lastError: SearchError | undefined;
+
+		const result = await Axios.request({
+			data: post,
+			method: post ? "POST" : "GET",
+			params: query,
+			url: `${endpoint}/${apiPath}`,
+		}).catch(({ response }: { response: { data: any } }) => {
+			lastError = response.data;
+		}) || undefined;
+
+		return { result, lastError };
 	}
 }

@@ -21,3 +21,12 @@ export { default as Symbology } from "./api/Symbology";
 export function error () {
 	return MagicQuerier.lastError;
 }
+
+/**
+ * Sets the API calls to retry if they fail, for any reason.
+ * @param attempts The number of attempts that can be made (includes the initial call).
+ * @param timeout The time that the query should wait before attempting the request again.
+ */
+export function setRetry (attempts: number, timeout?: number) {
+	MagicQuerier.retry = { attempts, timeout: timeout || 0 };
+}

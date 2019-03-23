@@ -425,4 +425,26 @@ describe("Scry", function () {
 		expect(result).satisfies(Array.isArray);
 		expect(Scry.error()).eq(undefined);
 	});
+
+	describe("on errors", () => {
+		it("should return the error", async () => {
+			await Scry.Cards.byMultiverseId("bananas" as any);
+			expect(Scry.error()).not.eq(undefined);
+		});
+
+		it("should overwrite the previous error", async () => {
+			await Scry.Cards.byMultiverseId("bananas" as any);
+			expect(Scry.error()).not.eq(undefined);
+			await Scry.Cards.byMtgoId(48338);
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("should retry", async () => {
+			const then = Date.now();
+			Scry.setRetry(3, 1000);
+			await Scry.Cards.byMultiverseId("bananas" as any);
+			expect(Scry.error()).not.eq(undefined);
+			expect(Date.now() - then).gt(3000);
+		});
+	});
 });
