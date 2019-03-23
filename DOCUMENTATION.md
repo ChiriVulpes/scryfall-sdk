@@ -43,8 +43,9 @@
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
-  - [`MagicEmitter<T>`](#magicemittert-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
+  - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry--error-searcherror-boolean-void-)
+  - [`MagicEmitter<T>`](#magicemittert-)
   
 
 
@@ -428,6 +429,31 @@ Scry.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
 
+### `error (): SearchError | undefined;` [🡅](#table-of-contents)
+
+Returns the error returned by the last API call, or undefined if there was no error. 
+
+Note: The "last error" is reset for every page in a multi-page call — this means that using `.waitForAll()` or similar may throw out errors from previous pages.
+
+
+### `setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;` [🡅](#table-of-contents)
+
+Sets the retry attempts & timeout for future API calls. 
+
+If a call errors because of a 404 or 400 (not found/bad request), then it will not retry.
+
+Example usage:
+```ts
+// allow 3 attempts for each query, with a timeout of 1000 ms (1 sec) between each
+Scry.setRetry(3, 1000); 
+// some api requests here
+
+// allow 3 attempts, a timeout of 1000 ms, and only retry if the error code is "some_code"
+Scry.setRetry(3, 1000, error => error.code == "some_code"); 
+// some api requests here
+```
+
+
 ### `MagicEmitter<T>` [🡅](#table-of-contents)
 
 ### `MagicEmitter.on(event: "data", listener: (data: T) => any): MagicEmitter;`
@@ -469,10 +495,3 @@ for await (const card of Scry.Cards.search("type:planeswalker").all()) {
     console.log(card.name);
 }
 ```
-
-
-### `error (): SearchError | undefined;` [🡅](#table-of-contents)
-
-Returns the error returned by the last API call, or undefined if there was no error. 
-
-Note: The "last error" is reset for every page in a multi-page call — this means that using `.waitForAll()` or similar may throw out errors from previous pages.

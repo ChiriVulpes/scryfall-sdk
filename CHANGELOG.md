@@ -1,3 +1,8 @@
+# v1.5.0 (March 23rd, 2019)
+- Scryfall SDK now uses [Axios](https://www.npmjs.com/package/axios) instead of [Request Promise](https://www.npmjs.com/package/request-promise)
+- Added [`Scry.setRetry`](./DOCUMENTATION.md#setretry-attempts-number-timeout-number-canretry--error-searcherror-boolean-void-)
+- There was heavy refactoring in this update. You may notice some d.ts changes, most of that is updating interfaces as per the [Scryfall documentation](https://scryfall.com/docs/api) and not exporting some interfaces/enums.
+
 # v1.4.0 (February 14th, 2019)
 - Added [`Cards.collection(...identifiers: CardIdentifier[])`](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-)
 - Added [`Cards.byTcgPlayerId(id: number)`](./DOCUMENTATION.md#cardsbytcgplayerid-id-number-promisecard-)
