@@ -421,7 +421,7 @@ describe("Scry", function () {
 	});
 
 	it("homepage links", async () => {
-		const result = await Scry.homepageLinks();
+		const result = await Scry.Misc.homepageLinks();
 		expect(result).satisfies(Array.isArray);
 		expect(Scry.error()).eq(undefined);
 	});

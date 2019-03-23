@@ -1,10 +1,23 @@
 {
-	"extends": [
-		"../tslint.json/tslint.json"
-	],
+	"extends": "tslint:recommended",
 	"rules": {
+		"indent": [true, "tabs"],
+		"space-before-function-paren": [true, "always"],
+		"arrow-parens": false,
+		"triple-equals": false,
+		"no-consecutive-blank-lines": false,
+		"interface-name": [true, "never-prefix"],
+		"new-parens": false,
+		"variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+		"unified-signatures": false,
+		"no-conditional-assignment": false,
+		"no-namespace": false,
+		"no-internal-module": false,
+		"array-type": [true, "array"],
 		"ban-comma-operator": false,
 		"curly": false,
-		"cyclomatic-complexity": [true, 7]
-	}
+		"cyclomatic-complexity": [true, 7],
+		"max-line-length": false
+	},
+	"defaultSeverity": "warn"
 }
