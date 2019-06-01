@@ -1,3 +1,6 @@
+# v1.5.1 (May 31st, 2019)
+- Updated axios to fix a security issue.
+
 # v1.5.0 (March 23rd, 2019)
 - Thanks to a contribution from [somkun](https://github.com/somkun), the Scryfall SDK now uses [Axios](https://www.npmjs.com/package/axios) instead of [Request Promise](https://www.npmjs.com/package/request-promise)
 - Added [`Scry.setRetry`](./DOCUMENTATION.md#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
