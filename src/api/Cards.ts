@@ -46,7 +46,7 @@ enum Rarity {
 	mythic,
 }
 
-enum FrameEffect {
+enum FrameEffects {
 	legendary,
 	miracle,
 	nyxtouched,
@@ -182,6 +182,12 @@ export interface CardFace {
 	watermark?: string | null;
 }
 
+export interface Preview {
+	previewed_at?: string;
+	source_uri?: string;
+	source?: string;
+}
+
 export interface Card {
 	object: "card";
 
@@ -229,7 +235,7 @@ export interface Card {
 	collector_number: string;
 	digital: boolean;
 	flavor_text?: string | null;
-	frame_effect: keyof typeof FrameEffect;
+	frame_effects?: (keyof typeof FrameEffects)[];
 	frame: 1993 | 1997 | 2003 | 2015 | "Future";
 	full_art: boolean;
 	games: (keyof typeof Game)[];
@@ -253,6 +259,7 @@ export interface Card {
 	set: string;
 	story_spotlight: boolean;
 	watermark?: string | null;
+	preview?: Preview | null;
 }
 
 export interface CardIdentifier {
