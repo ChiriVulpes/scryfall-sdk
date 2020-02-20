@@ -46,7 +46,7 @@ enum Rarity {
 	mythic,
 }
 
-enum FrameEffects {
+enum FrameEffect {
 	legendary,
 	miracle,
 	nyxtouched,
@@ -235,7 +235,7 @@ export interface Card {
 	collector_number: string;
 	digital: boolean;
 	flavor_text?: string | null;
-	frame_effects?: (keyof typeof FrameEffects)[];
+	frame_effects?: (keyof typeof FrameEffect)[];
 	frame: 1993 | 1997 | 2003 | 2015 | "Future";
 	full_art: boolean;
 	games: (keyof typeof Game)[];

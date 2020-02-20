@@ -266,33 +266,6 @@ describe("Scry", function () {
 				expect(Scry.error()).eq(undefined);
 			});
 		});
-
-		describe("property", () => {
-
-			it("frame_effect", async () => {
-				const card = await Scry.Cards.byId("94355044-e67a-4605-a37b-e879784fc9e5");
-				expect(card.frame_effects[0]).eq("legendary");
-				expect(Scry.error()).eq(undefined);
-			});
-			
-			it("preview.previewed_at", async () => {
-				const card = await Scry.Cards.byId("12a035fe-8847-4678-84f7-01bac77ae011");
-				expect(card.preview.previewed_at).eq("2020-01-28");
-				expect(Scry.error()).eq(undefined);
-			});
-
-			it("preview.source_uri", async () => {
-				const card = await Scry.Cards.byId("12a035fe-8847-4678-84f7-01bac77ae011");
-				expect(card.preview.source_uri).eq("https://www.cracked.com/article_27000_a-first-look-at-unsanctioned-magic-gatherings-new-set.html");
-				expect(Scry.error()).eq(undefined);
-			});			
-			
-			it("preview.source", async () => {
-				const card = await Scry.Cards.byId("12a035fe-8847-4678-84f7-01bac77ae011");
-				expect(card.preview.source).eq("Cracked");
-				expect(Scry.error()).eq(undefined);
-			});
-		});
 	});
 
 	describe("Sets", () => {
