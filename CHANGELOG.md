@@ -1,7 +1,7 @@
 # v1.6.0 (March 2nd, 2020)
 - Updated all data interfaces to those described in [Scryfall's Docs](https://scryfall.com/docs/api).
   - Including [two updates](https://github.com/Yuudaari/scryfall-sdk/pull/24) by [kasorin](https://github.com/kasorin). Thanks!
-- Added support for [getting `CardIdentifier`s by their oracle and illustration IDs]((./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-)).
+- Added support for [getting `CardIdentifier`s by their oracle and illustration IDs](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-).
 - Normalised all "null or missing" properties to actually be `null` or missing.
 
 # v1.5.1 (May 31st, 2019)
