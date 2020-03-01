@@ -315,6 +315,8 @@ export interface CardIdentifier {
 	id?: string;
 	mtgo_id?: number;
 	multiverse_id?: number;
+	oracle_id?: string;
+	illustration_id?: string;
 	name?: string;
 	set?: string;
 	collector_number?: string;
@@ -331,6 +333,14 @@ export module CardIdentifier {
 
 	export function byMultiverseId (id: number): CardIdentifier {
 		return { multiverse_id: id };
+	}
+
+	export function byOracleId (id: string): CardIdentifier {
+		return { oracle_id: id };
+	}
+
+	export function byIllustrationId (id: string): CardIdentifier {
+		return { illustration_id: id };
 	}
 
 	export function byName (name: string, set?: string): CardIdentifier {
