@@ -1,4 +1,4 @@
-import del from "del";
+import * as del from "del";
 import { dest, series, src, task, watch } from "gulp";
 import * as mocha from "gulp-mocha";
 import * as plumber from "gulp-plumber";

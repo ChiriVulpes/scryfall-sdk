@@ -2,7 +2,7 @@
 	"name": "scryfall-sdk",
 	"version": "1.5.1",
 	"dependencies": {
-		"axios": "^0.19.0"
+		"axios": "^0.19.2"
 	},
 	"main": "./out/Scry.js",
 	"types": "./out/Scry.d.ts",
@@ -27,23 +27,23 @@
 	"devDependencies": {
 		"gulp": "^4.0.2",
 		"gulp-plumber": "1.2.1",
-		"merge2": "1.2.3",
-		"typescript": "3.3.4000",
+		"merge2": "1.3.0",
+		"typescript": "3.8.3",
 		"gulp-typescript": "5.0.1",
-		"mocha": "6.1.4",
-		"gulp-mocha": "6.0.0",
+		"mocha": "7.1.0",
+		"gulp-mocha": "7.0.2",
 		"chai": "4.2.0",
 		"chai-as-promised": "7.1.1",
-		"ts-node": "8.0.3",
-		"del": "4.0.0",
-		"@types/node": "11.11.6",
-		"@types/request-promise": "4.1.42",
+		"ts-node": "8.6.2",
+		"del": "5.1.0",
+		"@types/node": "13.7.7",
+		"@types/request-promise": "4.1.45",
 		"@types/gulp-mocha": "0.0.32",
-		"@types/chai": "4.1.7",
-		"@types/chai-as-promised": "7.1.0",
+		"@types/chai": "4.2.9",
+		"@types/chai-as-promised": "7.1.2",
 		"@types/gulp": "4.0.6",
 		"@types/gulp-plumber": "0.0.32",
-		"@types/merge2": "1.1.4",
+		"@types/merge2": "1.3.0",
 		"@types/del": "4.0.0"
 	}
 }

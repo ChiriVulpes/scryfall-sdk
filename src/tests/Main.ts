@@ -193,31 +193,51 @@ describe("Scry", function () {
 
 			it("by id", async () => {
 				const collection = [
-					Scry.CardIdentifier.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050"),
+					Scry.CardIdentifier.byId("94c70f23-0ca9-425e-a53a-6c09921c0075"),
 				];
 				const cards = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
-				expect(cards[0].name).eq("Blood Scrivener");
+				expect(cards[0].name).eq("Crush Dissent");
 				expect(Scry.error()).eq(undefined);
 			});
 
 			it("by multiverse id", async () => {
 				const collection = [
-					Scry.CardIdentifier.byMultiverseId(369030),
+					Scry.CardIdentifier.byMultiverseId(462293),
 				];
 				const cards = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
-				expect(cards[0].name).eq("Blood Scrivener");
+				expect(cards[0].name).eq("Contentious Plan");
 				expect(Scry.error()).eq(undefined);
 			});
 
 			it("by mtgo id", async () => {
 				const collection = [
-					Scry.CardIdentifier.byMtgoId(48338),
+					Scry.CardIdentifier.byMtgoId(71692),
 				];
 				const cards = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
-				expect(cards[0].name).eq("Blood Scrivener");
+				expect(cards[0].name).eq("Bond of Insight");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by oracle id", async () => {
+				const collection = [
+					Scry.CardIdentifier.byOracleId("394c6de5-7957-4a0b-a6b9-ee0c707cd022"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Forgotten Cave");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by illustration id", async () => {
+				const collection = [
+					Scry.CardIdentifier.byIllustrationId("99f43949-049e-41e2-bf4c-e22e11790012"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("GO TO JAIL");
 				expect(Scry.error()).eq(undefined);
 			});
 
