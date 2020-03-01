@@ -7,7 +7,7 @@ export interface HomepageLink {
 	priority: number;
 	text: string;
 	uri: string;
-	badge: string;
+	badge?: string | null;
 }
 
 export default new class Misc extends MagicQuerier {

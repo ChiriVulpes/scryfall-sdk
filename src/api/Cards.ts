@@ -36,6 +36,7 @@ export interface SearchOptions {
 	dir?: keyof typeof SortDirection;
 	include_extras?: boolean;
 	include_multilingual?: boolean;
+	include_variations?: boolean;
 	page?: number;
 }
 
@@ -54,10 +55,14 @@ enum FrameEffect {
 	devoid,
 	tombstone,
 	colorshifted,
+	inverted,
 	sunmoondfc,
 	compasslanddfc,
 	originpwdfc,
 	mooneldrazidfc,
+	moonreversemoondfc,
+	showcase,
+	extendedart,
 }
 
 enum Game {
@@ -89,6 +94,7 @@ enum Layout {
 	meld,
 	leveler,
 	saga,
+	adventure,
 	planar,
 	scheme,
 	vanguard,
@@ -97,21 +103,24 @@ enum Layout {
 	emblem,
 	augment,
 	host,
+	art_series,
+	double_sided,
 }
 
 enum Format {
 	standard,
 	future,
-	frontier,
+	historic,
+	pioneer,
 	modern,
 	legacy,
 	pauper,
 	vintage,
 	penny,
 	commander,
-	"1v1",
-	duel,
 	brawl,
+	duel,
+	oldschool,
 }
 
 export type Legalities = {
@@ -128,35 +137,41 @@ export interface ImageUris {
 }
 
 export interface Prices {
-	usd: string | null;
-	usd_foil: string | null;
-	eur: string | null;
-	tix: string | null;
+	usd?: string | null;
+	usd_foil?: string | null;
+	eur?: string | null;
+	tix?: string | null;
 }
 
 export interface PurchaseUris {
-	amazon?: string;
-	ebay?: string;
-	tcgplayer?: string;
-	magiccardmarket?: string;
-	cardhoarder?: string;
-	card_kingdom?: string;
-	mtgo_traders?: string;
-	coolstuffinc?: string;
-	[key: string]: string | undefined;
+	tcgplayer?: string | null;
+	cardmarket?: string | null;
+	cardhoarder?: string | null;
+	[key: string]: string | null;
 }
 
 export interface RelatedUris {
-	gatherer?: string;
-	tcgplayer_decks?: string;
-	edhrec?: string;
-	mtgtop8?: string;
-	[key: string]: string | undefined;
+	gatherer?: string | null;
+	tcgplayer_decks?: string | null;
+	edhrec?: string | null;
+	mtgtop8?: string | null;
+	[key: string]: string | null;
 }
 
-export interface CardPart {
+enum RelatedCardComponent {
+	token,
+	meld_part,
+	meld_result,
+	combo_piece,
+}
+
+export interface RelatedCard {
+	object: "related_card";
+
 	id: string;
+	component: keyof typeof RelatedCardComponent;
 	name: string;
+	type_line: string;
 	uri: string;
 }
 
@@ -183,16 +198,44 @@ export interface CardFace {
 }
 
 export interface Preview {
-	previewed_at?: string;
-	source_uri?: string;
-	source?: string;
+	previewed_at?: string | null;
+	source_uri?: string | null;
+	source?: string | null;
+}
+
+enum PromoType {
+	tourney,
+	prerelease,
+	datestamped,
+	planeswalkerdeck,
+	buyabox,
+	judgegift,
+	event,
+	convention,
+	starterdeck,
+	instore,
+	setpromo,
+	fnm,
+	openhouse,
+	league,
+	draftweekend,
+	gameday,
+	release,
+	intropack,
+	giftbox,
+	duels,
+	wizardsplaynetwork,
+	premiereshop,
+	playerrewards,
+	gateway,
+	arenaleague
 }
 
 export interface Card {
 	object: "card";
 
 	// core fields
-	arena_id?: number;
+	arena_id?: number | null;
 	id: string;
 	lang: string;
 	mtgo_id?: number | null;
@@ -206,10 +249,10 @@ export interface Card {
 	uri: string;
 
 	// gameplay fields
-	all_parts?: CardPart[] | null;
+	all_parts?: RelatedCard[] | null;
 	card_faces?: CardFace[] | null;
 	cmc: number;
-	colors: Color[];
+	colors?: Color[] | null;
 	color_identity: Color[];
 	color_indicator?: Color[] | null;
 	edhrec_rank?: number | null;
@@ -219,7 +262,7 @@ export interface Card {
 	legalities: Legalities;
 	life_modifier?: string | null;
 	loyalty?: string | null;
-	mana_cost?: string;
+	mana_cost?: string | null;
 	name: string;
 	nonfoil: boolean;
 	oracle_text?: string | null;
@@ -227,15 +270,17 @@ export interface Card {
 	power?: string | null;
 	reserved: boolean;
 	toughness?: string | null;
-	type_line?: string | null;
+	type_line: string;
 
 	// print fields
 	artist?: string | null;
+	booster: boolean;
 	border_color: keyof typeof Border;
+	card_back_id: string;
 	collector_number: string;
 	digital: boolean;
 	flavor_text?: string | null;
-	frame_effects?: (keyof typeof FrameEffect)[];
+	frame_effects?: (keyof typeof FrameEffect)[] | null;
 	frame: 1993 | 1997 | 2003 | 2015 | "Future";
 	full_art: boolean;
 	games: (keyof typeof Game)[];
@@ -247,6 +292,7 @@ export interface Card {
 	printed_text?: string | null;
 	printed_type_line?: string | null;
 	promo: boolean;
+	promo_types?: (keyof typeof PromoType)[] | null;
 	purchase_uris: PurchaseUris;
 	rarity: keyof typeof Rarity;
 	related_uris: RelatedUris;
@@ -258,6 +304,9 @@ export interface Card {
 	set_uri: string;
 	set: string;
 	story_spotlight: boolean;
+	textless: boolean;
+	variation: boolean;
+	variation_of?: string | null;
 	watermark?: string | null;
 	preview?: Preview | null;
 }

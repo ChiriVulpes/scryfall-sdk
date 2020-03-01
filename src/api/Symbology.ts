@@ -3,14 +3,15 @@ import MagicQuerier, { List } from "../util/MagicQuerier";
 
 export interface CardSymbol {
 	symbol: string;
-	loose_variant: string;
+	loose_variant?: string | null;
 	english: string;
-	transposable: string;
+	transposable: boolean;
 	represents_mana: boolean;
-	converted_mana_cost: number;
+	converted_mana_cost?: number | null;
 	colors: Color[];
 	appears_in_mana_costs: boolean;
 	funny: boolean;
+	gatherer_alternates?: string[] | null;
 }
 
 export interface ManaCost {
