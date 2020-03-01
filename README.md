@@ -3,9 +3,9 @@
 [![GitHub issues](https://img.shields.io/github/issues/Yuudaari/scryfall-sdk.svg?style=flat-square)](https://github.com/Yuudaari/scryfall-sdk)
 [![Travis](https://img.shields.io/travis/Yuudaari/scryfall-sdk.svg?style=flat-square)](https://travis-ci.org/Yuudaari/scryfall-sdk)
 
-A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.
+A Node.js SDK for [Scryfall](https://scryfall.com/docs/api) written in Typescript.
 
-As of [February 14th, 2019](./CHANGELOG.md), all features of https://scryfall.com/docs/api-methods are supported. If you see something in the Scryfall documentation that isn't supported, make an issue! See [support readme](./SUPPORT.md).
+As of [March 2nd, 2020](./CHANGELOG.md), all features described in the [Scryfall documentation](https://scryfall.com/docs/api) are supported. If you see something that isn't supported, make an issue! See [support readme](./SUPPORT.md).
 
 
 ## Installation
@@ -23,7 +23,6 @@ npm install scryfall-sdk
 Thanks for wanting to help out! Here's the setup you'll have to do:
 ```bat
 git clone https://github.com/Yuudaari/scryfall-sdk
-git clone https://github.com/Yuudaari/tslint.json
 cd scryfall-sdk
 npm install
 ```
@@ -51,4 +50,4 @@ Thanks again!
 
 ## MIT License
 
-[Copyright 2017-2019 Mackenzie McClane](./LICENSE)
+[Copyright 2017-2020 Mackenzie McClane](./LICENSE)

@@ -170,7 +170,7 @@ Scry.Cards.random().then(result => console.log(result.name));
 
 ### `Cards.autoCompleteName (name: string): Promise<string[]>;` [🡅](#table-of-contents)
 
-From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-autocomplete):
+From the [Scryfall documentation](https://scryfall.com/docs/api/cards/autocomplete):
 
 Returns [an array] containing up to 25 full card names that could be autocompletions of the given string parameter q.
 
@@ -204,6 +204,8 @@ In order to assist with manual requests, this method comes with a new set of fac
 - `Scry.CardIdentifier.byId(id: string): CardIdentifier;`
 - `Scry.CardIdentifier.byMultiverseId(id: number): CardIdentifier;`
 - `Scry.CardIdentifier.byMtgoId(id: number): CardIdentifier;`
+- `Scry.CardIdentifier.byOracleId(id: string): CardIdentifier;`
+- `Scry.CardIdentifier.byIllustrationId(id: string): CardIdentifier;`
 - `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
 - `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
 - `Scry.CardIdentifier.bySet(set: string, collectorNumber: string | number): CardIdentifier;`
@@ -211,9 +213,11 @@ In order to assist with manual requests, this method comes with a new set of fac
 Example:
 ```ts
 const collection = [
-    Scry.CardIdentifier.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050"),
-    Scry.CardIdentifier.byMultiverseId(369030),
-    Scry.CardIdentifier.byMtgoId(48338),
+    Scry.CardIdentifier.byId("94c70f23-0ca9-425e-a53a-6c09921c0075"),
+    Scry.CardIdentifier.byMultiverseId(462293),
+    Scry.CardIdentifier.byMtgoId(71692),
+    Scry.CardIdentifier.byOracleId("394c6de5-7957-4a0b-a6b9-ee0c707cd022"),
+    Scry.CardIdentifier.byIllustrationId("99f43949-049e-41e2-bf4c-e22e11790012"),
     Scry.CardIdentifier.byName("Blood Scrivener"),
     Scry.CardIdentifier.byName("Lightning Bolt", "prm"),
     Scry.CardIdentifier.bySet("mrd", "150"),
@@ -225,15 +229,15 @@ const cards = await Scry.Cards.collection(...collection).waitForAll();
 for (const card of cards) {
     console.log(card.name);
 }
-// Blood Scrivener
-// Blood Scrivener
-// Blood Scrivener
+// Crush Dissent
+// Contentious Plan
+// Bond of Insight
+// Forgotten Cave
+// GO TO JAIL
 // Blood Scrivener
 // Lightning Bolt
 // Chalice of the Void
 ```
-
-<sub>Excuse that most of these are the same card, I was lazy when writing these examples...</sub>
 
 
 
@@ -320,7 +324,7 @@ Scry.Rulings.byArenaId(67204).then(result => console.log(result.length)); // 3
 
 ### `Symbology.all (): Promise<CardSymbol[]>;` [🡅](#table-of-contents)
 
-Gets all [card symbols](https://scryfall.com/docs/api-overview#type-card-symbol).
+Gets all [card symbols](https://scryfall.com/docs/api/card-symbols).
 
 ```ts
 Scry.Symbology.all().then(result => console.log(result.length)); // 63
@@ -328,7 +332,7 @@ Scry.Symbology.all().then(result => console.log(result.length)); // 63
 
 ### `Symbology.parseMana (mana: string): Promise<ManaCost>;` [🡅](#table-of-contents)
 
-From the [Scryfall documentation](https://scryfall.com/docs/api-methods#method-parse-mana): 
+From the [Scryfall documentation](https://scryfall.com/docs/api/card-symbols/parse-mana): 
 
 Parses the given mana cost parameter and returns Scryfall’s interpretation.
 

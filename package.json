@@ -6,7 +6,7 @@
 	},
 	"main": "./out/Scry.js",
 	"types": "./out/Scry.d.ts",
-	"description": "A Node.js SDK for https://scryfall.com/docs/api-overview written in Typescript.",
+	"description": "A Node.js SDK for https://scryfall.com/docs/api written in Typescript.",
 	"keywords": [
 		"magic",
 		"magic-the-gathering",
