@@ -43,7 +43,7 @@
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
-  - [`bulkData (): Promise<string[]>;`](#bulkdata--promisestring-)
+  - [`bulkData (): Promise<BulkData[]>;`](#bulkdata--promisebulkdata-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T>`](#magicemittert-)
