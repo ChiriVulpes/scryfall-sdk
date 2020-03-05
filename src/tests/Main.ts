@@ -440,11 +440,21 @@ describe("Scry", function () {
 		});
 	});
 
-	it("homepage links", async () => {
-		const result = await Scry.Misc.homepageLinks();
-		expect(result).satisfies(Array.isArray);
-		expect(Scry.error()).eq(undefined);
-	});
+  describe("Misc", () => {
+    it("bulk data", async () => {
+      const result = await Scry.Misc.bulkData();
+
+      expect(result).satisfies(Array.isArray);
+      expect(result.length).eq(5);
+      expect(Scry.error()).eq(undefined);
+    });
+
+    it("homepage links", async () => {
+      const result = await Scry.Misc.homepageLinks();
+      expect(result).satisfies(Array.isArray);
+      expect(Scry.error()).eq(undefined);
+    });
+  })
 
 	describe("on errors", () => {
 		it("should return the error", async () => {

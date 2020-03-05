@@ -43,10 +43,11 @@
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
+  - [`bulkData (): Promise<string[]>;`](#bulkdata--promisestring-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T>`](#magicemittert-)
-  
+
 
 
 ## Usage [🡅](#table-of-contents)
@@ -126,7 +127,7 @@ Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/ref
 
 ```ts
 Scry.Cards.search("type:planeswalker").on("data", card => {
-	console.log(card.name); 
+	console.log(card.name);
 }).on("end", () => {
 	console.log("done");
 });
@@ -138,7 +139,7 @@ This query returns a [`MagicEmitter`](#magicemittert-).
 
 ### `Cards.all (page = 1): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
-From the [Scryfall documentation](https://scryfall.com/docs/api/cards/all): 
+From the [Scryfall documentation](https://scryfall.com/docs/api/cards/all):
 
 Scryfall currently has 191,325 cards, and this endpoint has 1094 pages. This represents more than 400 MB of JSON data: beware your memory and storage limits if you are downloading the entire database.
 
@@ -146,7 +147,7 @@ Every card type is returned, including planar cards, schemes, Vanguard cards, to
 
 ```ts
 Scry.Cards.all().on("data", card => {
-	console.log(card.name); 
+	console.log(card.name);
 }).on("end", () => {
 	console.log("done");
 });
@@ -196,7 +197,7 @@ Scry.Cards.autoCompleteName("bloodsc").then((results) => {
 
 ### `Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
-Takes a list of "card identifiers", which describe a card, and returns their actual card objects. 
+Takes a list of "card identifiers", which describe a card, and returns their actual card objects.
 
 This method is useful for decks and even entire collections. Scryfall has a limit of 75 cards, but this API will split your request into multiple API calls, allowing requests of *as many cards as you want*.
 
@@ -332,7 +333,7 @@ Scry.Symbology.all().then(result => console.log(result.length)); // 63
 
 ### `Symbology.parseMana (mana: string): Promise<ManaCost>;` [🡅](#table-of-contents)
 
-From the [Scryfall documentation](https://scryfall.com/docs/api/card-symbols/parse-mana): 
+From the [Scryfall documentation](https://scryfall.com/docs/api/card-symbols/parse-mana):
 
 Parses the given mana cost parameter and returns Scryfall’s interpretation.
 
@@ -432,28 +433,34 @@ Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
 Scry.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
+### `bulkData (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+Scry.bulkData().then(result => console.log(result.length)); // 5
+```
+
 
 ### `error (): SearchError | undefined;` [🡅](#table-of-contents)
 
-Returns the error returned by the last API call, or undefined if there was no error. 
+Returns the error returned by the last API call, or undefined if there was no error.
 
 Note: The "last error" is reset for every page in a multi-page call — this means that using `.waitForAll()` or similar may throw out errors from previous pages.
 
 
 ### `setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;` [🡅](#table-of-contents)
 
-Sets the retry attempts & timeout for future API calls. 
+Sets the retry attempts & timeout for future API calls.
 
 If a call errors because of a 404 or 400 (not found/bad request), then it will not retry.
 
 Example usage:
 ```ts
 // allow 3 attempts for each query, with a timeout of 1000 ms (1 sec) between each
-Scry.setRetry(3, 1000); 
+Scry.setRetry(3, 1000);
 // some api requests here
 
 // allow 3 attempts, a timeout of 1000 ms, and only retry if the error code is "some_code"
-Scry.setRetry(3, 1000, error => error.code == "some_code"); 
+Scry.setRetry(3, 1000, error => error.code == "some_code");
 // some api requests here
 ```
 
@@ -492,7 +499,7 @@ Returns a promise for an Array of T, fulfilled after the end event is emitted.
 
 Returns an async iterator that will yield each T when it receives it.
 
-Example usage: 
+Example usage:
 
 ```ts
 for await (const card of Scry.Cards.search("type:planeswalker").all()) {
