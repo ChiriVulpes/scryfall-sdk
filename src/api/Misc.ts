@@ -30,7 +30,7 @@ export default new class Misc extends MagicQuerier {
 		return (await this.query<List<HomepageLink>>("homepage-links")).data;
 	}
 
-  public async bulkData () {
+	public async bulkData () {
 		return (await this.query<List<BulkData>>("bulk-data")).data;
 	}
 };
