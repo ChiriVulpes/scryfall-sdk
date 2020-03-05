@@ -433,7 +433,7 @@ Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
 Scry.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
-### `bulkData (): Promise<string[]>;` [🡅](#table-of-contents)
+### `bulkData (): Promise<BulkData[]>;` [🡅](#table-of-contents)
 
 ```ts
 Scry.bulkData().then(result => console.log(result.length)); // 5
