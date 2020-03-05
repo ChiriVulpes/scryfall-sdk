@@ -11,16 +11,18 @@ export interface HomepageLink {
 }
 
 export interface BulkData {
+	object: "bulk_data";
+
 	id: string;
 	type: string;
-  name: string;
-  description: string;
-  permalink_uri: string;
-  created_at: string;
-  updated_at: string;
-  compressed_size: number;
-  content_type: string;
-  content_encoding: string;
+	name: string;
+	description: string;
+	permalink_uri: string;
+	created_at: string;
+	updated_at: string;
+	compressed_size: number;
+	content_type: string;
+	content_encoding: string;
 }
 
 export default new class Misc extends MagicQuerier {
