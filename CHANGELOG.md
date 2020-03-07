@@ -1,3 +1,6 @@
+# v1.6.1 (March 7th, 2020)
+- Thanks to a [contribution](https://github.com/Yuudaari/scryfall-sdk/pull/26) from [codetheweb](https://github.com/codetheweb), added [support](./DOCUMENTATION.md#bulkdata--promisebulkdata-) for the [`bulk-data` endpoint](https://scryfall.com/docs/api/bulk-data).
+
 # v1.6.0 (March 2nd, 2020)
 - Updated all data interfaces to those described in [Scryfall's Docs](https://scryfall.com/docs/api).
   - Including [two updates](https://github.com/Yuudaari/scryfall-sdk/pull/24) by [kasorin](https://github.com/kasorin). Thanks!
