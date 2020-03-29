@@ -32,6 +32,6 @@ function compile () {
 
 function test () {
 	return src("out/tests/Main.js", { read: false })
-		.pipe(mocha({ reporter: "min" }))
+		.pipe(mocha({ reporter: "even-more-min" }))
 		.on("error", () => process.exitCode = 1);
 }

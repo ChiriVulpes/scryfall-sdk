@@ -1,3 +1,6 @@
+# v1.6.2 (March 29th, 2020)
+- Added some missing properties to the Card object.
+
 # v1.6.1 (March 7th, 2020)
 - Thanks to a [contribution](https://github.com/Yuudaari/scryfall-sdk/pull/26) from [codetheweb](https://github.com/codetheweb), added [support](./DOCUMENTATION.md#bulkdata--promisebulkdata-) for the [`bulk-data` endpoint](https://scryfall.com/docs/api/bulk-data).
 
