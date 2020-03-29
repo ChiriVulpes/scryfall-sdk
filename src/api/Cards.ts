@@ -274,6 +274,7 @@ export interface Card {
 
 	// print fields
 	artist?: string | null;
+	artist_ids?: string[] | null;
 	booster: boolean;
 	border_color: keyof typeof Border;
 	card_back_id: string;
@@ -281,7 +282,7 @@ export interface Card {
 	digital: boolean;
 	flavor_text?: string | null;
 	frame_effects?: (keyof typeof FrameEffect)[] | null;
-	frame: 1993 | 1997 | 2003 | 2015 | "Future";
+	frame: "1993" | "1997" | "2003" | "2015" | "Future";
 	full_art: boolean;
 	games: (keyof typeof Game)[];
 	highres_image: boolean;
@@ -301,6 +302,7 @@ export interface Card {
 	scryfall_set_uri: string;
 	set_name: string;
 	set_search_uri: string;
+	set_type: string;
 	set_uri: string;
 	set: string;
 	story_spotlight: boolean;
