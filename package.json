@@ -1,6 +1,6 @@
 {
 	"name": "scryfall-sdk",
-	"version": "1.6.2",
+	"version": "1.6.3",
 	"dependencies": {
 		"axios": "^0.19.2"
 	},
