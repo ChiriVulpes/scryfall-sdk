@@ -1,6 +1,7 @@
 import { Color } from "../IScry";
 import MagicEmitter from "../util/MagicEmitter";
 import MagicQuerier, { ApiCatalog, List } from "../util/MagicQuerier";
+import { Set } from "./Sets";
 
 enum UniqueStrategy {
 	cards,
@@ -302,7 +303,7 @@ export interface Card {
 	scryfall_set_uri: string;
 	set_name: string;
 	set_search_uri: string;
-	set_type: string;
+	set_type: Set["set_type"];
 	set_uri: string;
 	set: string;
 	story_spotlight: boolean;
