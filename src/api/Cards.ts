@@ -425,14 +425,14 @@ export default new class Cards extends MagicQuerier {
 	}
 
 	public collection (...identifiers: CardIdentifier[]) {
-		const emitter = new MagicEmitter<Card>();
+		const emitter = new MagicEmitter<Card, CardIdentifier>();
 
 		this.processCollection(emitter, identifiers);
 
 		return emitter;
 	}
 
-	private async processCollection (emitter: MagicEmitter<Card>, identifiers: CardIdentifier[]) {
+	private async processCollection (emitter: MagicEmitter<Card, CardIdentifier>, identifiers: CardIdentifier[]) {
 		for (let i = 0; i < identifiers.length; i += 75) {
 			if (emitter.cancelled) break;
 
@@ -440,17 +440,20 @@ export default new class Cards extends MagicQuerier {
 			// and split it into 75 card-max requests
 			const collectionSection = { identifiers: identifiers.slice(i, i + 75) };
 
-			const data = (await this.query<List<Card>>("cards/collection", undefined, collectionSection)).data;
+			const { data, not_found } = await this.query<List<Card, CardIdentifier>>("cards/collection", undefined, collectionSection);
 
-			for (const card of data) {
-				emitter.emit("data", card);
-				if (emitter.cancelled) break;
-			}
+			emitter.emitAll("not_found", ...not_found);
 
-			if (emitter.willCancelAfterPage) emitter.cancel();
+			if (!emitter.cancelled)
+				emitter.emitAll("data", ...data);
+
+			if (emitter.willCancelAfterPage)
+				emitter.cancel();
 		}
 
-		if (!emitter.cancelled) emitter.emit("end");
+		if (!emitter.cancelled)
+			emitter.emit("end");
+
 		emitter.emit("done");
 	}
 };

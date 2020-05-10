@@ -46,7 +46,7 @@
   - [`bulkData (): Promise<BulkData[]>;`](#bulkdata--promisebulkdata-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
-  - [`MagicEmitter<T>`](#magicemittert-)
+  - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
 
 
 
@@ -465,11 +465,15 @@ Scry.setRetry(3, 1000, error => error.code == "some_code");
 ```
 
 
-### `MagicEmitter<T>` [🡅](#table-of-contents)
+### `MagicEmitter<T, NOT_FOUND>` [🡅](#table-of-contents)
 
 ### `MagicEmitter.on(event: "data", listener: (data: T) => any): MagicEmitter;`
 
 Adds a listener for when data has been received. This method returns the emitter object.
+
+### `MagicEmitter.on(event: "not_found", listener: (notFound: NOT_FOUND) => any): MagicEmitter;`
+
+Adds a listener for when the API returned that it was unable to find something. This method returns the emitter object.
 
 ### `MagicEmitter.on(event: "end", listener: () => any): MagicEmitter;`
 
@@ -489,13 +493,13 @@ Adds a listener for when the emitter is done: either after finishing, erroring, 
 
 ### `MagicEmitter.cancel(): void;`
 
-Cancels emitting data. Only emits the "cancel" event, not the "end" event.
+Cancels emitting data. Only emits the `"cancel"` event, not the `"end"` event.
 
-### `MagicEmitter.waitForAll(): Promise<T[]>;`
+### `MagicEmitter.waitForAll(): Promise<T[] & { not_found: NOT_FOUND[] }>;`
 
-Returns a promise for an Array of T, fulfilled after the end event is emitted.
+Returns a promise for an array of `T`, fulfilled after the end event is emitted. If the API returns that it was unable to find anything, it's returned in a `not_found` array property on the array of `T`.
 
-### `MagicEmitter.all(): AsyncIterableIterator<T>;`
+### `MagicEmitter.all(): AsyncGenerator<T, void, unknown>;`
 
 Returns an async iterator that will yield each T when it receives it.
 
@@ -504,5 +508,17 @@ Example usage:
 ```ts
 for await (const card of Scry.Cards.search("type:planeswalker").all()) {
     console.log(card.name);
+}
+```
+
+### `MagicEmitter.notFound(): AsyncGenerator<NOT_FOUND, void, unknown>;`
+
+Returns an async generator that will yield each "not found" value when it receives it.
+
+Example usage:
+
+```ts
+for await (const identifier of Scry.Cards.collection({ id: "00000000-0000-0000-0000-000000000000" }).notFound()) {
+    console.log(identifier);
 }
 ```

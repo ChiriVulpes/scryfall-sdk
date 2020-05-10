@@ -285,6 +285,19 @@ describe("Scry", function () {
 				}
 				expect(Scry.error()).eq(undefined);
 			});
+
+			it("by id with invalid", async () => {
+				const collection = [
+					Scry.CardIdentifier.byId("94c70f23-0ca9-425e-a53a-6c09921c0075"),
+					Scry.CardIdentifier.byId("94c70f23-0ca9-425e-a53a-111111111111"),
+				];
+				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(1);
+				expect(cards[0].name).eq("Crush Dissent");
+				expect(cards.not_found.length).eq(1);
+				expect(cards.not_found[0].id).eq("94c70f23-0ca9-425e-a53a-111111111111")
+				expect(Scry.error()).eq(undefined);
+			});
 		});
 	});
 

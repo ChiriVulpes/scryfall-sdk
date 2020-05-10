@@ -15,17 +15,19 @@ function sleep (ms = 0) {
 
 type TOrArrayOfT<T> = T | T[];
 
-export interface List<T> {
+interface Data<T, NOT_FOUND = never> {
 	data: T[];
+	not_found?: NOT_FOUND[];
+}
+
+export interface List<T, NOT_FOUND = never> extends Data<T, NOT_FOUND> {
 	has_more: boolean;
 	next_page: string | null;
 	total_cards: string | null;
 	warnings: string[];
 }
 
-export interface ApiCatalog {
-	data: string[];
-}
+export interface ApiCatalog extends Data<string> { }
 
 export interface SearchError {
 	object: "error";
@@ -63,7 +65,7 @@ export default class MagicQuerier {
 
 		MagicQuerier.lastError = lastError;
 
-		return result ? result.data : ({ data: [] } as any);
+		return result ? result.data : ({ data: [], not_found: [] } as Data<T>);
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
