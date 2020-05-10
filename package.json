@@ -1,6 +1,6 @@
 {
 	"name": "scryfall-sdk",
-	"version": "1.6.3",
+	"version": "1.6.4",
 	"dependencies": {
 		"axios": "^0.19.2"
 	},
@@ -25,26 +25,26 @@
 		"url": "https://github.com/yuudaari/scryfall-sdk"
 	},
 	"devDependencies": {
-		"gulp": "^4.0.2",
-		"gulp-plumber": "1.2.1",
-		"merge2": "1.3.0",
-		"typescript": "3.8.3",
-		"gulp-typescript": "5.0.1",
-		"mocha": "7.1.0",
-		"gulp-mocha": "7.0.2",
-		"chai": "4.2.0",
-		"chai-as-promised": "7.1.1",
-		"ts-node": "8.6.2",
-		"even-more-min": "1.0.1",
-		"del": "5.1.0",
-		"@types/node": "13.7.7",
-		"@types/request-promise": "4.1.45",
-		"@types/gulp-mocha": "0.0.32",
 		"@types/chai": "4.2.9",
 		"@types/chai-as-promised": "7.1.2",
+		"@types/del": "4.0.0",
 		"@types/gulp": "4.0.6",
+		"@types/gulp-mocha": "0.0.32",
 		"@types/gulp-plumber": "0.0.32",
 		"@types/merge2": "1.3.0",
-		"@types/del": "4.0.0"
+		"@types/node": "13.7.7",
+		"@types/request-promise": "4.1.45",
+		"chai": "4.2.0",
+		"chai-as-promised": "7.1.1",
+		"del": "5.1.0",
+		"even-more-min": "1.0.1",
+		"gulp": "^4.0.2",
+		"gulp-mocha": "7.0.2",
+		"gulp-plumber": "1.2.1",
+		"gulp-typescript": "5.0.1",
+		"merge2": "1.3.0",
+		"mocha": "^7.1.2",
+		"ts-node": "8.6.2",
+		"typescript": "3.8.3"
 	}
 }

@@ -1,3 +1,6 @@
+# v1.6.4 (May 11th, 2020)
+- Added `not_found` array property to `MagicEmitter.waitForAll()` return. Added `MagicEmitter.notFound()`. Based on a [PR](https://github.com/Yuudaari/scryfall-sdk/pull/29) by [aSlug](https://github.com/aSlug)
+
 # v1.6.3 (March 30th, 2020)
 - Changed `set_type` on Card objects to the type of Set objects' `set_type`.
 
