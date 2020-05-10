@@ -1,6 +1,7 @@
 import { Color } from "../IScry";
 import MagicEmitter from "../util/MagicEmitter";
-import MagicQuerier, { ApiCatalog, List } from "../util/MagicQuerier";
+import MagicBiEmitter from "../util/MagicBiEmitter";
+import MagicQuerier, { ApiCatalog, ListWithFailure } from "../util/MagicQuerier";
 import { Set } from "./Sets";
 
 enum UniqueStrategy {
@@ -425,14 +426,14 @@ export default new class Cards extends MagicQuerier {
 	}
 
 	public collection (...identifiers: CardIdentifier[]) {
-		const emitter = new MagicEmitter<Card>();
+		const emitter = new MagicBiEmitter<Card, CardIdentifier>();
 
 		this.processCollection(emitter, identifiers);
 
 		return emitter;
 	}
 
-	private async processCollection (emitter: MagicEmitter<Card>, identifiers: CardIdentifier[]) {
+	private async processCollection (emitter: MagicBiEmitter<Card, CardIdentifier>, identifiers: CardIdentifier[]) {
 		for (let i = 0; i < identifiers.length; i += 75) {
 			if (emitter.cancelled) break;
 
@@ -440,10 +441,15 @@ export default new class Cards extends MagicQuerier {
 			// and split it into 75 card-max requests
 			const collectionSection = { identifiers: identifiers.slice(i, i + 75) };
 
-			const data = (await this.query<List<Card>>("cards/collection", undefined, collectionSection)).data;
+			const { data, not_found } = await this.query<ListWithFailure<Card, CardIdentifier>>("cards/collection", undefined, collectionSection);
 
 			for (const card of data) {
 				emitter.emit("data", card);
+				if (emitter.cancelled) break;
+			}
+
+			for (const identifier of not_found) {
+				emitter.emit("not_found", identifier);
 				if (emitter.cancelled) break;
 			}
 

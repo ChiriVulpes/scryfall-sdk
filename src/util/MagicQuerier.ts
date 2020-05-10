@@ -23,6 +23,10 @@ export interface List<T> {
 	warnings: string[];
 }
 
+export interface ListWithFailure<T, Q> extends List<T> {
+	not_found: Q[];
+}
+
 export interface ApiCatalog {
 	data: string[];
 }
