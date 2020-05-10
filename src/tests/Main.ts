@@ -195,8 +195,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byId("94c70f23-0ca9-425e-a53a-6c09921c0075"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Crush Dissent");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -205,8 +206,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byMultiverseId(462293),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Contentious Plan");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -215,8 +217,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byMtgoId(71692),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Bond of Insight");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -225,8 +228,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byOracleId("394c6de5-7957-4a0b-a6b9-ee0c707cd022"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Forgotten Cave");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -235,8 +239,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byIllustrationId("99f43949-049e-41e2-bf4c-e22e11790012"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("GO TO JAIL");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -245,8 +250,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byName("Blood Scrivener"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Blood Scrivener");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -255,8 +261,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.byName("Lightning Bolt", "prm"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Lightning Bolt");
 				expect(cards[0].set).eq("prm");
 				expect(Scry.error()).eq(undefined);
@@ -266,8 +273,9 @@ describe("Scry", function () {
 				const collection = [
 					Scry.CardIdentifier.bySet("mrd", "150"),
 				];
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(1);
+				expect(not_found.length).eq(0);
 				expect(cards[0].name).eq("Chalice of the Void");
 				expect(Scry.error()).eq(undefined);
 			});
@@ -277,14 +285,28 @@ describe("Scry", function () {
 				for (let i = 1; i < 101; i++) {
 					collection.push(Scry.CardIdentifier.byMultiverseId(i));
 				}
-
-				const cards = await Scry.Cards.collection(...collection).waitForAll();
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
 				expect(cards.length).eq(100);
+				expect(not_found.length).eq(0);
 				for (let i = 0; i < 100; i++) {
 					expect(cards[i].multiverse_ids).includes(i + 1);
 				}
 				expect(Scry.error()).eq(undefined);
 			});
+
+			it("returns not found identifiers", async () => {
+				const collection = [
+					Scry.CardIdentifier.byName("Willy Wonka"),
+					Scry.CardIdentifier.byId("00000000-0000-0000-0000-000000000000"),
+				];
+				const { data: cards, not_found } = await Scry.Cards.collection(...collection).waitForAll();
+				expect(cards.length).eq(0);
+				expect(not_found.length).eq(2);
+				expect(not_found.filter(c => c.name === "Willy Wonka").length).eq(1);
+				expect(not_found.filter(c => c.id === "00000000-0000-0000-0000-000000000000").length).eq(1);
+				expect(Scry.error()).eq(undefined);
+			});
+
 		});
 	});
 
