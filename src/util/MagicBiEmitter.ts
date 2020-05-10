@@ -1,8 +1,9 @@
 import AbstractMagicEmitter from "./AbstractMagicEmitter";
 
-export default class MagicEmitter<T> extends AbstractMagicEmitter {
+export default class MagicBiEmitter<T, Q> extends AbstractMagicEmitter {
 
 	public on (event: "data", listener: (data: T) => any): this;
+	public on (event: "not_found", listener: (data: Q) => any): this;
 	public on (event: "end", listener: () => any): this;
 	public on (event: "cancel", listener: () => any): this;
 	public on (event: "error", listener: (err: Error) => any): this;
@@ -13,6 +14,7 @@ export default class MagicEmitter<T> extends AbstractMagicEmitter {
 	}
 
 	public emit (event: "data", data: T): boolean;
+	public emit (event: "not_found", data: Q): boolean;
 	public emit (event: "end"): boolean;
 	public emit (event: "cancel"): boolean;
 	public emit (event: "error", error: Error): boolean;
@@ -22,29 +24,23 @@ export default class MagicEmitter<T> extends AbstractMagicEmitter {
 	}
 
 	public async waitForAll () {
-		return new Promise<T[]>((resolve, reject) => {
+		return new Promise<ResultsAndFailures<T, Q>>((resolve, reject) => {
 			const results: T[] = [];
+			const notMatchingQueries: Q[] = [];
 			this.on("data", result => {
 				results.push(result);
 			});
-			this.on("end", () => resolve(results));
+			this.on("not_found", notMatchingQuery => {
+				notMatchingQueries.push(notMatchingQuery);
+			});
+			this.on("end", () => resolve({
+                data: results,
+                not_found: notMatchingQueries
+            }));
 			this.on("error", reject);
 		});
 	}
 
-	public async *[Symbol.asyncIterator] () {
-		const unyielded: T[] = [];
-		this.on("data", data => unyielded.push(data));
-		while (!this.ended) {
-			await new Promise(resolve => this.on("data", resolve));
-			let data: T | undefined;
-			while (data = unyielded.shift()) {
-				yield data;
-			}
-		}
-	}
-
-	public all () {
-		return this[Symbol.asyncIterator]();
-	}
 }
+
+type ResultsAndFailures<T, Q> = { data: T[], not_found: Q[] }
