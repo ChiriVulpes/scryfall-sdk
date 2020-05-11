@@ -497,7 +497,7 @@ Cancels emitting data. Only emits the `"cancel"` event, not the `"end"` event.
 
 ### `MagicEmitter.waitForAll(): Promise<T[] & { not_found: NOT_FOUND[] }>;`
 
-Returns a promise for an array of `T`, fulfilled after the end event is emitted. If the API returns that it was unable to find anything, it's returned in a `not_found` array property on the array of `T`.
+Returns a promise for an array of `T`, fulfilled after the end event is emitted. If the API returns that it was unable to find anything, it's returned in a `not_found` array property on the array of `T`. (Note that this property is excluded when using `JSON.stringify` on the array)
 
 ### `MagicEmitter.all(): AsyncGenerator<T, void, unknown>;`
 
