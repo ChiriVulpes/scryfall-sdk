@@ -133,7 +133,7 @@ Scry.Cards.search("type:planeswalker").on("data", card => {
 });
 ```
 
-For information on how to provide extra options, see the [`/get/cards/search` page](https://scryfall.com/docs/api/cards/search) on Scryfall. You can also reference the `SearchOptions` interface in [`IScry.ts`](./src/IScry.ts)
+For information on how to provide extra options, see the [`/get/cards/search` page](https://scryfall.com/docs/api/cards/search) on Scryfall. You can also reference the `SearchOptions` interface in [`Cards.ts`](./src/api/Cards.ts)
 
 This query returns a [`MagicEmitter`](#magicemittert-).
 
