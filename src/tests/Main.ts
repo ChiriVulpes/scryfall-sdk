@@ -454,15 +454,63 @@ describe("Scry", function () {
 		});
 	});
 
-	describe("Misc", () => {
-		it("bulk data", async () => {
-			const result = await Scry.Misc.bulkData();
+	describe("Bulk Data", async () => {
+		let definitions: BulkDataDefinition[];
 
-			expect(result).satisfies(Array.isArray);
-			expect(result.length).gte(5);
-			expect(Scry.error()).eq(undefined);
+		describe("definitions", () => {
+			it("all", async () => {
+				definitions = await Scry.BulkData.definitions();
+
+				expect(definitions).satisfies(Array.isArray);
+				expect(definitions.length).gte(5);
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("by id", async () => {
+				const result = await Scry.BulkData.definitionById(definitions[0].id);
+
+				expect(result.object).eq("bulk_data");
+				expect(result.compressed_size).gte(10000);
+			});
+
+			it("by type", async () => {
+				const result = await Scry.BulkData.definitionByType("all_cards");
+
+				expect(result.object).eq("bulk_data");
+				expect(result.type).eq("all_cards");
+				expect(result.compressed_size).gte(10000);
+			});
 		});
 
+		describe("download", () => {
+			describe("by id", () => {
+				it("no matter the last download time", async () => {
+					const result = await Scry.BulkData.downloadById(definitions[0].id, 0);
+					expect(result).instanceOf(Stream);
+				});
+
+				it("with the last download time more recent than the last update time", async () => {
+					const result = await Scry.BulkData.downloadById(definitions[0].id, new Date(definitions[0].updated_at).getTime() + 10);
+					expect(result).eq(undefined);
+				});
+			});
+
+			describe("by type", () => {
+				it("no matter the last download time", async () => {
+					const result = await Scry.BulkData.downloadByType("rulings", 0);
+					expect(result).instanceOf(Stream);
+				});
+
+				it("with the last download time more recent than the last update time", async () => {
+					const rulingsDefinition = await Scry.BulkData.definitionByType("rulings");
+					const result = await Scry.BulkData.downloadByType("rulings", new Date(rulingsDefinition.updated_at).getTime() + 10);
+					expect(result).eq(undefined);
+				});
+			});
+		});
+	});
+
+	describe("Misc", () => {
 		it("homepage links", async () => {
 			const result = await Scry.Misc.homepageLinks();
 			expect(result).satisfies(Array.isArray);
