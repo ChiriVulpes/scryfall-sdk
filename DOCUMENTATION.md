@@ -49,7 +49,6 @@
   - [`BulkData.definitionById (id: string): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
-  - [`bulkData (): Promise<BulkData[]>;`](#bulkdata--promisebulkdata-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
@@ -415,7 +414,7 @@ Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
 
 ## Bulk Data [🡅](#table-of-contents)
 
-### `downloadByType (type: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
+### `BulkData.downloadByType (type: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
 Returns a stream for a bulk data file by its type, or `undefined` if the bulk data file hasn't been updated since the last download time.
 
 ```ts
@@ -436,7 +435,7 @@ if (rulingsStream)
     rulingsStream.pipe(fs.createWriteStream("rulings.json"));
 ```
 
-### `downloadById (id: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
+### `BulkData.downloadById (id: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
 Returns a stream for a bulk data file by its id, or `undefined` if the bulk data file hasn't been updated since the last download time.
 
 ```ts
@@ -444,21 +443,21 @@ const id = "<an id here>"; // a UUID identifying the bulk data definition
 Scry.BulkData.downloadById(id, lastDownloadTime).then(result => console.log(result)); // either a stream or undefined
 ```
 
-### `definitions (): Promise<BulkDataDefinition[]>;` [🡅](#table-of-contents)
+### `BulkData.definitions (): Promise<BulkDataDefinition[]>;` [🡅](#table-of-contents)
 Returns the definitions of all bulk data files that Scryfall is currently providing.
 
 ```ts
 Scry.BulkData.definitions().then(result => console.log(result.length)); // 5
 ```
 
-### `definitionByType (type: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
+### `BulkData.definitionByType (type: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
 Returns a single bulk data file definition by its type.
 
 ```ts
 Scry.BulkData.definitionByType("rulings").then(result => console.log(result.object, result.type)); // "bulk_data rulings"
 ```
 
-### `definitionById (id: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
+### `BulkData.definitionById (id: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
 Returns a single bulk data file definition by its id.
 
 ```ts
