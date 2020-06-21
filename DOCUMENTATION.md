@@ -414,7 +414,7 @@ Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
 
 ## Bulk Data [🡅](#table-of-contents)
 
-### `BulkData.downloadByType (type: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
+### `BulkData.downloadByType (type: BulkDataType): Promise<Stream | undefined>;` [🡅](#table-of-contents)
 Returns a stream for a bulk data file by its type, or `undefined` if the bulk data file hasn't been updated since the last download time.
 
 ```ts
@@ -450,7 +450,7 @@ Returns the definitions of all bulk data files that Scryfall is currently provid
 Scry.BulkData.definitions().then(result => console.log(result.length)); // 5
 ```
 
-### `BulkData.definitionByType (type: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
+### `BulkData.definitionByType (type: BulkDataType): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
 Returns a single bulk data file definition by its type.
 
 ```ts
