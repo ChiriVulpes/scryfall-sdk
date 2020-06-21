@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import MagicEmitter from "./MagicEmitter";
 
 // the path to the api
@@ -49,7 +49,7 @@ export default class MagicQuerier {
 	public static lastError: SearchError | undefined;
 	public static retry: RetryStrategy = { attempts: 1 };
 
-	protected async query<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }, post?: any): Promise<T> {
+	protected async query<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
 
 		if (Array.isArray(apiPath)) {
 			apiPath = apiPath.join("/");
@@ -87,7 +87,7 @@ export default class MagicQuerier {
 		emitter.emit("done");
 	}
 
-	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any) {
+	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig) {
 		const now = Date.now();
 		const timeSinceLastQuery = now - lastQuery;
 		if (timeSinceLastQuery >= rateLimit) {
@@ -106,6 +106,7 @@ export default class MagicQuerier {
 			method: post ? "POST" : "GET",
 			params: query,
 			url: `${endpoint}/${apiPath}`,
+			...requestOptions,
 		}).catch(({ response }: { response: { data: any } }) => {
 			lastError = response.data;
 		}) || undefined;
