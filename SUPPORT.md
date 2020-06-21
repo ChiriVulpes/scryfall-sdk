@@ -11,7 +11,6 @@
 | [`/cards/tcgplayer/:id`](./DOCUMENTATION.md#cardsbytcgplayerid-id-number-promisecard-) | Card |
 | [`/cards/random`](./DOCUMENTATION.md#cardsrandom-id-number-promisecard-) | Card |
 | [`/cards/search?q=<https://scryfall.com/docs/reference>`](./DOCUMENTATION.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
-| [`/cards?page=:page`](./DOCUMENTATION.md#cardsall-page--1-magicemittercard-) | List\<Card\> |
 | [`/cards/autocomplete?q=<autocomplete to a card name>`](./DOCUMENTATION.md#cardsautocompletename-name-string-promisestring-) | Catalog |
 | [`/cards/collection`](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-) | List\<Card\> |
 | [`/sets`](./DOCUMENTATION.md#setsall--promiseset-) | List\<Set\> |
@@ -37,6 +36,9 @@
 | [`/catalog/toughnesses`](./DOCUMENTATION.md#catalogtoughnesses--promisestring-) | Catalog |
 | [`/catalog/loyalties`](./DOCUMENTATION.md#catalogloyalties--promisestring-) | Catalog |
 | [`/catalog/watermarks`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/bulk-data`](./DOCUMENTATION.md#bulkdatadefinitions--promisebulkdatadefinition-) | List\<BulkDataDefinition\> |
+| [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
+| [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/homepage-links`](./DOCUMENTATION.md#cataloghomepagelinks--promisestring-) | List\<HomepageLink\> |
 
 

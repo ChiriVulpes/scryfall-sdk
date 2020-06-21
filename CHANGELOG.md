@@ -1,3 +1,13 @@
+# v2.0.0 (June 21st, 2020)
+- Removed `Cards.all` method as [Scryfall has removed the endpoint from their API](https://scryfall.com/blog/updates-to-bulk-data-and-cards-deprecation-notice-217).
+- `Cards.search` now supports passing a page number in place of `SearchOptions`.
+- Added better support for downloading bulk data from Scryfall, accessible via `Scry.BulkData`
+  - `Misc.bulkData()` is now `BulkData.definitions()`
+  - Added `BulkData.definitionById`, `BulkData.definitionByType`.
+  - Added `BulkData.downloadById`, `BulkData.downloadByType`, both of which take a `lastDownload` time and, if the bulk data has been updated since the last download, return a `Stream` for the download to be consumed as you see fit.
+
+Note: In cases where you have a *proper* reason for paginating through every single card in Scryfall's database, such as displaying a paginated list to the user of your application, you can use any query which matches all cards, such as `Cards.search("year>0")`. Please respect Scryfall and only do this if you need to, though. If you just need to download all the cards, use the new and improved bulk data support!
+
 # v1.6.4 (May 11th, 2020)
 - Added `not_found` array property to `MagicEmitter.waitForAll()` return. Added `MagicEmitter.notFound()`. Based on a [PR](https://github.com/Yuudaari/scryfall-sdk/pull/29) by [aSlug](https://github.com/aSlug)
 

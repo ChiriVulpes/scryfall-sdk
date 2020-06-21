@@ -41,6 +41,12 @@
   - [`Catalog.toughnesses (): Promise<string[]>;`](#catalogtoughnesses--promisestring-)
   - [`Catalog.loyalties (): Promise<string[]>;`  ](#catalogloyalties--promisestring-)
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
+- [Bulk Data](#bulk-data-)
+  - [`BulkData.downloadByType (type: BulkDataType): Promise<Stream | undefined>;`](#bulkdatadownloadbytype-type-bulkdatatype-promisestream--undefined-)
+  - [`BulkData.downloadById (id: string): Promise<Stream | undefined>;`](#bulkdatadownloadbyid-id-string-promisestream--undefined-)
+  - [`BulkData.definitions (): Promise<BulkDataDefinition[]>;`](#bulkdatadefinitions--promisebulkdatadefinition-)
+  - [`BulkData.definitionByType (type: BulkDataType): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-)
+  - [`BulkData.definitionById (id: string): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-)
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
   - [`bulkData (): Promise<BulkData[]>;`](#bulkdata--promisebulkdata-)
@@ -121,7 +127,7 @@ Gets a card based on its TCG Player id.
 Scry.Cards.byTcgPlayerId(1030).then(result => console.log(result.name)); // Ankh of Mishra
 ```
 
-### `Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` [🡅](#table-of-contents)
+### `Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
 
@@ -137,28 +143,10 @@ For information on how to provide extra options, see the [`/get/cards/search` pa
 
 This query returns a [`MagicEmitter`](#magicemittert-).
 
-### `Cards.all (page = 1): MagicEmitter<Card>;` [🡅](#table-of-contents)
-
-From the [Scryfall documentation](https://scryfall.com/docs/api/cards/all):
-
-Scryfall currently has 191,325 cards, and this endpoint has 1094 pages. This represents more than 400 MB of JSON data: beware your memory and storage limits if you are downloading the entire database.
-
-Every card type is returned, including planar cards, schemes, Vanguard cards, tokens, emblems, and funny cards.
-
-```ts
-Scry.Cards.all().on("data", card => {
-	console.log(card.name);
-}).on("end", () => {
-	console.log("done");
-});
-```
-
-This query returns a [`MagicEmitter`](#magicemittert-).
-
 The page parameter is the page of results that the query will begin at. A page is 175 cards, and cannot be changed. To get only the one page you requested, you can do the following:
 
 ```ts
-const cardsFromPage15 = await Scry.Cards.all(15).cancelAfterPage().waitForAll();
+const cardsFromPage15 = await Scry.Cards.search("type:creature", 15).cancelAfterPage().waitForAll();
 ```
 
 ### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -425,18 +413,66 @@ Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
 ```
 
 
+## Bulk Data [🡅](#table-of-contents)
+
+### `downloadByType (type: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
+Returns a stream for a bulk data file by its type, or `undefined` if the bulk data file hasn't been updated since the last download time.
+
+```ts
+/**
+ * if you're downloading the file from scryfall and storing it on disk, usually you'll want to get the file modification date here.
+ * if you want to redownload the file regardless of the last time it was updated, just put `0` here.
+ */
+const lastDownloadTime: number;
+Scry.BulkData.downloadByType("rulings", lastDownloadTime).then(result => console.log(result)); // either a stream or undefined
+```
+
+Example with saving the file to disk, assuming the usage of a promisified fs module:
+```ts
+// redownload rulings.json if it's been updated since the last download
+const rulingsJsonStats = await fs.stat("rulings.json");
+const rulingsStream = await Scry.BulkData.downloadByType("rulings", rulingsJsonStats.mtimeMs);
+if (rulingsStream)
+    rulingsStream.pipe(fs.createWriteStream("rulings.json"));
+```
+
+### `downloadById (id: string): Promise<Stream | undefined>;` [🡅](#table-of-contents)
+Returns a stream for a bulk data file by its id, or `undefined` if the bulk data file hasn't been updated since the last download time.
+
+```ts
+const id = "<an id here>"; // a UUID identifying the bulk data definition
+Scry.BulkData.downloadById(id, lastDownloadTime).then(result => console.log(result)); // either a stream or undefined
+```
+
+### `definitions (): Promise<BulkDataDefinition[]>;` [🡅](#table-of-contents)
+Returns the definitions of all bulk data files that Scryfall is currently providing.
+
+```ts
+Scry.BulkData.definitions().then(result => console.log(result.length)); // 5
+```
+
+### `definitionByType (type: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
+Returns a single bulk data file definition by its type.
+
+```ts
+Scry.BulkData.definitionByType("rulings").then(result => console.log(result.object, result.type)); // "bulk_data rulings"
+```
+
+### `definitionById (id: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
+Returns a single bulk data file definition by its id.
+
+```ts
+const id = "<an id here>"; // a UUID identifying the bulk data definition
+Scry.BulkData.definitionById(id).then(result => console.log(result.object, result.type)); // "bulk_data rulings"
+```
+
+
 ## Misc [🡅](#table-of-contents)
 
 ### `homepageLinks (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.homepageLinks().then(result => console.log(result.length)); // 4
-```
-
-### `bulkData (): Promise<BulkData[]>;` [🡅](#table-of-contents)
-
-```ts
-Scry.bulkData().then(result => console.log(result.length)); // 5
+Scry.Misc.homepageLinks().then(result => console.log(result.length)); // 4
 ```
 
 
