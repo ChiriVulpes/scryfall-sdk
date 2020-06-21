@@ -1,19 +1,20 @@
 import MagicQuerier, { SearchError } from "./util/MagicQuerier";
 
-export * from "./IScry";
+export { default as BulkData } from "./api/BulkData";
 export * from "./api/Cards";
-export * from "./api/Catalog";
-export * from "./api/Misc";
-export * from "./api/Rulings";
-export * from "./api/Sets";
-export * from "./api/Symbology";
-
 export { default as Cards } from "./api/Cards";
+export * from "./api/Catalog";
 export { default as Catalog } from "./api/Catalog";
+export * from "./api/Misc";
 export { default as Misc } from "./api/Misc";
+export * from "./api/Rulings";
 export { default as Rulings } from "./api/Rulings";
+export * from "./api/Sets";
 export { default as Sets } from "./api/Sets";
+export * from "./api/Symbology";
 export { default as Symbology } from "./api/Symbology";
+export * from "./IScry";
+
 
 /**
  * Returns the last error thrown while querying.

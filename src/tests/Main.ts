@@ -1,13 +1,14 @@
 /// <reference types="mocha" />
 
 import * as chai from "chai";
-const expect = chai.expect;
+import { Stream } from "stream";
+import { BulkDataDefinition } from "../api/BulkData";
 /*
 import * as chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 */
-
 import * as Scry from "../Scry";
+const expect = chai.expect;
 
 
 describe("Scry", function () {
