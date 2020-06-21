@@ -126,10 +126,10 @@ describe("Scry", function () {
 			}).on("error", done);
 		});
 
-		it("all (cancel after 427 cards)", async () => {
+		it("search type:creature (cancel after 427 cards)", async () => {
 			return new Promise((resolve, reject) => {
 				let needCount = 427;
-				const emitter = Scry.Cards.all();
+				const emitter = Scry.Cards.search("type:creature");
 				emitter.on("data", card => {
 					needCount--;
 					if (needCount == 0) {
@@ -146,20 +146,20 @@ describe("Scry", function () {
 			});
 		}).timeout(15000);
 
-		it("should support pagination of all", async () => {
+		it("should support pagination of searches", async () => {
 			let firstPageCard: Scry.Card;
 			let secondPageCard: Scry.Card;
 
 			await Promise.all([
 				new Promise((resolve, reject) => {
-					const emitter = Scry.Cards.all();
+					const emitter = Scry.Cards.search("type:creature");
 					emitter.on("data", card => (firstPageCard = card, emitter.cancel()))
 						.on("end", () => reject(new Error("Did not expect to reach this point")))
 						.on("cancel", resolve)
 						.on("error", reject);
 				}),
 				new Promise((resolve, reject) => {
-					const emitter = Scry.Cards.all(2).cancelAfterPage();
+					const emitter = Scry.Cards.search("type:creature", 2).cancelAfterPage();
 					emitter.on("data", card => secondPageCard = card)
 						.on("end", () => reject(new Error("Did not expect to reach this point")))
 						.on("cancel", resolve)

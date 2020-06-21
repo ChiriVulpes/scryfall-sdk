@@ -38,6 +38,9 @@ export interface SearchOptions {
 	include_extras?: boolean;
 	include_multilingual?: boolean;
 	include_variations?: boolean;
+	/**
+	 * The page to start on. Defaults to `1`, for first page. A page is 175 cards.
+	 */
 	page?: number;
 }
 
@@ -398,23 +401,13 @@ export default new class Cards extends MagicQuerier {
 		return this.query<Card>("cards/random");
 	}
 
-	public search (query: string, options?: SearchOptions) {
-		const emitter = new MagicEmitter<Card>();
-
-		this.queryPage(emitter, "cards/search", { q: query, ...options })
-			.catch(err => emitter.emit("error", err));
-
-		return emitter;
-	}
-
 	/**
-	 * Returns a MagicEmitter of every card in the Scryfall database.
-	 * @param page The page to start on. Defaults to `1`, for first page. A page is 175 cards.
+	 * Returns a MagicEmitter of every card in the Scryfall database that matches the given query.
 	 */
-	public all (page = 1) {
+	public search (query: string, options?: SearchOptions | number) {
 		const emitter = new MagicEmitter<Card>();
 
-		this.queryPage(emitter, "cards", {}, page)
+		this.queryPage(emitter, "cards/search", { q: query, ...typeof options === "number" ? { page: options } : options })
 			.catch(err => emitter.emit("error", err));
 
 		return emitter;
