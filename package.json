@@ -9,6 +9,7 @@
 	"description": "A Node.js SDK for https://scryfall.com/docs/api written in Typescript.",
 	"keywords": [
 		"magic",
+		"magic the gathering",
 		"magic-the-gathering",
 		"gathering",
 		"api",
