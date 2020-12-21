@@ -7,4 +7,6 @@ out/tests/
 .travis.yml
 gulpfile.ts
 tsconfig.json
-tslint.json
+.eslintrc.ts
+.eslintrc.js
+.eslintignore
