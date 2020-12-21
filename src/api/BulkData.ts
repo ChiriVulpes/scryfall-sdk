@@ -75,7 +75,7 @@ export default new class BulkData extends MagicQuerier {
 		const result = await Axios.request<Stream>({
 			method: "GET",
 			url: definition.download_uri,
-			responseType: "stream"
+			responseType: "stream",
 		});
 
 		return result.data;

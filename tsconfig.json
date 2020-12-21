@@ -10,6 +10,12 @@
         "strictPropertyInitialization": false,
         "noImplicitReturns": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": false
-	}
+		"noUnusedParameters": false,
+		"esModuleInterop": true
+	},
+    "include": [
+        "gulpfile.ts",
+        "gulp/**/*.ts",
+        ".eslintrc.ts"
+    ]
 }

@@ -15,7 +15,7 @@ function sleep (ms = 0) {
 
 type TOrArrayOfT<T> = T | T[];
 
-interface Data<T, NOT_FOUND = never> {
+export interface Data<T, NOT_FOUND = never> {
 	data: T[];
 	not_found?: NOT_FOUND[];
 }
@@ -40,6 +40,11 @@ export interface SearchError {
 export interface RetryStrategy {
 	attempts: number;
 	timeout?: number;
+	/**
+	 * Whether even `not_found` and `bad_request` errors should be retried.
+	 * @deprecated Don't use this, this is for unit tests
+	 */
+	forced?: boolean;
 	// tslint:disable-next-line space-before-function-paren typescript autoformats this to remove the space
 	canRetry?(error: SearchError): boolean;
 }
@@ -47,9 +52,10 @@ export interface RetryStrategy {
 export default class MagicQuerier {
 	public static lastQuery = 0;
 	public static lastError: SearchError | undefined;
+	public static lastRetries = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
 
-	protected async query<T> (apiPath: TOrArrayOfT<string | number>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
+	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
 
 		if (Array.isArray(apiPath)) {
 			apiPath = apiPath.join("/");
@@ -57,15 +63,17 @@ export default class MagicQuerier {
 
 		let lastError: SearchError | undefined;
 		let result: AxiosResponse | undefined;
-		for (let i = 0; i < MagicQuerier.retry.attempts; i++) {
-			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post));
-			if (result || !this.canRetry(lastError)) break;
+		let retries: number;
+		for (retries = 0; retries < MagicQuerier.retry.attempts; retries++) {
+			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post, requestOptions));
+			if (result || (!this.canRetry(lastError!) && !MagicQuerier.retry.forced)) break;
 			await sleep(MagicQuerier.retry.timeout);
 		}
 
 		MagicQuerier.lastError = lastError;
+		MagicQuerier.lastRetries = retries;
 
-		return result ? result.data : ({ data: [], not_found: [] } as Data<T>);
+		return result ? result.data : ({ data: [], not_found: [] });
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {

@@ -24,10 +24,10 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 
 	public on (event: "data", listener: (data: T) => any): this;
 	public on (event: "not_found", listener: (data: NOT_FOUND) => any): this;
-	public on (event: "end", listener: () => any): this;
-	public on (event: "cancel", listener: () => any): this;
+	public on (event: "end", listener: (...args: any[]) => any): this;
+	public on (event: "cancel", listener: (...args: any[]) => any): this;
 	public on (event: "error", listener: (err: Error) => any): this;
-	public on (event: "done", listener: () => any): this;
+	public on (event: "done", listener: (...args: any[]) => any): this;
 	public on (event: string, listener: (...args: any[]) => any) {
 		super.on(event, listener);
 		return this;
@@ -64,8 +64,9 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	}
 
 	public async waitForAll () {
-		return new Promise<T[] & { not_found: NOT_FOUND[] }>((resolve, reject) => {
-			const results: T[] & { not_found: NOT_FOUND[] } = [] as any;
+		type Result = T[] & { not_found: NOT_FOUND[] };
+		return new Promise<Result>((resolve, reject) => {
+			const results: Result = [] as T[] as Result;
 			results.not_found = [];
 			this.on("data", result => { results.push(result); });
 			this.on("not_found", notFound => { results.not_found.push(notFound); });

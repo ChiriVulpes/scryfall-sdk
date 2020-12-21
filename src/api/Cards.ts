@@ -151,7 +151,7 @@ export interface PurchaseUris {
 	tcgplayer?: string | null;
 	cardmarket?: string | null;
 	cardhoarder?: string | null;
-	[key: string]: string | null;
+	[key: string]: string | null | undefined;
 }
 
 export interface RelatedUris {
@@ -159,7 +159,7 @@ export interface RelatedUris {
 	tcgplayer_decks?: string | null;
 	edhrec?: string | null;
 	mtgtop8?: string | null;
-	[key: string]: string | null;
+	[key: string]: string | null | undefined;
 }
 
 enum RelatedCardComponent {
@@ -328,7 +328,7 @@ export interface CardIdentifier {
 	collector_number?: string;
 }
 
-export module CardIdentifier {
+export namespace CardIdentifier {
 	export function byId (id: string): CardIdentifier {
 		return { id };
 	}
@@ -361,7 +361,7 @@ export module CardIdentifier {
 export default new class Cards extends MagicQuerier {
 	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
 	public async byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
-	public async byName (name: string, set?: string | boolean, fuzzy: boolean = false) {
+	public async byName (name: string, set?: string | boolean, fuzzy = false) {
 		if (typeof set === "boolean") {
 			fuzzy = set;
 			set = undefined;
@@ -378,7 +378,9 @@ export default new class Cards extends MagicQuerier {
 	}
 
 	public async bySet (setCode: string, collectorNumber: number, lang?: string) {
-		return this.query<Card>(["cards", setCode, collectorNumber, lang]);
+		const path = ["cards", setCode, collectorNumber];
+		if (lang) path.push(lang);
+		return this.query<Card>(path);
 	}
 
 	public async byMultiverseId (id: number) {
@@ -420,7 +422,7 @@ export default new class Cards extends MagicQuerier {
 	public collection (...identifiers: CardIdentifier[]) {
 		const emitter = new MagicEmitter<Card, CardIdentifier>();
 
-		this.processCollection(emitter, identifiers);
+		void this.processCollection(emitter, identifiers);
 
 		return emitter;
 	}
@@ -435,7 +437,7 @@ export default new class Cards extends MagicQuerier {
 
 			const { data, not_found } = await this.query<List<Card, CardIdentifier>>("cards/collection", undefined, collectionSection);
 
-			emitter.emitAll("not_found", ...not_found);
+			emitter.emitAll("not_found", ...not_found ?? []);
 
 			if (!emitter.cancelled)
 				emitter.emitAll("data", ...data);

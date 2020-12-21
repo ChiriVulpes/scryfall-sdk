@@ -8,6 +8,7 @@ import * as chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 */
 import * as Scry from "../Scry";
+import MagicQuerier from "../util/MagicQuerier";
 const expect = chai.expect;
 
 
@@ -109,29 +110,39 @@ describe("Scry", function () {
 			expect(Scry.error()).not.eq(undefined);
 		});
 
-		it("search by set", done => {
+		it("search by set", async () => new Promise<void>((resolve, reject) => {
 			const results: Scry.Card[] = [];
 			Scry.Cards.search("s:kld", { order: "cmc" }).on("data", card => {
-				if (results.length) {
-					expect(card.cmc).gte(results[results.length - 1].cmc);
-					expect(Scry.error()).eq(undefined);
-				}
+				try {
+					if (results.length) {
+						expect(card.cmc).gte(results[results.length - 1].cmc);
+						expect(Scry.error()).eq(undefined);
+					}
 
-				results.push(card);
-				expect(card.set).satisfies((set: string) => set == "kld");
-				expect(Scry.error()).eq(undefined);
+					results.push(card);
+					expect(card.set).satisfies((set: string) => set == "kld");
+					expect(Scry.error()).eq(undefined);
+					resolve();
+				} catch (err) {
+					reject(err);
+				}
 			}).on("end", () => {
-				expect(results.length).eq(264);
-				expect(Scry.error()).eq(undefined);
-				done();
-			}).on("error", done);
-		});
+				try {
+					expect(results.length).eq(264);
+					expect(Scry.error()).eq(undefined);
+					resolve();
+				} catch (err) {
+					reject(err);
+				}
+			}).on("error", reject);
+		}))
+			.timeout(20000);
 
 		it("search type:creature (cancel after 427 cards)", async () => {
 			return new Promise((resolve, reject) => {
 				let needCount = 427;
 				const emitter = Scry.Cards.search("type:creature");
-				emitter.on("data", card => {
+				emitter.on("data", () => {
 					needCount--;
 					if (needCount == 0) {
 						emitter.cancel();
@@ -168,7 +179,7 @@ describe("Scry", function () {
 				}),
 			]);
 
-			expect(firstPageCard.id).not.eq(secondPageCard.id);
+			expect(firstPageCard!.id).not.eq(secondPageCard!.id);
 			expect(Scry.error()).eq(undefined);
 		}).timeout(15000);
 
@@ -454,7 +465,7 @@ describe("Scry", function () {
 		});
 	});
 
-	describe("Bulk Data", async () => {
+	describe("Bulk Data", () => {
 		let definitions: BulkDataDefinition[];
 
 		describe("definitions", () => {
@@ -533,10 +544,14 @@ describe("Scry", function () {
 
 		it("should retry", async () => {
 			const then = Date.now();
-			Scry.setRetry(3, 1000);
+			const attempts = 3;
+			const timeout = 1000;
+			Scry.setRetry(attempts, timeout);
+			MagicQuerier.retry.forced = true;
 			await Scry.Cards.byMultiverseId("bananas" as any);
+			MagicQuerier.retry.forced = false;
 			expect(Scry.error()).not.eq(undefined);
-			expect(Date.now() - then).lt(1000);
+			expect(Date.now() - then).gt(attempts * timeout);
 		});
 
 		// todo figure out tests for the "can retry" stuff that doesn't rely on enabling 404/400 errors
