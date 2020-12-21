@@ -1,3 +1,7 @@
+# v2.1.0 (December 22nd, 2020)
+- Now compiled in strict mode, which catches a bunch of [issues for consumers of the module](https://github.com/ChiriCuddles/scryfall-sdk/issues/34)
+- Fixed other misc issues caught by enabling strict mode
+
 # v2.0.0 (June 21st, 2020)
 - Removed `Cards.all` method as [Scryfall has removed the endpoint from their API](https://scryfall.com/blog/updates-to-bulk-data-and-cards-deprecation-notice-217).
 - `Cards.search` now supports passing a page number in place of `SearchOptions`.
@@ -9,7 +13,7 @@
 Note: In cases where you have a *proper* reason for paginating through every single card in Scryfall's database, such as displaying a paginated list to the user of your application, you can use any query which matches all cards, such as `Cards.search("year>0")`. Please respect Scryfall and only do this if you need to, though. If you just need to download all the cards, use the new and improved bulk data support!
 
 # v1.6.4 (May 11th, 2020)
-- Added `not_found` array property to `MagicEmitter.waitForAll()` return. Added `MagicEmitter.notFound()`. Based on a [PR](https://github.com/Yuudaari/scryfall-sdk/pull/29) by [aSlug](https://github.com/aSlug)
+- Added `not_found` array property to `MagicEmitter.waitForAll()` return. Added `MagicEmitter.notFound()`. Based on a [PR](https://github.com/ChiriCuddles/scryfall-sdk/pull/29) by [aSlug](https://github.com/aSlug)
 
 # v1.6.3 (March 30th, 2020)
 - Changed `set_type` on Card objects to the type of Set objects' `set_type`.
@@ -18,11 +22,11 @@ Note: In cases where you have a *proper* reason for paginating through every sin
 - Added some missing properties to the Card object.
 
 # v1.6.1 (March 7th, 2020)
-- Thanks to a [contribution](https://github.com/Yuudaari/scryfall-sdk/pull/26) from [codetheweb](https://github.com/codetheweb), added [support](./DOCUMENTATION.md#bulkdata--promisebulkdata-) for the [`bulk-data` endpoint](https://scryfall.com/docs/api/bulk-data).
+- Thanks to a [contribution](https://github.com/ChiriCuddles/scryfall-sdk/pull/26) from [codetheweb](https://github.com/codetheweb), added [support](./DOCUMENTATION.md#bulkdata--promisebulkdata-) for the [`bulk-data` endpoint](https://scryfall.com/docs/api/bulk-data).
 
 # v1.6.0 (March 2nd, 2020)
 - Updated all data interfaces to those described in [Scryfall's Docs](https://scryfall.com/docs/api).
-  - Including [two updates](https://github.com/Yuudaari/scryfall-sdk/pull/24) by [kasorin](https://github.com/kasorin). Thanks!
+  - Including [two updates](https://github.com/ChiriCuddles/scryfall-sdk/pull/24) by [kasorin](https://github.com/kasorin). Thanks!
 - Added support for [getting `CardIdentifier`s by their oracle and illustration IDs](./DOCUMENTATION.md#cardscollection-collection-cardidentifier-magicemittercard-).
 - Normalised all "null or missing" properties to actually be `null` or missing.
 
@@ -48,7 +52,7 @@ Note: In cases where you have a *proper* reason for paginating through every sin
 - Fixed `RelatedUris` and `PurchaseUris` throwing errors in some configurations.
 
 # v1.3.2 (September 16th, 2018)
-- Added support for filtering [`Cards.byName()`](./DOCUMENTATION.md#cardsbyname-name-string-set-string-fuzzy--false-promisecard-) by set. [#10](https://github.com/Yuudaari/scryfall-sdk/pull/10) Thanks [dantolini](https://github.com/dantolini)!
+- Added support for filtering [`Cards.byName()`](./DOCUMENTATION.md#cardsbyname-name-string-set-string-fuzzy--false-promisecard-) by set. [#10](https://github.com/ChiriCuddles/scryfall-sdk/pull/10) Thanks [dantolini](https://github.com/dantolini)!
 
 # v1.3.1 (August 10th, 2018)
 - [Added `error()`, allowing you to access the error returned by the last API call.](./DOCUMENTATION.md#error--searcherror--undefined-)

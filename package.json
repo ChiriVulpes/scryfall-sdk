@@ -1,6 +1,6 @@
 {
 	"name": "scryfall-sdk",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"dependencies": {
 		"axios": "^0.19.2"
 	},
@@ -22,7 +22,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/yuudaari/scryfall-sdk"
+		"url": "https://github.com/ChiriCuddles/scryfall-sdk"
 	},
 	"devDependencies": {
 		"@types/chai": "4.2.14",
