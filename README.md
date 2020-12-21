@@ -1,7 +1,7 @@
 # scryfall-sdk
 [![npm](https://img.shields.io/npm/v/scryfall-sdk.svg?style=flat-square)](https://www.npmjs.com/package/scryfall-sdk)
 [![GitHub issues](https://img.shields.io/github/issues/ChiriCuddles/scryfall-sdk.svg?style=flat-square)](https://github.com/ChiriCuddles/scryfall-sdk)
-[![Travis](https://img.shields.io/travis/ChiriCuddles/scryfall-sdk/master.svg?style=flat-square)](https://travis-ci.org/ChiriCuddles/scryfall-sdk)
+[![Travis](https://img.shields.io/travis/com/ChiriCuddles/scryfall-sdk/master.svg?style=flat-square)](https://travis-ci.com/ChiriCuddles/scryfall-sdk)
 
 A Node.js SDK for [Scryfall](https://scryfall.com/docs/api) written in Typescript.
 
