@@ -1,3 +1,6 @@
+# v2.1.1 (January 5th, 2020)
+- Updated axios to [fix a security vulnerability](https://github.com/axios/axios/issues/3407)
+
 # v2.1.0 (December 22nd, 2020)
 - Now compiled in strict mode, which catches a bunch of [issues for consumers of the module](https://github.com/ChiriCuddles/scryfall-sdk/issues/34)
 - Fixed other misc issues caught by enabling strict mode
