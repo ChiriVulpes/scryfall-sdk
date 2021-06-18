@@ -494,6 +494,11 @@ describe("Scry", function () {
 		});
 
 		describe("download", () => {
+
+			before(async () => {
+				definitions = await Promise.all(definitions.map(definition => Scry.BulkData.definitionById(definition.id)));
+			});
+
 			describe("by id", () => {
 				it("no matter the last download time", async () => {
 					const result = await Scry.BulkData.downloadById(definitions[0].id, 0);
