@@ -1,4 +1,5 @@
 import MagicQuerier, { List } from "../util/MagicQuerier";
+import { SearchOptions } from "./Cards";
 
 enum SetType {
 	core,
@@ -23,7 +24,9 @@ enum SetType {
 	memorabilia,
 }
 
-export interface Set {
+let Scry!: typeof import("../Scry");
+
+export class Set {
 	id: string;
 	code: string;
 	mtgo_code?: string | null;
@@ -41,22 +44,45 @@ export interface Set {
 	uri: string;
 	icon_svg_uri: string;
 	search_uri: string;
+
+	public getCards (options?: SearchOptions | number) {
+		return this.search(`s:${(this as any as Set).code}`, { order: "set", ...typeof options === "number" ? { page: options } : options })
+			.waitForAll();
+	}
+
+	public search (query: string, options?: SearchOptions | number) {
+		return Scry.Cards.search(`s:${(this as any as Set).code} ${query}`, options);
+	}
+}
+
+function initialiseSet (set: Set) {
+	Object.setPrototypeOf(set, Set.prototype);
+	return set;
 }
 
 export default new class Sets extends MagicQuerier {
+
+	protected set Scry (scry: typeof import("../Scry")) {
+		Scry = scry;
+	}
+
 	public async all () {
-		return (await this.query<List<Set>>("sets")).data;
+		return (await this.query<List<Set>>("sets")).data
+			.map(initialiseSet);
 	}
 
 	public async byCode (code: string) {
-		return this.query<Set>(["sets", code]);
+		return this.query<Set>(["sets", code])
+			.then(initialiseSet);
 	}
 
 	public async byId (id: string) {
-		return this.query<Set>(["sets", id]);
+		return this.query<Set>(["sets", id])
+			.then(initialiseSet);
 	}
 
 	public async byTcgPlayerId (id: number) {
-		return this.query<Set>(["sets/tcgplayer", id]);
+		return this.query<Set>(["sets/tcgplayer", id])
+			.then(initialiseSet);
 	}
 };

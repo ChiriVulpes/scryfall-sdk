@@ -1,5 +1,9 @@
 import { EventEmitter } from "events";
 
+export interface MagicArray<T, NOT_FOUND = never> extends Array<T> {
+	not_found: NOT_FOUND[];
+}
+
 export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	private _ended = false;
 	public get ended () {
@@ -15,6 +19,8 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	public get willCancelAfterPage () {
 		return this._willCancelAfterPage;
 	}
+
+	private mappers: ((value: any) => any)[] = [];
 
 	public constructor () {
 		super();
@@ -40,6 +46,8 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	public emit (event: "error", error: Error): boolean;
 	public emit (event: "done"): boolean;
 	public emit (event: string, ...data: any[]) {
+		if (event === "data")
+			return super.emit(event, this.mappers.reduce((current, mapper) => mapper(current), data[0]));
 		return super.emit(event, ...data);
 	}
 
@@ -47,7 +55,7 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	public emitAll (event: "not_found", ...data: NOT_FOUND[]): void;
 	public emitAll (event: string, ...data: any[]) {
 		for (const item of data) {
-			super.emit(event, item);
+			super.emit(event, event !== "data" ? item : this.mappers.reduce((current, mapper) => mapper(current), item));
 			if (this._cancelled) break;
 		}
 	}
@@ -64,9 +72,8 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	}
 
 	public async waitForAll () {
-		type Result = T[] & { not_found: NOT_FOUND[] };
-		return new Promise<Result>((resolve, reject) => {
-			const results: Result = [] as T[] as Result;
+		return new Promise<MagicArray<T, NOT_FOUND>>((resolve, reject) => {
+			const results: MagicArray<T, NOT_FOUND> = [] as any;
 			results.not_found = [];
 			this.on("data", result => { results.push(result); });
 			this.on("not_found", notFound => { results.not_found.push(notFound); });
@@ -85,6 +92,11 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 
 	public notFound () {
 		return this.generate("not_found");
+	}
+
+	public map<T2> (mapper: (value: T) => T2) {
+		this.mappers.push(mapper);
+		return this as any as MagicEmitter<T2, NOT_FOUND>;
 	}
 
 	private generate (event: "data"): AsyncGenerator<T, void, unknown>;

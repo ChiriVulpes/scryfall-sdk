@@ -311,6 +311,22 @@ describe("Scry", function () {
 				expect(Scry.error()).eq(undefined);
 			});
 		});
+
+		describe("methods", () => {
+			it("getSet", async () => {
+				const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+				const set = await card.getSet();
+				expect(set.code).eq("dgm");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("getRulings", async () => {
+				const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+				const rulings = await card.getRulings();
+				expect(rulings.length).eq(2);
+				expect(Scry.error()).eq(undefined);
+			});
+		});
 	});
 
 	describe("Sets", () => {
@@ -336,6 +352,34 @@ describe("Scry", function () {
 			const sets = await Scry.Sets.all();
 			expect(sets.length).gte(394);
 			expect(Scry.error()).eq(undefined);
+		});
+
+		describe("methods", () => {
+			it("getCards", async () => {
+				const set = await Scry.Sets.byCode("hou");
+				const cards = await set.getCards();
+				expect(cards.length).eq(199);
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("search", async () => {
+				const set = await Scry.Sets.byCode("hou");
+				const results: Scry.Card[] = [];
+				for await (const card of set.search("type:planeswalker").all()) {
+					if (card.layout !== "normal") {
+						return;
+					}
+
+					results.push(card);
+
+					expect(card.type_line)
+						.satisfies((type: string) => type.startsWith("Legendary Planeswalker") || type.startsWith("Planeswalker"));
+					expect(Scry.error()).eq(undefined);
+				}
+
+				expect(results.length).eq(4);
+				expect(Scry.error()).eq(undefined);
+			});
 		});
 	});
 

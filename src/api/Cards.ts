@@ -235,7 +235,9 @@ enum PromoType {
 	arenaleague
 }
 
-export interface Card {
+let Scry!: typeof import("../Scry");
+
+export class Card {
 	object: "card";
 
 	// core fields
@@ -315,6 +317,19 @@ export interface Card {
 	variation_of?: string | null;
 	watermark?: string | null;
 	preview?: Preview | null;
+
+	public getSet () {
+		return Scry.Sets.byId(this.set);
+	}
+
+	public getRulings () {
+		return Scry.Rulings.byId(this.id);
+	}
+}
+
+function initialiseCard (card: Card) {
+	Object.setPrototypeOf(card, Card.prototype);
+	return card;
 }
 
 export interface CardIdentifier {
@@ -359,6 +374,11 @@ export namespace CardIdentifier {
 }
 
 export default new class Cards extends MagicQuerier {
+
+	protected set Scry (scry: typeof import("../Scry")) {
+		Scry = scry;
+	}
+
 	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
 	public async byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
 	public async byName (name: string, set?: string | boolean, fuzzy = false) {
@@ -370,44 +390,53 @@ export default new class Cards extends MagicQuerier {
 		return this.query<Card>("cards/named", {
 			[fuzzy ? "fuzzy" : "exact"]: name,
 			set,
-		});
+		})
+			.then(initialiseCard);
 	}
 
 	public async byId (id: string) {
-		return this.query<Card>(["cards", id]);
+		return this.query<Card>(["cards", id])
+			.then(initialiseCard);
 	}
 
-	public async bySet (setCode: string, collectorNumber: number, lang?: string) {
-		const path = ["cards", setCode, collectorNumber];
+	public async bySet (setCode: string | Set, collectorNumber: number, lang?: string) {
+		const path = ["cards", typeof setCode === "string" ? setCode : setCode.code, collectorNumber];
 		if (lang) path.push(lang);
-		return this.query<Card>(path);
+		return this.query<Card>(path)
+			.then(initialiseCard);
 	}
 
 	public async byMultiverseId (id: number) {
-		return this.query<Card>(["cards/multiverse", id]);
+		return this.query<Card>(["cards/multiverse", id])
+			.then(initialiseCard);
 	}
 
 	public async byMtgoId (id: number) {
-		return this.query<Card>(["cards/mtgo", id]);
+		return this.query<Card>(["cards/mtgo", id])
+			.then(initialiseCard);
 	}
 
 	public async byArenaId (id: number) {
-		return this.query<Card>(["cards/arena", id]);
+		return this.query<Card>(["cards/arena", id])
+			.then(initialiseCard);
 	}
 
 	public async byTcgPlayerId (id: number) {
-		return this.query<Card>(["cards/tcgplayer", id]);
+		return this.query<Card>(["cards/tcgplayer", id])
+			.then(initialiseCard);
 	}
 
 	public async random () {
-		return this.query<Card>("cards/random");
+		return this.query<Card>("cards/random")
+			.then(initialiseCard);
 	}
 
 	/**
 	 * Returns a MagicEmitter of every card in the Scryfall database that matches the given query.
 	 */
 	public search (query: string, options?: SearchOptions | number) {
-		const emitter = new MagicEmitter<Card>();
+		const emitter = new MagicEmitter<Card>()
+			.map(initialiseCard);
 
 		this.queryPage(emitter, "cards/search", { q: query, ...typeof options === "number" ? { page: options } : options })
 			.catch(err => emitter.emit("error", err));
@@ -420,7 +449,8 @@ export default new class Cards extends MagicQuerier {
 	}
 
 	public collection (...identifiers: CardIdentifier[]) {
-		const emitter = new MagicEmitter<Card, CardIdentifier>();
+		const emitter = new MagicEmitter<Card, CardIdentifier>()
+			.map(initialiseCard);
 
 		void this.processCollection(emitter, identifiers);
 

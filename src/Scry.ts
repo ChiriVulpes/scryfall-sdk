@@ -1,4 +1,6 @@
-import MagicQuerier, { SearchError } from "./util/MagicQuerier";
+import Cards from "./api/Cards";
+import Sets from "./api/Sets";
+import MagicQuerier, { minimumRequestTimeout, SearchError } from "./util/MagicQuerier";
 
 export { default as BulkData } from "./api/BulkData";
 export * from "./api/Cards";
@@ -14,6 +16,10 @@ export { default as Sets } from "./api/Sets";
 export * from "./api/Symbology";
 export { default as Symbology } from "./api/Symbology";
 export * from "./IScry";
+
+
+Cards["Scry"] = exports;
+Sets["Scry"] = exports;
 
 
 /**
