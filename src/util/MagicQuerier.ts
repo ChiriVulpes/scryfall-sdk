@@ -4,7 +4,8 @@ import MagicEmitter from "./MagicEmitter";
 // the path to the api
 const endpoint = "https://api.scryfall.com";
 // the api requests 50-100 ms between calls, we go on the generous side and never wait less than 100 ms between calls
-const rateLimit = 100;
+export const defaultRequestTimeout = 100;
+export const minimumRequestTimeout = 50;
 
 
 let lastQuery = 0;
@@ -54,6 +55,7 @@ export default class MagicQuerier {
 	public static lastError: SearchError | undefined;
 	public static lastRetries = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
+	public static timeout = defaultRequestTimeout;
 
 	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
 
@@ -98,11 +100,11 @@ export default class MagicQuerier {
 	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig) {
 		const now = Date.now();
 		const timeSinceLastQuery = now - lastQuery;
-		if (timeSinceLastQuery >= rateLimit) {
+		if (timeSinceLastQuery >= MagicQuerier.timeout) {
 			lastQuery = now;
 
 		} else {
-			const timeUntilNextQuery = rateLimit - timeSinceLastQuery;
+			const timeUntilNextQuery = MagicQuerier.timeout - timeSinceLastQuery;
 			lastQuery += timeUntilNextQuery;
 			await sleep(timeUntilNextQuery);
 		}

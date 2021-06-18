@@ -31,3 +31,10 @@ export function error () {
 export function setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean) {
 	MagicQuerier.retry = { attempts, timeout, canRetry };
 }
+
+/**
+ * Sets the API calls to be spaced by at least this amount of time. Respects the minimum requested timeout provided by Scryfall.
+ */
+export function setTimeout (timeout: number) {
+	MagicQuerier.timeout = Math.max(minimumRequestTimeout, timeout);
+}
