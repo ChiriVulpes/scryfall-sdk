@@ -12,23 +12,23 @@
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
   - [`Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;`](#cardscollection-collection-cardidentifier-magicemittercard-)
-  - [`Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void`](#cardssetsymbologytransformer-transformer-string-symbologytransformer-void-)
+  - [`Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void`](#cardssetsymbologytransformer-transformer-string--symbologytransformer-void-)
   - [`Card`](#card-)
     - [`Card.getSet (): Promise<Set>`](#cardgetset--promiseset-)
-    - [`Card.getPrints (): Promise<Card[]>`](#cardgetprints--promise-card-)
-    - [`Card.getRulings (): Promise<Ruling[]>`](#cardgetrulings--promise-rulings-)
+    - [`Card.getPrints (): Promise<Card[]>`](#cardgetprints--promisecard-)
+    - [`Card.getRulings (): Promise<Ruling[]>`](#cardgetrulings--promiserulings-)
     - [`Card.isLegal (format: Format): boolean`](#cardislegal-format-format-boolean-)
     - [`Card.isIllegal (format: Format): boolean`](#cardisillegal-format-format-boolean-)
-    - [`Card.getText (): string | null`](#cardgettext--string-null-)
-    - [`Card.getCost (): string | null`](#cardgetcost--string-null-)
+    - [`Card.getText (): string | null`](#cardgettext--string--null-)
+    - [`Card.getCost (): string | null`](#cardgetcost--string--null-)
 - [Sets](#sets-)
   - [`Sets.byCode (code: string): Promise<Set>;` ](#setsbycode-code-string-promiseset-)
   - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-id-string-promiseset-)
   - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-id-number-promiseset-)
   - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
   - [`Set`](#set-)
-    - [`Set.getCards (): Promise<Card[]>`](#setgetcards--promise-card-)
-    - [`Set.search (query: string, options?: SearchOptions): Promise<Card[]>`](#setsearch-query-string-options-searchoptions-promise-card-)
+    - [`Set.getCards (): Promise<Card[]>`](#setgetcards--promisecard-)
+    - [`Set.search (query: string, options?: SearchOptions): Promise<Card[]>`](#setsearch-query-string-options-searchoptions-promisecard-)
 - [Rulings](#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promiseruling-)
   - [`Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectornumber-string--number-promiseruling-)
@@ -259,7 +259,7 @@ for (const card of cards) {
 
 Applies a symbology transformer to Card objects. Card objects contain a `mana_cost` and an `oracle_text` field, and these fields contain symbology formatted like `{U}`, `{8}`, `{B/W}`. A symbology transformer, if applied, will replace each symbol with something else.
 
-For performance, the symbology transformer is currently only applied in [`Card.getText`](#cardgettext-string--null-) and [`Card.getCost`](#cardgetcost-string--null-)
+For performance, the symbology transformer is currently only applied in [`Card.getText`](#cardgettext--string--null-) and [`Card.getCost`](#cardgetcost--string--null-)
 
 In the following example, a symbology transformer is added which can replace symbology with Discord emoji equivalents as seen in [Manamoji for Discord](https://github.com/scryfall/manamoji-discord):
 
