@@ -373,7 +373,7 @@ export namespace CardIdentifier {
 	}
 }
 
-export default new class Cards extends MagicQuerier {
+class Cards extends MagicQuerier {
 
 	protected set Scry (scry: typeof import("../Scry")) {
 		Scry = scry;
@@ -481,4 +481,6 @@ export default new class Cards extends MagicQuerier {
 
 		emitter.emit("done");
 	}
-};
+}
+
+export default new Cards;

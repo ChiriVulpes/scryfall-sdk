@@ -27,7 +27,7 @@ export interface BulkDataDefinition {
 	content_encoding: string;
 }
 
-export default new class BulkData extends MagicQuerier {
+class BulkData extends MagicQuerier {
 
 	/**
 	 * Returns a stream for the given bulk data if it has been updated since the last download time. If it hasn't, returns `undefined`
@@ -84,4 +84,6 @@ export default new class BulkData extends MagicQuerier {
 	private definition (idOrType: string) {
 		return this.query<BulkDataDefinition>(["bulk-data", idOrType]);
 	}
-};
+}
+
+export default new BulkData;

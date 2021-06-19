@@ -6,7 +6,7 @@ export interface Ruling {
 	comment: string;
 }
 
-export default new class Rulings extends MagicQuerier {
+class Rulings extends MagicQuerier {
 
 	public async byId (id: string) {
 		return (await this.query<List<Ruling>>(["cards", id, "rulings"])).data;
@@ -27,4 +27,6 @@ export default new class Rulings extends MagicQuerier {
 	public async byArenaId (id: number) {
 		return (await this.query<List<Ruling>>(["cards/arena", id, "rulings"])).data;
 	}
-};
+}
+
+export default new Rulings;

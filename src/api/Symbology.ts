@@ -23,7 +23,7 @@ export interface ManaCost {
 	multicolored: boolean;
 }
 
-export default new class Symbology extends MagicQuerier {
+class Symbology extends MagicQuerier {
 	public async all () {
 		return (await this.query<List<CardSymbol>>("symbology")).data;
 	}
@@ -31,4 +31,6 @@ export default new class Symbology extends MagicQuerier {
 	public async parseMana (shorthand: string) {
 		return this.query<ManaCost>("symbology/parse-mana", { cost: shorthand });
 	}
-};
+}
+
+export default new Symbology;

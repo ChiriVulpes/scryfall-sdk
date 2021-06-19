@@ -60,7 +60,7 @@ function initialiseSet (set: Set) {
 	return set;
 }
 
-export default new class Sets extends MagicQuerier {
+class Sets extends MagicQuerier {
 
 	protected set Scry (scry: typeof import("../Scry")) {
 		Scry = scry;
@@ -85,4 +85,6 @@ export default new class Sets extends MagicQuerier {
 		return this.query<Set>(["sets/tcgplayer", id])
 			.then(initialiseSet);
 	}
-};
+}
+
+export default new Sets;

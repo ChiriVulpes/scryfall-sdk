@@ -1,6 +1,6 @@
 import MagicQuerier, { ApiCatalog } from "../util/MagicQuerier";
 
-export default new class Catalog extends MagicQuerier {
+class Catalog extends MagicQuerier {
 	public async cardNames () {
 		return (await this.query<ApiCatalog>("catalog/card-names")).data;
 	}
@@ -52,4 +52,6 @@ export default new class Catalog extends MagicQuerier {
 	public async watermarks () {
 		return (await this.query<ApiCatalog>("catalog/watermarks")).data;
 	}
-};
+}
+
+export default new Catalog;

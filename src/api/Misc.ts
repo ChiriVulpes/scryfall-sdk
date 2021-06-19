@@ -10,8 +10,10 @@ export interface HomepageLink {
 	badge?: string | null;
 }
 
-export default new class Misc extends MagicQuerier {
+class Misc extends MagicQuerier {
 	public async homepageLinks () {
 		return (await this.query<List<HomepageLink>>("homepage-links")).data;
 	}
-};
+}
+
+export default new Misc;
