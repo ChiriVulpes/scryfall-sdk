@@ -235,6 +235,47 @@ enum PromoType {
 	arenaleague
 }
 
+export interface CardIdentifier {
+	id?: string;
+	mtgo_id?: number;
+	multiverse_id?: number;
+	oracle_id?: string;
+	illustration_id?: string;
+	name?: string;
+	set?: string;
+	collector_number?: string;
+}
+
+export namespace CardIdentifier {
+	export function byId (id: string): CardIdentifier {
+		return { id };
+	}
+
+	export function byMtgoId (id: number): CardIdentifier {
+		return { mtgo_id: id };
+	}
+
+	export function byMultiverseId (id: number): CardIdentifier {
+		return { multiverse_id: id };
+	}
+
+	export function byOracleId (id: string): CardIdentifier {
+		return { oracle_id: id };
+	}
+
+	export function byIllustrationId (id: string): CardIdentifier {
+		return { illustration_id: id };
+	}
+
+	export function byName (name: string, set?: string): CardIdentifier {
+		return { name, set };
+	}
+
+	export function bySet (set: string, collectorNumber: string | number): CardIdentifier {
+		return { collector_number: `${collectorNumber}`, set };
+	}
+}
+
 let Scry!: typeof import("../Scry");
 
 /**
@@ -398,47 +439,6 @@ export class Card {
 function initialiseCard (card: Card) {
 	Object.setPrototypeOf(card, Card.prototype);
 	return card;
-}
-
-export interface CardIdentifier {
-	id?: string;
-	mtgo_id?: number;
-	multiverse_id?: number;
-	oracle_id?: string;
-	illustration_id?: string;
-	name?: string;
-	set?: string;
-	collector_number?: string;
-}
-
-export namespace CardIdentifier {
-	export function byId (id: string): CardIdentifier {
-		return { id };
-	}
-
-	export function byMtgoId (id: number): CardIdentifier {
-		return { mtgo_id: id };
-	}
-
-	export function byMultiverseId (id: number): CardIdentifier {
-		return { multiverse_id: id };
-	}
-
-	export function byOracleId (id: string): CardIdentifier {
-		return { oracle_id: id };
-	}
-
-	export function byIllustrationId (id: string): CardIdentifier {
-		return { illustration_id: id };
-	}
-
-	export function byName (name: string, set?: string): CardIdentifier {
-		return { name, set };
-	}
-
-	export function bySet (set: string, collectorNumber: string | number): CardIdentifier {
-		return { collector_number: `${collectorNumber}`, set };
-	}
 }
 
 class Cards extends MagicQuerier {
