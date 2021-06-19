@@ -49,6 +49,7 @@
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
+  - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
 
@@ -496,6 +497,17 @@ Scry.setRetry(3, 1000);
 // allow 3 attempts, a timeout of 1000 ms, and only retry if the error code is "some_code"
 Scry.setRetry(3, 1000, error => error.code == "some_code");
 // some api requests here
+```
+
+
+### `setTimeout (timeout: number): void;` [🡅](#table-of-contents)
+
+Sets the length of time that must pass between API calls. By default, 100ms is used. This method will prevent you from setting the timeout to a shorter time than 50ms, which is the minimum time between calls that Scryfall requests.
+
+Example usage:
+```ts
+// wait 1 second between api calls
+Scry.setTimeout(1000);
 ```
 
 
