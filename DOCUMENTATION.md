@@ -8,15 +8,27 @@
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
   - [`Cards.byTcgPlayerId (id: number): Promise<Card>;` ](#cardsbytcgplayerid-id-number-promisecard-)
-  - [`Cards.search (query: string, options?: SearchOptions): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions--number-magicemittercard-)
+  - [`Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions--number-magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
   - [`Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;`](#cardscollection-collection-cardidentifier-magicemittercard-)
+  - [`Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void`](#cardssetsymbologytransformer-transformer-string-symbologytransformer-void-)
+  - [`Card`](#card-)
+    - [`Card.getSet (): Promise<Set>`](#cardgetset--promiseset-)
+    - [`Card.getPrints (): Promise<Card[]>`](#cardgetprints--promise-card-)
+    - [`Card.getRulings (): Promise<Ruling[]>`](#cardgetrulings--promise-rulings-)
+    - [`Card.isLegal (format: Format): boolean`](#cardislegal-format-format-boolean-)
+    - [`Card.isIllegal (format: Format): boolean`](#cardisillegal-format-format-boolean-)
+    - [`Card.getText (): string | null`](#cardgettext--string-null-)
+    - [`Card.getCost (): string | null`](#cardgetcost--string-null-)
 - [Sets](#sets-)
   - [`Sets.byCode (code: string): Promise<Set>;` ](#setsbycode-code-string-promiseset-)
   - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-id-string-promiseset-)
   - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-id-number-promiseset-)
   - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
+  - [`Set`](#set-)
+    - [`Set.getCards (): Promise<Card[]>`](#setgetcards--promise-card-)
+    - [`Set.search (query: string, options?: SearchOptions): Promise<Card[]>`](#setsearch-query-string-options-searchoptions-promise-card-)
 - [Rulings](#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promiseruling-)
   - [`Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectornumber-string--number-promiseruling-)
@@ -243,6 +255,95 @@ for (const card of cards) {
 // Chalice of the Void
 ```
 
+## `Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void;`
+
+Applies a symbology transformer to Card objects. Card objects contain a `mana_cost` and an `oracle_text` field, and these fields contain symbology formatted like `{U}`, `{8}`, `{B/W}`. A symbology transformer, if applied, will replace each symbol with something else.
+
+For performance, the symbology transformer is currently only applied in [`Card.getText`](#cardgettext-string--null-) and [`Card.getCost`](#cardgetcost-string--null-)
+
+In the following example, a symbology transformer is added which can replace symbology with Discord emoji equivalents as seen in [Manamoji for Discord](https://github.com/scryfall/manamoji-discord):
+
+```ts
+// $1 = first type or quantity, $2 = second type or empty string
+Scry.Cards.setSymbologyTransformer(":mana$1$2:");
+// equivalent to:
+Scry.Cards.setSymbologyTransformer((type1, type2) => `:mana-${type1}${type2}:`);
+
+// Input: {1}{W/B}{W/B}
+// Output: :mana1::manaWB::manaWB:
+```
+
+## `Card`
+
+### `Card.getSet (): Promise<Set>;`
+
+Returns the set this card is associated with.
+
+```ts
+const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+const set = await card.getSet();
+console.log(set.code); // dgm
+```
+
+### `Card.getPrints (): Promise<Card[]>;`
+
+Returns all prints of this card.
+
+```ts
+const card = await Scry.Cards.byId("1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4");
+const prints = await card.getPrints();
+console.log(prints.length); // 7
+```
+
+### `Card.getRulings (): Promise<Ruling[]>;`
+
+Returns an array of all rulings for this card.
+
+```ts
+const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+const rulings = await card.getRulings();
+console.log(rulings.length); // 2
+```
+
+### `Card.isLegal (format: Format): boolean;`
+
+Returns whether this card is `legal` or `restricted` in the given format.
+
+```ts
+const card = await Scry.Cards.byId("3462a3d0-5552-49fa-9eb7-100960c55891");
+console.log(card.isLegal("legacy")); // false
+console.log(card.isLegal("penny")); // false
+console.log(card.isLegal("vintage")); // true
+```
+
+### `Card.isIllegal (format: Format): boolean;`
+
+Returns whether this card is `not_legal` or `banned` in the given format.
+
+```ts
+const card = await Scry.Cards.byId("8c39f9b4-02b9-4d44-b8d6-4fd02ebbb0c5");
+console.log(card.isIllegal("standard")); // true
+console.log(card.isIllegal("vintage")); // false
+```
+
+### `Card.getText (): string | null;`
+Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
+
+```ts
+Scry.Cards.setSymbologyTransformer(":mana$1$2:");
+const card = await Scry.Cards.byId("be0e3547-d8cb-4b68-a396-8c8fbc3b2b1c");
+card.getText(); // :mana3::manaG:: Put a +1/+1 counter on Jungle Delver.
+```
+
+### `Card.getCost (): string | null;`
+Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
+
+```ts
+Scry.Cards.setSymbologyTransformer(":mana$1$2:");
+const card = await Scry.Cards.byId("a3f64ad2-4041-421d-baa2-206cedcecf0e");
+card.getCost(); // :mana1::manaWB::manaWB:
+```
+
 
 
 ## Sets [🡅](#table-of-contents)
@@ -281,6 +382,29 @@ Gets all sets.
 ```ts
 const set = await Scry.Sets.all();
 console.log(set.length); // 394
+```
+
+## `Set`
+All sets returned by the SDK have the following methods.
+
+### `Set.getCards (): Promise<Card[]>;`
+
+Gets all the cards in this set.
+
+```ts
+const set = await Scry.Sets.byCode("hou");
+const cards = await set.getCards();
+console.log(cards.length); // 199
+```
+
+### `Set.search (query: string, options?: SearchOptions): Promise<Card[]>;`
+
+Gets all cards in this set that match the given query.
+
+```ts
+const set = await Scry.Sets.byCode("hou");
+const cards = await set.search("type:planeswalker");
+console.log(cards.length); // 4
 ```
 
 

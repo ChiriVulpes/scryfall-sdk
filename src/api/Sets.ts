@@ -46,12 +46,12 @@ export class Set {
 	search_uri: string;
 
 	public getCards (options?: SearchOptions | number) {
-		return this.search(`s:${(this as any as Set).code}`, { order: "set", ...typeof options === "number" ? { page: options } : options })
-			.waitForAll();
+		return this.search(`s:${(this as any as Set).code}`, { order: "set", ...typeof options === "number" ? { page: options } : options });
 	}
 
 	public search (query: string, options?: SearchOptions | number) {
-		return Scry.Cards.search(`s:${(this as any as Set).code} ${query}`, options);
+		return Scry.Cards.search(`s:${(this as any as Set).code} ${query}`, options)
+			.waitForAll();
 	}
 }
 

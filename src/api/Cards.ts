@@ -305,7 +305,7 @@ function transform (self: Card,
 
 	const transformed = typeof symbologyTransformer === "string"
 		? text.replace(REGEX_SYMBOLOGY, symbologyTransformer)
-		: text.replace(REGEX_SYMBOLOGY, (_: string, type1: string, type2?: string) => (symbologyTransformer as SymbologyTransformer)(type1, type2));
+		: text.replace(REGEX_SYMBOLOGY, (_: string, type1: string, type2?: string) => (symbologyTransformer as SymbologyTransformer)(type1, type2 ?? ""));
 
 	map.set(transformerKey, transformed);
 	return transformed;

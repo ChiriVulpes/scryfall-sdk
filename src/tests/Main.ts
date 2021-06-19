@@ -3,6 +3,7 @@
 import * as chai from "chai";
 import { Stream } from "stream";
 import { BulkDataDefinition } from "../api/BulkData";
+import { Card, SymbologyTransformer } from "../api/Cards";
 /*
 import * as chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
@@ -335,13 +336,23 @@ describe("Scry", function () {
 			});
 
 			it("getCost", async () => {
-				let card = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
-				Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
-				expect(card.getCost()).eq(":mana-U:");
+				const map = new Map<Card, string>();
+				map.set(await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b"), ":mana-U:");
 				expect(Scry.error()).eq(undefined);
-				card = await Scry.Cards.byId("3e7da55c-7f05-46b2-aa3c-17f8d5df46bb");
-				expect(card.getCost()).eq(":mana-12:");
+				map.set(await Scry.Cards.byId("3e7da55c-7f05-46b2-aa3c-17f8d5df46bb"), ":mana-12:");
 				expect(Scry.error()).eq(undefined);
+				map.set(await Scry.Cards.byId("a3f64ad2-4041-421d-baa2-206cedcecf0e"), ":mana-1::mana-WB::mana-WB:");
+				expect(Scry.error()).eq(undefined);
+
+				const transformers: (string | SymbologyTransformer)[] = [
+					":mana-$1$2:",
+					(type1, type2) => `:mana-${type1}${type2}:`,
+				];
+				for (const transformer of transformers) {
+					Scry.Cards.setSymbologyTransformer(transformer);
+					for (const [card, expected] of map)
+						expect(card.getCost()).eq(expected);
+				}
 			});
 
 			it("getPrints", async () => {
@@ -414,20 +425,12 @@ describe("Scry", function () {
 
 			it("search", async () => {
 				const set = await Scry.Sets.byCode("hou");
-				const results: Scry.Card[] = [];
-				for await (const card of set.search("type:planeswalker").all()) {
-					if (card.layout !== "normal") {
-						return;
-					}
-
-					results.push(card);
-
+				const cards = await set.search("type:planeswalker");
+				for (const card of cards)
 					expect(card.type_line)
 						.satisfies((type: string) => type.startsWith("Legendary Planeswalker") || type.startsWith("Planeswalker"));
-					expect(Scry.error()).eq(undefined);
-				}
 
-				expect(results.length).eq(4);
+				expect(cards.length).eq(4);
 				expect(Scry.error()).eq(undefined);
 			});
 		});
