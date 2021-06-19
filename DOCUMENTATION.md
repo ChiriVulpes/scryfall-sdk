@@ -71,7 +71,8 @@ import Scry = require("scryfall-sdk");
 Gets a single card from its ID.
 
 ```ts
-Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.name)); // Blood Scrivener
+const card = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+console.log(card.name); // Blood Scrivener
 ```
 
 ### `Cards.byName (name: string, set?: string, fuzzy = false): Promise<Card>;` [🡅](#table-of-contents)
@@ -79,10 +80,17 @@ Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.l
 Gets a card based on its name. Supports fuzzy searching, by 1-2 replacements/translations.
 
 ```ts
-Scry.Cards.byName("Blood Scrivener").then(result => console.log(result.name)); // Blood Scrivener
-Scry.Cards.byName("Bliid Scrivener", true).then(result => console.log(result.name)); // Blood Scrivener
-Scry.Cards.byName("Loxodon Warhammer", "MRD").then(result => console.log(result.name, result.set)); // Loxodon Warhammer, mrd
-Scry.Cards.byName("Warhammer", "MRD", true).then(result => console.log(result.name, result.set)); // Loxodon Warhammer, mrd
+let card = await Scry.Cards.byName("Blood Scrivener");
+console.log(card.name); // Blood Scrivener
+
+card = await Scry.Cards.byName("Bliid Scrivener", true);
+console.log(card.name); // Blood Scrivener
+
+card = await Scry.Cards.byName("Loxodon Warhammer", "MRD");
+console.log(card.name, card.set); // Loxodon Warhammer, mrd
+
+card = await Scry.Cards.byName("Warhammer", "MRD", true);
+console.log(card.name, card.set); // Loxodon Warhammer, mrd
 ```
 
 ### `Cards.bySet (setCode: string, collectorNumber: number, lang?: string): Promise<Card>;` [🡅](#table-of-contents)
@@ -90,8 +98,11 @@ Scry.Cards.byName("Warhammer", "MRD", true).then(result => console.log(result.na
 Gets a card based on its set and collector id. You can use the optional `lang` argument to get cards in another language. See the [Scryfall Documentation for a list of all languages](https://scryfall.com/docs/api/languages).
 
 ```ts
-Scry.Cards.bySet("dgm", 22).then(result => console.log(result.name + ", " + result.printed_name)); // Blood Scrivener, undefined
-Scry.Cards.bySet("dgm", 22, "ja").then(result => console.log(result.name + ", " + result.printed_name)); // Blood Scrivener, 血の公証人
+let card = await Scry.Cards.bySet("dgm", 22);
+console.log(card.name, card.printed_name); // Blood Scrivener, undefined
+
+card = await Scry.Cards.bySet("dgm", 22, "ja");
+console.log(card.name, card.printed_name); // Blood Scrivener, 血の公証人
 ```
 
 ### `Cards.byMultiverseId (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -99,7 +110,8 @@ Scry.Cards.bySet("dgm", 22, "ja").then(result => console.log(result.name + ", " 
 Gets a card based on its multiverse id.
 
 ```ts
-Scry.Cards.byMultiverseId(369030).then(result => console.log(result.name)); // Blood Scrivener
+const card = await Scry.Cards.byMultiverseId(369030);
+console.log(card.name); // Blood Scrivener
 ```
 
 ### `Cards.byMtgoId (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -107,7 +119,8 @@ Scry.Cards.byMultiverseId(369030).then(result => console.log(result.name)); // B
 Gets a card based on its MTGO (sometimes called "Cat") id.
 
 ```ts
-Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Scrivener
+const card = await Scry.Cards.byMtgoId(48338);
+console.log(card.name); // Blood Scrivener
 ```
 
 ### `Cards.byArenaId (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -115,7 +128,8 @@ Scry.Cards.byMtgoId(48338).then(result => console.log(result.name)); // Blood Sc
 Gets a card based on its MTG Arena id.
 
 ```ts
-Scry.Cards.byArenaId(67330).then(result => console.log(result.name)); // Yargle, Glutton of Urborg
+const card = await Scry.Cards.byArenaId(67330);
+console.log(card.name); // Yargle, Glutton of Urborg
 ```
 
 ### `Cards.byTcgPlayerId (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -123,7 +137,8 @@ Scry.Cards.byArenaId(67330).then(result => console.log(result.name)); // Yargle,
 Gets a card based on its TCG Player id.
 
 ```ts
-Scry.Cards.byTcgPlayerId(1030).then(result => console.log(result.name)); // Ankh of Mishra
+const card = await Scry.Cards.byTcgPlayerId(1030);
+console.log(card.name); // Ankh of Mishra
 ```
 
 ### `Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` [🡅](#table-of-contents)
@@ -131,11 +146,13 @@ Scry.Cards.byTcgPlayerId(1030).then(result => console.log(result.name)); // Ankh
 Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
 
 ```ts
-Scry.Cards.search("type:planeswalker").on("data", card => {
-	console.log(card.name);
-}).on("end", () => {
-	console.log("done");
-});
+Scry.Cards.search("type:planeswalker")
+  .on("data", card => {
+    console.log(card.name);
+  })
+  .on("end", () => {
+    console.log("done");
+  });
 ```
 
 For information on how to provide extra options, see the [`/get/cards/search` page](https://scryfall.com/docs/api/cards/search) on Scryfall. You can also reference the `SearchOptions` interface in [`Cards.ts`](./src/api/Cards.ts)
@@ -145,7 +162,8 @@ This query returns a [`MagicEmitter`](#magicemittert-).
 The page parameter is the page of results that the query will begin at. A page is 175 cards, and cannot be changed. To get only the one page you requested, you can do the following:
 
 ```ts
-const cardsFromPage15 = await Scry.Cards.search("type:creature", 15).cancelAfterPage().waitForAll();
+const cardsFromPage7 = await Scry.Cards.search("type:creature", 7).cancelAfterPage().waitForAll();
+console.log(cardsFromPage7.length); // 175
 ```
 
 ### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
@@ -153,33 +171,31 @@ const cardsFromPage15 = await Scry.Cards.search("type:creature", 15).cancelAfter
 Gets a random card.
 
 ```ts
-Scry.Cards.random().then(result => console.log(result.name));
+const card = Scry.Cards.random();
+console.log(card.name); // TODO come up with a MTG meme to put here
 ```
 
 ### `Cards.autoCompleteName (name: string): Promise<string[]>;` [🡅](#table-of-contents)
 
 From the [Scryfall documentation](https://scryfall.com/docs/api/cards/autocomplete):
-
-Returns [an array] containing up to 25 full card names that could be autocompletions of the given string parameter q.
-
-This method is designed for creating assistive UI elements that allow users to free-type card names.
-The names are sorted with the nearest match first.
-
-Spaces, punctuation, and capitalization are ignored.
-
-If q is less than 2 characters long, or if no names match, the Catalog will contain 0 items (instead of returning any errors).
+> Returns [an array] containing up to 20 full English card names that could be autocompletions of the given string parameter.
+> 
+> This method is designed for creating assistive UI elements that allow users to free-type card names.
+> 
+> The names are sorted with the nearest match first, highly favoring results that begin with your given string.
+> 
+> Spaces, punctuation, and capitalization are ignored.
+> 
+> If the given string parameter is less than 2 characters long, or if no names match, the Catalog will contain 0 items (instead of returning any errors).
 
 ```ts
-Scry.Cards.autoCompleteName("bloodsc").then((results) => {
-	for (const result of results) {
-		console.log(result);
-		// Bloodscent
-		// Blood Scrivener
-		// Bloodscale Prowler
-		// Burning-Tree Bloodscale
-		// Ghor-Clan Bloodscale
-	}
-});
+const results = await Scry.Cards.autoCompleteName("bloodsc");
+results.forEach(console.log);
+// Bloodscent
+// Blood Scrivener
+// Bloodscale Prowler
+// Burning-Tree Bloodscale
+// Ghor-Clan Bloodscale
 ```
 
 ### `Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;` [🡅](#table-of-contents)
@@ -236,7 +252,8 @@ for (const card of cards) {
 Gets a set by its code.
 
 ```ts
-Scry.Sets.byCode("hou").then(set => console.log(set.name)); // Hour of Devastation
+const set = await Scry.Sets.byCode("hou");
+console.log(set.name); // Hour of Devastation
 ```
 
 ### `Sets.byId (id: string): Promise<Set>;` [🡅](#table-of-contents)
@@ -244,7 +261,8 @@ Scry.Sets.byCode("hou").then(set => console.log(set.name)); // Hour of Devastati
 Gets a set by its Scryfall ID.
 
 ```ts
-Scry.Sets.byId("65ff168b-bb94-47a5-a8f9-4ec6c213e768").then(set => console.log(set.name)); // Hour of Devastation
+const set = await Scry.Sets.byId("65ff168b-bb94-47a5-a8f9-4ec6c213e768");
+console.log(set.name); // Hour of Devastation
 ```
 
 ### `Sets.byTcgPlayerId (id: number): Promise<Set>;` [🡅](#table-of-contents)
@@ -252,7 +270,8 @@ Scry.Sets.byId("65ff168b-bb94-47a5-a8f9-4ec6c213e768").then(set => console.log(s
 Gets a set by its TCG Player ID, also known as the `groupId` on [TCGPlayer's API](https://docs.tcgplayer.com/docs).
 
 ```ts
-Scry.Sets.byTcgPlayerId(1934).then(set => console.log(set.name)); // Hour of Devastation
+const set = await Scry.Sets.byTcgPlayerId(1934);
+console.log(set.name); // Hour of Devastation
 ```
 
 ### `Sets.all (): Promise<Set[]>;` [🡅](#table-of-contents)
@@ -260,7 +279,8 @@ Scry.Sets.byTcgPlayerId(1934).then(set => console.log(set.name)); // Hour of Dev
 Gets all sets.
 
 ```ts
-Scry.Sets.all().then(result => console.log(result.length)); // 394
+const set = await Scry.Sets.all();
+console.log(set.length); // 394
 ```
 
 
@@ -272,7 +292,8 @@ Scry.Sets.all().then(result => console.log(result.length)); // 394
 Gets the rulings for a single card from its ID.
 
 ```ts
-Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console.log(result.length)); // 2
+const rulings = await Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+console.log(rulings.length); // 2
 ```
 
 ### `Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` [🡅](#table-of-contents)
@@ -280,7 +301,8 @@ Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050").then(result => console
 Gets the rulings for a card based on its set and collector id.
 
 ```ts
-Scry.Rulings.bySet("dgm", "22").then(result => console.log(result.length)); // 2
+const rulings = await Scry.Rulings.bySet("dgm", "22");
+console.log(rulings.length); // 2
 ```
 
 ### `Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
@@ -288,7 +310,8 @@ Scry.Rulings.bySet("dgm", "22").then(result => console.log(result.length)); // 2
 Gets the rulings for a card based on its multiverse id.
 
 ```ts
-Scry.Rulings.byMultiverseId(369030).then(result => console.log(result.length)); // 2
+const rulings = await Scry.Rulings.byMultiverseId(369030);
+console.log(rulings.length); // 2
 ```
 
 ### `Rulings.byMtgoId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
@@ -296,7 +319,8 @@ Scry.Rulings.byMultiverseId(369030).then(result => console.log(result.length)); 
 Gets the rulings for a card based on its MTGO (sometimes called "Cat") id.
 
 ```ts
-Scry.Rulings.byMtgoId(48338).then(result => console.log(result.length)); // 2
+const rulings = await Scry.Rulings.byMtgoId(48338);
+console.log(rulings.length); // 2
 ```
 
 ### `Rulings.byArenaId (id: number): Promise<Ruling[]>;` [🡅](#table-of-contents)
@@ -304,8 +328,10 @@ Scry.Rulings.byMtgoId(48338).then(result => console.log(result.length)); // 2
 Gets the rulings for a card based on its Arena id.
 
 ```ts
-Scry.Rulings.byArenaId(67204).then(result => console.log(result.length)); // 3
+const rulings = await Scry.Rulings.byArenaId(67204);
+console.log(rulings.length); // 3
 ```
+
 
 
 ## Symbology [🡅](#table-of-contents)
@@ -315,7 +341,8 @@ Scry.Rulings.byArenaId(67204).then(result => console.log(result.length)); // 3
 Gets all [card symbols](https://scryfall.com/docs/api/card-symbols).
 
 ```ts
-Scry.Symbology.all().then(result => console.log(result.length)); // 63
+const symbology = await Scry.Symbology.all();
+console.log(symbology.length); // 63
 ```
 
 ### `Symbology.parseMana (mana: string): Promise<ManaCost>;` [🡅](#table-of-contents)
@@ -327,8 +354,10 @@ Parses the given mana cost parameter and returns Scryfall’s interpretation.
 The server understands most community shorthand for mana costs (such as `2WW` for `{2}{W}{W}`). Symbols can also be out of order, lowercase, or have multiple colorless costs (such as `2{g}2` for `{4}{G}`).
 
 ```ts
-Scry.Symbology.parseMana("7wg").then(result => console.log(result.cost)); // {7}{W}{G}
+const manaCost = await Scry.Symbology.parseMana("7wg");
+console.log(manaCost.cost); // {7}{W}{G}
 ```
+
 
 
 ## Catalogs [🡅](#table-of-contents)
@@ -336,79 +365,92 @@ Scry.Symbology.parseMana("7wg").then(result => console.log(result.cost)); // {7}
 ### `Catalog.cardNames (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.cardNames().then(result => console.log(result.length)); // 18059
+const cardNames = await Scry.Catalog.cardNames();
+console.log(cardNames.length); // 18059
 ```
 
 ### `Catalog.artistNames (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.artistNames().then(result => console.log(result.length)); // 676
+const artistNames = await Scry.Catalog.artistNames();
+console.log(artistNames.length); // 676
 ```
 
 ### `Catalog.wordBank (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.wordBank().then(result => console.log(result.length)); // 12892
+const wordBank = await Scry.Catalog.wordBank();
+console.log(wordBank.length); // 12892
 ```
 
 ### `Catalog.creatureTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.creatureTypes().then(result => console.log(result.length)); // 242
+const creatureTypes = await Scry.Catalog.creatureTypes();
+console.log(creatureTypes.length); // 242
 ```
 
 ### `Catalog.planeswalkerTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.planeswalkerTypes().then(result => console.log(result.length)); // 42
+const planeswalkerTypes = await Scry.Catalog.planeswalkerTypes();
+console.log(planeswalkerTypes.length); // 42
 ```
 
 ### `Catalog.landTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.landTypes().then(result => console.log(result.length)); // 13
+const landTypes = await Scry.Catalog.landTypes();
+console.log(landTypes.length); // 13
 ```
 
 ### `Catalog.artifactTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.artifactTypes().then(result => console.log(result.length)); // 6
+const artifactTypes = await Scry.Catalog.artifactTypes();
+console.log(artifactTypes.length); // 6
 ```
 
 ### `Catalog.enchantmentTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.enchantmentTypes().then(result => console.log(result.length)); // 5
+const enchantmentTypes = await Scry.Catalog.enchantmentTypes();
+console.log(enchantmentTypes.length); // 5
 ```
 
 ### `Catalog.spellTypes (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.spellTypes().then(result => console.log(result.length)); // 2
+const spellTypes = await Scry.Catalog.spellTypes();
+console.log(spellTypes.length); // 2
 ```
 
 ### `Catalog.powers (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.powers().then(result => console.log(result.length)); // 33
+const powers = await Scry.Catalog.powers();
+console.log(powers.length); // 33
 ```
 
 ### `Catalog.toughnesses (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.toughnesses().then(result => console.log(result.length)); // 35
+const toughnesses = await Scry.Catalog.toughnesses();
+console.log(toughnesses.length); // 35
 ```
 
 ### `Catalog.loyalties (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.loyalties().then(result => console.log(result.length)); // 9
+const loyalties = await Scry.Catalog.loyalties();
+console.log(loyalties.length); // 9
 ```
 
 ### `Catalog.watermarks (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Catalog.watermarks().then(result => console.log(result.length)); // 50
+const watermarks = await Scry.Catalog.watermarks();
+console.log(watermarks.length); // 50
 ```
 
 
@@ -423,7 +465,8 @@ Returns a stream for a bulk data file by its type, or `undefined` if the bulk da
  * if you want to redownload the file regardless of the last time it was updated, just put `0` here.
  */
 const lastDownloadTime: number;
-Scry.BulkData.downloadByType("rulings", lastDownloadTime).then(result => console.log(result)); // either a stream or undefined
+const download = await Scry.BulkData.downloadByType("rulings", lastDownloadTime);
+console.log(download); // either a stream or undefined
 ```
 
 Example with saving the file to disk, assuming the usage of a promisified fs module:
@@ -440,21 +483,24 @@ Returns a stream for a bulk data file by its id, or `undefined` if the bulk data
 
 ```ts
 const id = "<an id here>"; // a UUID identifying the bulk data definition
-Scry.BulkData.downloadById(id, lastDownloadTime).then(result => console.log(result)); // either a stream or undefined
+const download = await Scry.BulkData.downloadById(id, lastDownloadTime);
+console.log(download); // either a stream or undefined
 ```
 
 ### `BulkData.definitions (): Promise<BulkDataDefinition[]>;` [🡅](#table-of-contents)
 Returns the definitions of all bulk data files that Scryfall is currently providing.
 
 ```ts
-Scry.BulkData.definitions().then(result => console.log(result.length)); // 5
+const definitions = await Scry.BulkData.definitions();
+console.log(definitions.length); // 5
 ```
 
 ### `BulkData.definitionByType (type: BulkDataType): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
 Returns a single bulk data file definition by its type.
 
 ```ts
-Scry.BulkData.definitionByType("rulings").then(result => console.log(result.object, result.type)); // "bulk_data rulings"
+const definition = await Scry.BulkData.definitionByType("rulings");
+console.log(definition.object, definition.type); // "bulk_data rulings"
 ```
 
 ### `BulkData.definitionById (id: string): Promise<BulkDataDefinition>;` [🡅](#table-of-contents)
@@ -462,8 +508,10 @@ Returns a single bulk data file definition by its id.
 
 ```ts
 const id = "<an id here>"; // a UUID identifying the bulk data definition
-Scry.BulkData.definitionById(id).then(result => console.log(result.object, result.type)); // "bulk_data rulings"
+const definition = await Scry.BulkData.definitionById(id);
+console.log(definition.object, definition.type); // "bulk_data rulings"
 ```
+
 
 
 ## Misc [🡅](#table-of-contents)
@@ -471,7 +519,8 @@ Scry.BulkData.definitionById(id).then(result => console.log(result.object, resul
 ### `homepageLinks (): Promise<string[]>;` [🡅](#table-of-contents)
 
 ```ts
-Scry.Misc.homepageLinks().then(result => console.log(result.length)); // 4
+const homepageLinks = await Scry.Misc.homepageLinks();
+console.log(homepageLinks.length); // 4
 ```
 
 
