@@ -326,6 +326,56 @@ describe("Scry", function () {
 				expect(rulings.length).eq(2);
 				expect(Scry.error()).eq(undefined);
 			});
+
+			it("getText", async () => {
+				const card = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+				Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
+				expect(card.getText()).eq(":mana-1::mana-U:, :mana-T:: Target creature gains flying until end of turn.");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("getCost", async () => {
+				let card = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+				Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
+				expect(card.getCost()).eq(":mana-U:");
+				expect(Scry.error()).eq(undefined);
+				card = await Scry.Cards.byId("3e7da55c-7f05-46b2-aa3c-17f8d5df46bb");
+				expect(card.getCost()).eq(":mana-12:");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("getPrints", async () => {
+				const card = await Scry.Cards.byId("1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4");
+				const prints = await card.getPrints();
+				expect(prints.length).gte(7);
+				for (const print of prints)
+					expect(print.name).eq("Chalice of the Void");
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("isLegal", async () => {
+				let card = await Scry.Cards.byId("3462a3d0-5552-49fa-9eb7-100960c55891");
+				expect(card.isLegal("legacy")).false; // banned
+				expect(card.isLegal("penny")).false; // not legal
+				expect(card.isLegal("vintage")).true; // legal
+				expect(Scry.error()).eq(undefined);
+				card = await Scry.Cards.byId("8c39f9b4-02b9-4d44-b8d6-4fd02ebbb0c5");
+				expect(card.isLegal("standard")).false; // not legal
+				expect(card.isLegal("vintage")).true; // restricted
+				expect(Scry.error()).eq(undefined);
+			});
+
+			it("isIllegal", async () => {
+				let card = await Scry.Cards.byId("3462a3d0-5552-49fa-9eb7-100960c55891");
+				expect(card.isIllegal("legacy")).true; // banned
+				expect(card.isIllegal("penny")).true; // not legal
+				expect(card.isIllegal("vintage")).false; // legal
+				expect(Scry.error()).eq(undefined);
+				card = await Scry.Cards.byId("8c39f9b4-02b9-4d44-b8d6-4fd02ebbb0c5");
+				expect(card.isIllegal("standard")).true; // not legal
+				expect(card.isIllegal("vintage")).false; // restricted
+				expect(Scry.error()).eq(undefined);
+			});
 		});
 	});
 

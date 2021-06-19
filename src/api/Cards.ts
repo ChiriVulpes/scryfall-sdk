@@ -237,6 +237,39 @@ enum PromoType {
 
 let Scry!: typeof import("../Scry");
 
+/**
+ * A transformer that replaces symbols as seen in `mana_cost` and `oracle_text` in the format: `{G}`, `{8}`, `{U/W}`, etc. 
+ * 
+ * A transformer will be given a type, and a potential second type (in the case of `{T/T}`), 
+ * and produce a string to replace the symbol in the text.
+ */
+export type SymbologyTransformer = (type: string, type2?: string) => string;
+let symbologyTransformer: SymbologyTransformer | string | undefined;
+const SYMBOL_TEXT = Symbol("TEXT");
+const SYMBOL_COST = Symbol("COST");
+const REGEX_SYMBOLOGY = /{([a-z]|\d+)(?:\/([a-z]))?}/gi;
+
+function transform (self: Card,
+	key: keyof { [KEY in keyof Card as Card[KEY] extends string | null | undefined ? KEY : never]: any },
+	map: WeakMap<SymbologyTransformer | String, string>) {
+
+	const text = self[key];
+	if (!text || !symbologyTransformer)
+		return text;
+
+	const transformerKey = typeof symbologyTransformer === "string" ? new String(symbologyTransformer) : symbologyTransformer;
+	const value = map.get(transformerKey);
+	if (value)
+		return value;
+
+	const transformed = typeof symbologyTransformer === "string"
+		? text.replace(REGEX_SYMBOLOGY, symbologyTransformer)
+		: text.replace(REGEX_SYMBOLOGY, (_: string, type1: string, type2?: string) => (symbologyTransformer as SymbologyTransformer)(type1, type2));
+
+	map.set(transformerKey, transformed);
+	return transformed;
+}
+
 export class Card {
 	object: "card";
 
@@ -325,6 +358,41 @@ export class Card {
 	public getRulings () {
 		return Scry.Rulings.byId(this.id);
 	}
+
+	public getPrints () {
+		return Scry.Cards.search(`oracleid:${this.oracle_id}`, { unique: "prints" })
+			.waitForAll();
+	}
+
+	/**
+	 * @returns `true` if this card is `legal` or `restricted` in the given format.
+	 */
+	public isLegal (format: keyof typeof Format) {
+		return this.legalities[format] === "legal" || this.legalities[format] === "restricted";
+	}
+
+	/**
+	 * @returns `true` if this card is `not_legal` or `banned` in the given format.
+	 */
+	public isIllegal (format: keyof typeof Format) {
+		return this.legalities[format] === "not_legal" || this.legalities[format] === "banned";
+	}
+
+	private [SYMBOL_TEXT]: WeakMap<SymbologyTransformer, string>;
+	/**
+	 * @returns The `oracle_text` of this card, with symbols transformed by the transformer as set by @see {@link Cards.setSymbologyTransformer}
+	 */
+	public getText () {
+		return transform(this, "oracle_text", this[SYMBOL_TEXT] ??= new WeakMap);
+	}
+
+	private [SYMBOL_COST]: WeakMap<SymbologyTransformer, string>;
+	/**
+	 * @returns The `mana_cost` of this card, with symbols transformed by the transformer as set by @see {@link Cards.setSymbologyTransformer}
+	 */
+	public getCost () {
+		return transform(this, "mana_cost", this[SYMBOL_COST] ??= new WeakMap);
+	}
 }
 
 function initialiseCard (card: Card) {
@@ -377,6 +445,11 @@ class Cards extends MagicQuerier {
 
 	protected set Scry (scry: typeof import("../Scry")) {
 		Scry = scry;
+	}
+
+	public setSymbologyTransformer (transformer?: string | SymbologyTransformer) {
+		symbologyTransformer = transformer;
+		return this;
 	}
 
 	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
