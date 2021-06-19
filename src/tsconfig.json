@@ -10,7 +10,6 @@
         "noUnusedParameters": false,
         "strictPropertyInitialization": false,
         "strict": true,
-		"removeComments": true,
 		"declaration": true
 	},
 	"include": [
