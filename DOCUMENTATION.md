@@ -327,7 +327,7 @@ console.log(card.isIllegal("vintage")); // false
 ```
 
 ### `Card.getText (): string | null;` [🡅](#table-of-contents)
-Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
+Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`](#cardssetsymbologytransformer-transformer-string--symbologytransformer-void-).
 
 ```ts
 Scry.Cards.setSymbologyTransformer(":mana$1$2:");
@@ -336,7 +336,7 @@ card.getText(); // :mana3::manaG:: Put a +1/+1 counter on Jungle Delver.
 ```
 
 ### `Card.getCost (): string | null;` [🡅](#table-of-contents)
-Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
+Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`](#cardssetsymbologytransformer-transformer-string--symbologytransformer-void-).
 
 ```ts
 Scry.Cards.setSymbologyTransformer(":mana$1$2:");
