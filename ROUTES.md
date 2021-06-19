@@ -1,4 +1,4 @@
-## Supported:
+## Documentation on Scryfall-SDK equivalents for Scryfall routes:
 
 | Query | Result |
 | --- | --- |
@@ -40,9 +40,3 @@
 | [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/homepage-links`](./DOCUMENTATION.md#cataloghomepagelinks--promisestring-) | List\<HomepageLink\> |
-
-
-## Todo:
-
-| Query | Result |
-| --- | --- |
