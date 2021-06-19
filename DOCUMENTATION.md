@@ -255,7 +255,7 @@ for (const card of cards) {
 // Chalice of the Void
 ```
 
-## `Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void;`
+## `Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void;` [🡅](#table-of-contents)
 
 Applies a symbology transformer to Card objects. Card objects contain a `mana_cost` and an `oracle_text` field, and these fields contain symbology formatted like `{U}`, `{8}`, `{B/W}`. A symbology transformer, if applied, will replace each symbol with something else.
 
@@ -273,9 +273,9 @@ Scry.Cards.setSymbologyTransformer((type1, type2) => `:mana-${type1}${type2}:`);
 // Output: :mana1::manaWB::manaWB:
 ```
 
-## `Card`
+## `Card` [🡅](#table-of-contents)
 
-### `Card.getSet (): Promise<Set>;`
+### `Card.getSet (): Promise<Set>;` [🡅](#table-of-contents)
 
 Returns the set this card is associated with.
 
@@ -285,7 +285,7 @@ const set = await card.getSet();
 console.log(set.code); // dgm
 ```
 
-### `Card.getPrints (): Promise<Card[]>;`
+### `Card.getPrints (): Promise<Card[]>;` [🡅](#table-of-contents)
 
 Returns all prints of this card.
 
@@ -295,7 +295,7 @@ const prints = await card.getPrints();
 console.log(prints.length); // 7
 ```
 
-### `Card.getRulings (): Promise<Ruling[]>;`
+### `Card.getRulings (): Promise<Ruling[]>;` [🡅](#table-of-contents)
 
 Returns an array of all rulings for this card.
 
@@ -305,7 +305,7 @@ const rulings = await card.getRulings();
 console.log(rulings.length); // 2
 ```
 
-### `Card.isLegal (format: Format): boolean;`
+### `Card.isLegal (format: Format): boolean;` [🡅](#table-of-contents)
 
 Returns whether this card is `legal` or `restricted` in the given format.
 
@@ -316,7 +316,7 @@ console.log(card.isLegal("penny")); // false
 console.log(card.isLegal("vintage")); // true
 ```
 
-### `Card.isIllegal (format: Format): boolean;`
+### `Card.isIllegal (format: Format): boolean;` [🡅](#table-of-contents)
 
 Returns whether this card is `not_legal` or `banned` in the given format.
 
@@ -326,7 +326,7 @@ console.log(card.isIllegal("standard")); // true
 console.log(card.isIllegal("vintage")); // false
 ```
 
-### `Card.getText (): string | null;`
+### `Card.getText (): string | null;` [🡅](#table-of-contents)
 Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
 
 ```ts
@@ -335,7 +335,7 @@ const card = await Scry.Cards.byId("be0e3547-d8cb-4b68-a396-8c8fbc3b2b1c");
 card.getText(); // :mana3::manaG:: Put a +1/+1 counter on Jungle Delver.
 ```
 
-### `Card.getCost (): string | null;`
+### `Card.getCost (): string | null;` [🡅](#table-of-contents)
 Returns the `oracle_text` of this card, if present, with any symbology transformed by the symbology transformer set in [`Cards.setSymbologyTransformer`]().
 
 ```ts
@@ -384,10 +384,10 @@ const set = await Scry.Sets.all();
 console.log(set.length); // 394
 ```
 
-## `Set`
+## `Set` [🡅](#table-of-contents)
 All sets returned by the SDK have the following methods.
 
-### `Set.getCards (): Promise<Card[]>;`
+### `Set.getCards (): Promise<Card[]>;` [🡅](#table-of-contents)
 
 Gets all the cards in this set.
 
@@ -397,7 +397,7 @@ const cards = await set.getCards();
 console.log(cards.length); // 199
 ```
 
-### `Set.search (query: string, options?: SearchOptions): Promise<Card[]>;`
+### `Set.search (query: string, options?: SearchOptions): Promise<Card[]>;` [🡅](#table-of-contents)
 
 Gets all cards in this set that match the given query.
 
