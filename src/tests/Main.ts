@@ -4,6 +4,7 @@ import * as chai from "chai";
 import { Stream } from "stream";
 import { BulkDataDefinition } from "../api/BulkData";
 import { Card, SymbologyTransformer } from "../api/Cards";
+import { ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK } from "../IScry";
 /*
 import * as chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
@@ -356,12 +357,26 @@ describe("Scry", function () {
 			});
 
 			it("getPrints", async () => {
+				let prints!: Card[];
+				function validatePrints () {
+					expect(prints.length).gte(7);
+					for (const print of prints)
+						expect(print.name).eq("Chalice of the Void");
+					expect(Scry.error()).eq(undefined);
+				}
+
 				const card = await Scry.Cards.byId("1f0d2e8e-c8f2-4b31-a6ba-6283fc8740d4");
-				const prints = await card.getPrints();
-				expect(prints.length).gte(7);
-				for (const print of prints)
-					expect(print.name).eq("Chalice of the Void");
-				expect(Scry.error()).eq(undefined);
+				MagicQuerier.requestCount = 0;
+				for (let i = 0; i < 5; i++) {
+					prints = await card.getPrints();
+					validatePrints();
+				}
+
+				expect(MagicQuerier.requestCount).eq(1, "Unnecessary requests");
+				prints = await prints[0].getPrints();
+				validatePrints();
+
+				expect(MagicQuerier.requestCount).eq(1, "Unnecessary requests");
 			});
 
 			it("isLegal", async () => {
@@ -386,6 +401,72 @@ describe("Scry", function () {
 				expect(card.isIllegal("standard")).true; // not legal
 				expect(card.isIllegal("vintage")).false; // restricted
 				expect(Scry.error()).eq(undefined);
+			});
+
+			it("getImageURI", async () => {
+				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
+				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+			});
+
+			it("getFrontImageURI", async () => {
+				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
+				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+			});
+
+			it("getBackImageURI", async () => {
+				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+				expect(card.getBackImageURI("normal")).eq(RESOURCE_GENERIC_CARD_BACK);
+				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
+				expect(card.getBackImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+			});
+
+			describe("on faces", () => {
+				it("getText", async () => {
+					const card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+					Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
+					expect(card.getText()).undefined;
+					expect(card.card_faces.length).eq(2);
+					expect(card.card_faces[0].getText()).eq("Counter target spell unless its controller pays :mana-3:.");
+					expect(card.card_faces[1].getText()).eq("Aftermath (Cast this spell only from your graveyard. Then exile it.)\nUp to three target lands don't untap during their controller's next untap step.");
+					expect(Scry.error()).eq(undefined);
+				});
+
+				it("getCost", async () => {
+					const card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+					Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
+					expect(card.getCost()).eq(":mana-2::mana-U: // :mana-2::mana-R:");
+					expect(card.card_faces.length).eq(2);
+					expect(card.card_faces[0].getCost()).eq(":mana-2::mana-U:");
+					expect(card.card_faces[1].getCost()).eq(":mana-2::mana-R:");
+					expect(Scry.error()).eq(undefined);
+				});
+
+				it("getImageURI", async () => {
+					let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
+					expect(card.card_faces.length).eq(2);
+					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+					card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
+					expect(card.card_faces.length).eq(2);
+					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+				});
+			});
+
+			describe("related cards", () => {
+				it("get", async () => {
+					const card = await Scry.Cards.byId("e634baa3-2cdd-412a-9407-c347fe46f9b8");
+					const tokens = card.getTokens();
+					expect(tokens.length).eq(2);
+					expect(tokens.map(token => token.name)).members(["Human Soldier", "Dinosaur"]);
+					const tokenCards = await Promise.all(tokens.map(token => token.get()));
+					expect(tokenCards.length).eq(2);
+					expect(tokenCards.map(card => card.oracle_text)).members(["", "Haste"]);
+				})
 			});
 		});
 	});

@@ -1,6 +1,7 @@
-import { Color } from "../IScry";
+import { Color, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
 import MagicEmitter from "../util/MagicEmitter";
 import MagicQuerier, { ApiCatalog, List } from "../util/MagicQuerier";
+import { Ruling } from "./Rulings";
 import { Set } from "./Sets";
 
 enum UniqueStrategy {
@@ -169,7 +170,10 @@ enum RelatedCardComponent {
 	combo_piece,
 }
 
-export interface RelatedCard {
+let Scry!: typeof import("../Scry");
+const SYMBOL_CARD = Symbol("CARD");
+
+export class RelatedCard {
 	object: "related_card";
 
 	id: string;
@@ -177,19 +181,35 @@ export interface RelatedCard {
 	name: string;
 	type_line: string;
 	uri: string;
+
+	public static construct (card: RelatedCard) {
+		Object.setPrototypeOf(card, RelatedCard.prototype);
+		return card;
+	}
+
+	private [SYMBOL_CARD]?: Card;
+	public async get () {
+		return this[SYMBOL_CARD] ??= await Scry.Cards.byId(this.id);
+	}
 }
 
-export interface CardFace {
+interface CardFaceMethods {
+	getText (): string | null | undefined;
+	getCost (): string | null | undefined;
+	getImageURI (version: keyof ImageUris): string | null | undefined;
+}
+
+export interface CardFace extends CardFaceMethods {
 	object: "card_face";
 
 	artist?: string | null;
 	color_indicator?: Color[] | null;
-	colors: Color[];
+	colors?: Color[] | null;
 	flavor_text?: string | null;
 	illustration_id?: string | null;
 	image_uris?: ImageUris | null;
 	loyalty?: string | null;
-	mana_cost: string;
+	mana_cost?: string | null;
 	name: string;
 	oracle_text?: string | null;
 	power?: string | null;
@@ -276,8 +296,6 @@ export namespace CardIdentifier {
 	}
 }
 
-let Scry!: typeof import("../Scry");
-
 /**
  * A transformer that replaces symbols as seen in `mana_cost` and `oracle_text` in the format: `{G}`, `{8}`, `{U/W}`, etc. 
  * 
@@ -286,8 +304,6 @@ let Scry!: typeof import("../Scry");
  */
 export type SymbologyTransformer = (type: string, type2?: string) => string;
 let symbologyTransformer: SymbologyTransformer | string | undefined;
-const SYMBOL_TEXT = Symbol("TEXT");
-const SYMBOL_COST = Symbol("COST");
 const REGEX_SYMBOLOGY = /{([a-z]|\d+)(?:\/([a-z]))?}/gi;
 
 function transform (self: Card,
@@ -311,7 +327,7 @@ function transform (self: Card,
 	return transformed;
 }
 
-export class Card {
+export class Card implements CardFaceMethods {
 	object: "card";
 
 	// core fields
@@ -330,7 +346,7 @@ export class Card {
 
 	// gameplay fields
 	all_parts?: RelatedCard[] | null;
-	card_faces?: CardFace[] | null;
+	card_faces: CardFace[];
 	cmc: number;
 	colors?: Color[] | null;
 	color_identity: Color[];
@@ -392,17 +408,49 @@ export class Card {
 	watermark?: string | null;
 	preview?: Preview | null;
 
-	public getSet () {
-		return Scry.Sets.byId(this.set);
+	public static construct (card: Card) {
+		Object.setPrototypeOf(card, Card.prototype);
+
+		if (!card.card_faces)
+			card.card_faces = [{ object: "card_face" } as CardFace];
+
+		for (const face of card.card_faces)
+			Object.setPrototypeOf(face, card);
+
+		card.all_parts?.forEach(RelatedCard.construct);
+
+		return card;
 	}
 
-	public getRulings () {
-		return Scry.Rulings.byId(this.id);
+	private [SYMBOL_SET]?: Set;
+	public async getSet () {
+		return this[SYMBOL_SET] ??= await Scry.Sets.byId(this.set);
 	}
 
-	public getPrints () {
-		return Scry.Cards.search(`oracleid:${this.oracle_id}`, { unique: "prints" })
-			.waitForAll();
+	private [SYMBOL_RULINGS]?: Ruling[];
+	public async getRulings () {
+		return this[SYMBOL_RULINGS] ??= await Scry.Rulings.byId(this.id);
+	}
+
+	private [SYMBOL_PRINTS]?: Card[];
+	public async getPrints () {
+		if (!this[SYMBOL_PRINTS]) {
+			this[SYMBOL_PRINTS] = await Scry.Cards.search(`oracleid:${this.oracle_id}`, { unique: "prints" })
+				.waitForAll();
+
+			for (const card of this[SYMBOL_PRINTS]!) {
+				card[SYMBOL_SET] ??= this[SYMBOL_SET];
+				card[SYMBOL_RULINGS] ??= this[SYMBOL_RULINGS];
+				card[SYMBOL_PRINTS] ??= this[SYMBOL_PRINTS];
+			}
+		}
+
+		return this[SYMBOL_PRINTS]!;
+	}
+
+	public getTokens () {
+		return !this.all_parts ? []
+			: this.all_parts.filter(part => part.component === "token");
 	}
 
 	/**
@@ -424,7 +472,10 @@ export class Card {
 	 * @returns The `oracle_text` of this card, with symbols transformed by the transformer as set by @see {@link Cards.setSymbologyTransformer}
 	 */
 	public getText () {
-		return transform(this, "oracle_text", this[SYMBOL_TEXT] ??= new WeakMap);
+		if (!this.hasOwnProperty(SYMBOL_TEXT))
+			this[SYMBOL_TEXT] = new WeakMap;
+
+		return transform(this, "oracle_text", this[SYMBOL_TEXT]);
 	}
 
 	private [SYMBOL_COST]: WeakMap<SymbologyTransformer, string>;
@@ -432,13 +483,27 @@ export class Card {
 	 * @returns The `mana_cost` of this card, with symbols transformed by the transformer as set by @see {@link Cards.setSymbologyTransformer}
 	 */
 	public getCost () {
-		return transform(this, "mana_cost", this[SYMBOL_COST] ??= new WeakMap);
-	}
-}
+		if (!this.hasOwnProperty(SYMBOL_COST))
+			this[SYMBOL_COST] = new WeakMap;
 
-function initialiseCard (card: Card) {
-	Object.setPrototypeOf(card, Card.prototype);
-	return card;
+		return transform(this, "mana_cost", this[SYMBOL_COST]);
+	}
+
+	public getImageURI (version: keyof ImageUris) {
+		return this.image_uris?.[version]
+			?? this.card_faces[0].image_uris?.[version];
+	}
+
+	public getFrontImageURI (version: keyof ImageUris) {
+		return this.card_faces[0].image_uris?.[version]
+			?? this.image_uris?.[version];
+	}
+
+	public getBackImageURI (version: keyof ImageUris) {
+		return this.layout !== "transform" && this.layout !== "double_faced_token"
+			? RESOURCE_GENERIC_CARD_BACK
+			: this.card_faces[1].image_uris?.[version] ?? RESOURCE_GENERIC_CARD_BACK;
+	}
 }
 
 class Cards extends MagicQuerier {
@@ -464,44 +529,44 @@ class Cards extends MagicQuerier {
 			[fuzzy ? "fuzzy" : "exact"]: name,
 			set,
 		})
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async byId (id: string) {
 		return this.query<Card>(["cards", id])
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async bySet (setCode: string | Set, collectorNumber: number, lang?: string) {
 		const path = ["cards", typeof setCode === "string" ? setCode : setCode.code, collectorNumber];
 		if (lang) path.push(lang);
 		return this.query<Card>(path)
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async byMultiverseId (id: number) {
 		return this.query<Card>(["cards/multiverse", id])
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async byMtgoId (id: number) {
 		return this.query<Card>(["cards/mtgo", id])
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async byArenaId (id: number) {
 		return this.query<Card>(["cards/arena", id])
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async byTcgPlayerId (id: number) {
 		return this.query<Card>(["cards/tcgplayer", id])
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	public async random () {
 		return this.query<Card>("cards/random")
-			.then(initialiseCard);
+			.then(Card.construct);
 	}
 
 	/**
@@ -509,7 +574,7 @@ class Cards extends MagicQuerier {
 	 */
 	public search (query: string, options?: SearchOptions | number) {
 		const emitter = new MagicEmitter<Card>()
-			.map(initialiseCard);
+			.map(Card.construct);
 
 		this.queryPage(emitter, "cards/search", { q: query, ...typeof options === "number" ? { page: options } : options })
 			.catch(err => emitter.emit("error", err));
@@ -523,7 +588,7 @@ class Cards extends MagicQuerier {
 
 	public collection (...identifiers: CardIdentifier[]) {
 		const emitter = new MagicEmitter<Card, CardIdentifier>()
-			.map(initialiseCard);
+			.map(Card.construct);
 
 		void this.processCollection(emitter, identifiers);
 

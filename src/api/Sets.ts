@@ -1,5 +1,6 @@
+import { SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
 import MagicQuerier, { List } from "../util/MagicQuerier";
-import { SearchOptions } from "./Cards";
+import { Card, SearchOptions } from "./Cards";
 
 enum SetType {
 	core,
@@ -24,6 +25,8 @@ enum SetType {
 	memorabilia,
 }
 
+type SetSearchOptions = Omit<SearchOptions, "page">;
+
 let Scry!: typeof import("../Scry");
 
 export class Set {
@@ -45,19 +48,26 @@ export class Set {
 	icon_svg_uri: string;
 	search_uri: string;
 
-	public getCards (options?: SearchOptions | number) {
-		return this.search(`s:${(this as any as Set).code}`, { order: "set", ...typeof options === "number" ? { page: options } : options });
+	public static construct (set: Set) {
+		Object.setPrototypeOf(set, Set.prototype);
+		return set;
 	}
 
-	public search (query: string, options?: SearchOptions | number) {
-		return Scry.Cards.search(`s:${(this as any as Set).code} ${query}`, options)
+	private [SYMBOL_CARDS]?: Card[];
+	public async getCards (options?: SetSearchOptions) {
+		if (!options)
+			return this[SYMBOL_CARDS] ??= await this.search(`s:${this.code}`, { order: "set" });
+		return this.search(`s:${this.code}`, { order: "set", ...options });
+	}
+
+	public search (query: string, options?: SetSearchOptions) {
+		return Scry.Cards.search(`s:${this.code} ${query}`, options)
+			.map(card => {
+				card[SYMBOL_SET] ??= this;
+				return card;
+			})
 			.waitForAll();
 	}
-}
-
-function initialiseSet (set: Set) {
-	Object.setPrototypeOf(set, Set.prototype);
-	return set;
 }
 
 class Sets extends MagicQuerier {
@@ -68,22 +78,22 @@ class Sets extends MagicQuerier {
 
 	public async all () {
 		return (await this.query<List<Set>>("sets")).data
-			.map(initialiseSet);
+			.map(Set.construct);
 	}
 
 	public async byCode (code: string) {
 		return this.query<Set>(["sets", code])
-			.then(initialiseSet);
+			.then(Set.construct);
 	}
 
 	public async byId (id: string) {
 		return this.query<Set>(["sets", id])
-			.then(initialiseSet);
+			.then(Set.construct);
 	}
 
 	public async byTcgPlayerId (id: number) {
 		return this.query<Set>(["sets/tcgplayer", id])
-			.then(initialiseSet);
+			.then(Set.construct);
 	}
 }
 

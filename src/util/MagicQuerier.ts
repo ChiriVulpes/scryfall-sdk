@@ -1,8 +1,7 @@
 import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { ENDPOINT_API } from "../IScry";
 import MagicEmitter from "./MagicEmitter";
 
-// the path to the api
-const endpoint = "https://api.scryfall.com";
 // the api requests 50-100 ms between calls, we go on the generous side and never wait less than 100 ms between calls
 export const defaultRequestTimeout = 100;
 export const minimumRequestTimeout = 50;
@@ -56,6 +55,7 @@ export default class MagicQuerier {
 	public static lastRetries = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
 	public static timeout = defaultRequestTimeout;
+	public static requestCount = 0;
 
 	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
 
@@ -111,11 +111,13 @@ export default class MagicQuerier {
 
 		let lastError: SearchError | undefined;
 
+		MagicQuerier.requestCount++;
+
 		const result = await Axios.request({
 			data: post,
 			method: post ? "POST" : "GET",
 			params: query,
-			url: `${endpoint}/${apiPath}`,
+			url: `${ENDPOINT_API}/${apiPath}`,
 			...requestOptions,
 		}).catch(({ response }: { response: { data: any } }) => {
 			lastError = response.data;
