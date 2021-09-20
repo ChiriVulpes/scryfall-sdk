@@ -36,6 +36,9 @@ module.exports = {
 		"@typescript-eslint/no-empty-interface": ["off"],
 		"@typescript-eslint/no-unsafe-assignment": ["off"],
 		"@typescript-eslint/no-unsafe-return": ["off"],
+		"@typescript-eslint/unbound-method": ["off"],
+		"no-prototype-builtins": ["off"],
+		"@typescript-eslint/no-unused-vars": ["off"],
 
 	},
 } as ESLint.Options;

@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { Stream } from "stream";
+import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
 
 enum BulkDataTypes {
@@ -51,14 +52,17 @@ class BulkData extends MagicQuerier {
 	// Definitions
 	//
 
+	@Cached
 	public async definitions () {
 		return (await this.query<List<BulkDataDefinition>>("bulk-data")).data;
 	}
 
+	@Cached
 	public async definitionByType (type: BulkDataType) {
 		return this.definition(type);
 	}
 
+	@Cached
 	public async definitionById (id: string) {
 		return this.definition(id);
 	}

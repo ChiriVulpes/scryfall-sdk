@@ -1,4 +1,5 @@
 import { SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
+import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
 import { Card, SearchOptions } from "./Cards";
 
@@ -81,16 +82,19 @@ class Sets extends MagicQuerier {
 			.map(Set.construct);
 	}
 
+	@Cached
 	public async byCode (code: string) {
 		return this.query<Set>(["sets", code])
 			.then(Set.construct);
 	}
 
+	@Cached
 	public async byId (id: string) {
 		return this.query<Set>(["sets", id])
 			.then(Set.construct);
 	}
 
+	@Cached
 	public async byTcgPlayerId (id: number) {
 		return this.query<Set>(["sets/tcgplayer", id])
 			.then(Set.construct);

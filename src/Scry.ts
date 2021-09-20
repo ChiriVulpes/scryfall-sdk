@@ -1,5 +1,6 @@
 import Cards from "./api/Cards";
 import Sets from "./api/Sets";
+import Cached from "./util/Cached";
 import MagicQuerier, { minimumRequestTimeout, SearchError } from "./util/MagicQuerier";
 
 export { default as BulkData } from "./api/BulkData";
@@ -43,4 +44,12 @@ export function setRetry (attempts: number, timeout?: number, canRetry?: (error:
  */
 export function setTimeout (timeout: number) {
 	MagicQuerier.timeout = Math.max(minimumRequestTimeout, timeout);
+}
+
+/**
+ * Sets the duration that most API calls will be cached. By default, the cache duration is 1 day. 
+ * **Note:* The entire cache is cleared after this duration, not individual results.
+ */
+export function setCacheDuration (timeout: number) {
+	Cached.duration = timeout;
 }

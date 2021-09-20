@@ -10,7 +10,8 @@
         "noUnusedParameters": false,
         "strictPropertyInitialization": false,
         "strict": true,
-		"declaration": true
+		"declaration": true,
+		"experimentalDecorators": true
 	},
 	"include": [
 		"**/*.ts"

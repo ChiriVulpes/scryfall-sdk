@@ -62,6 +62,7 @@
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
   - [`error (): SearchError | undefined;`](#error--searcherror--undefined-)
   - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
+  - [`setCacheDuration (timeout: number): void;`](#setcacheduration-timeout-number-void-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
 
@@ -685,6 +686,19 @@ Example usage:
 ```ts
 // wait 1 second between api calls
 Scry.setTimeout(1000);
+```
+
+
+### `setCacheDuration (timeout: number): void;` [🡅](#table-of-contents)
+
+Many, but not all query functions cache their results. For example, trying to get a card by ID twice will return the cached copy, rather than requesting it from Scryfall again. The cache is stored globally, which means that after the cache duration passes, *everything* will be re-cached.
+
+By default, scryfall-sdk uses a cache duration of 24 hours.
+
+Example usage:
+```ts
+// cache for five hours
+Scry.setCacheDuration(1000 * 60 * 60 * 5);
 ```
 
 

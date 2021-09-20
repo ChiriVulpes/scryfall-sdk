@@ -1,3 +1,4 @@
+import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
 
 export interface HomepageLink {
@@ -11,6 +12,7 @@ export interface HomepageLink {
 }
 
 class Misc extends MagicQuerier {
+	@Cached
 	public async homepageLinks () {
 		return (await this.query<List<HomepageLink>>("homepage-links")).data;
 	}

@@ -1,3 +1,8 @@
+# v3.0.0 (TBD)
+- Cards and sets now come with helper methods to make consuming the data a little bit more convenient.
+- You can now configure the request timeout with [`Scry.setTimeout`](./DOCUMENTATION.md#settimeout-timeout-number-void-)
+- Many (not all) query functions now have cached results. You can configure a project-wide cache duration with [`Scry.setCacheDuration`](./DOCUMENTATION.md#setcacheduration-timeout-number-void-)
+
 # v2.1.1 (January 5th, 2020)
 - Updated axios to [fix a security vulnerability](https://github.com/axios/axios/issues/3407)
 

@@ -1,4 +1,5 @@
 import { Color, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
+import Cached from "../util/Cached";
 import MagicEmitter from "../util/MagicEmitter";
 import MagicQuerier, { ApiCatalog, List } from "../util/MagicQuerier";
 import { Ruling } from "./Rulings";
@@ -519,6 +520,7 @@ class Cards extends MagicQuerier {
 
 	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
 	public async byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
+	@Cached
 	public async byName (name: string, set?: string | boolean, fuzzy = false) {
 		if (typeof set === "boolean") {
 			fuzzy = set;
@@ -532,11 +534,13 @@ class Cards extends MagicQuerier {
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async byId (id: string) {
 		return this.query<Card>(["cards", id])
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async bySet (setCode: string | Set, collectorNumber: number, lang?: string) {
 		const path = ["cards", typeof setCode === "string" ? setCode : setCode.code, collectorNumber];
 		if (lang) path.push(lang);
@@ -544,21 +548,25 @@ class Cards extends MagicQuerier {
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async byMultiverseId (id: number) {
 		return this.query<Card>(["cards/multiverse", id])
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async byMtgoId (id: number) {
 		return this.query<Card>(["cards/mtgo", id])
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async byArenaId (id: number) {
 		return this.query<Card>(["cards/arena", id])
 			.then(Card.construct);
 	}
 
+	@Cached
 	public async byTcgPlayerId (id: number) {
 		return this.query<Card>(["cards/tcgplayer", id])
 			.then(Card.construct);
@@ -582,6 +590,7 @@ class Cards extends MagicQuerier {
 		return emitter;
 	}
 
+	@Cached
 	public async autoCompleteName (name: string) {
 		return (await this.query<ApiCatalog>("cards/autocomplete", { q: name })).data;
 	}
