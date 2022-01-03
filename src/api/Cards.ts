@@ -96,6 +96,7 @@ enum Layout {
 	split,
 	flip,
 	transform,
+	modal_dfc,
 	meld,
 	leveler,
 	saga,
