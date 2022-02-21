@@ -13,7 +13,7 @@ function sleep (ms = 0) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-type TOrArrayOfT<T> = T | T[];
+export type TOrArrayOfT<T> = T | T[];
 
 export interface Data<T, NOT_FOUND = never> {
 	data: T[];
@@ -21,6 +21,7 @@ export interface Data<T, NOT_FOUND = never> {
 }
 
 export interface List<T, NOT_FOUND = never> extends Data<T, NOT_FOUND> {
+	object: "list";
 	has_more: boolean;
 	next_page: string | null;
 	total_cards: string | null;
@@ -29,7 +30,7 @@ export interface List<T, NOT_FOUND = never> extends Data<T, NOT_FOUND> {
 
 export interface ApiCatalog extends Data<string> { }
 
-export interface SearchError {
+export interface SearchError extends Error {
 	object: "error";
 	code: string;
 	status: number;
@@ -58,10 +59,8 @@ export default class MagicQuerier {
 	public static requestCount = 0;
 
 	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
-
-		if (Array.isArray(apiPath)) {
+		if (Array.isArray(apiPath))
 			apiPath = apiPath.join("/");
-		}
 
 		let lastError: SearchError | undefined;
 		let result: AxiosResponse | undefined;
@@ -75,17 +74,28 @@ export default class MagicQuerier {
 		MagicQuerier.lastError = lastError;
 		MagicQuerier.lastRetries = retries;
 
-		return result ? result.data : ({ data: [], not_found: [] });
+		if (!result?.data)
+			throw lastError ?? new Error("No data");
+
+		return result.data;
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
-		const results = await this.query<List<T>>(apiPath, { ...query, page });
-		for (const card of results.data) {
+		const results = await this.query<List<T>>(apiPath, { ...query, page })
+			.catch(err => undefined);
+
+		const data = results?.data ?? [];
+		if (results?.object !== "list" && MagicQuerier.lastError === undefined) {
+			emitter.emit("error", new Error("Result object is not a list"));
+			return;
+		}
+
+		for (const card of data) {
 			if (emitter.cancelled) break;
 			emitter.emit("data", card);
 		}
 
-		if (results.has_more) {
+		if (results?.has_more) {
 			if (!emitter.cancelled) {
 				if (emitter.willCancelAfterPage) emitter.cancel();
 				else return this.queryPage(emitter, apiPath, query, page + 1)
@@ -120,7 +130,9 @@ export default class MagicQuerier {
 			url: `${ENDPOINT_API}/${apiPath}`,
 			...requestOptions,
 		}).catch(({ response }: { response: { data: any } }) => {
-			lastError = response.data;
+			const error = response.data as SearchError;
+			lastError = new Error(error.details ?? error.code) as SearchError;
+			Object.assign(lastError, response.data);
 		}) || undefined;
 
 		return { result, lastError };

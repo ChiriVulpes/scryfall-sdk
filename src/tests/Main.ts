@@ -1,17 +1,16 @@
 /// <reference types="mocha" />
 
 import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
 import { Stream } from "stream";
 import { BulkDataDefinition } from "../api/BulkData";
 import { Card, SymbologyTransformer } from "../api/Cards";
 import { ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK } from "../IScry";
-/*
-import * as chaiAsPromised from "chai-as-promised";
-chai.use(chaiAsPromised);
-*/
 import * as Scry from "../Scry";
 import MagicQuerier from "../util/MagicQuerier";
+
 const expect = chai.expect;
+chai.use(chaiAsPromised);
 
 
 describe("Scry", function () {
@@ -32,9 +31,12 @@ describe("Scry", function () {
 			});
 
 			it("fuzzy", async () => {
-				const card = await Scry.Cards.byName("Bliid Scrivener", true);
-				expect(card.name).eq("Blood Scrivener");
+				let card = await Scry.Cards.byName("Bliid Scrivener", true);
+				expect(card?.name).eq("Blood Scrivener");
 				expect(Scry.error()).eq(undefined);
+				card = await Scry.Cards.byName("rstdrdtst", true);
+				expect(card).eq(undefined);
+				expect(Scry.error()).satisfies((value: any) => typeof value === "object" && !!value && value.status === 404);
 			});
 
 			it("with set filter", async () => {
@@ -46,8 +48,8 @@ describe("Scry", function () {
 
 			it("fuzzy with set filter", async () => {
 				const card = await Scry.Cards.byName("Warhammer", "MRD", true);
-				expect(card.name).eq("Loxodon Warhammer");
-				expect(card.set).eq("mrd");
+				expect(card?.name).eq("Loxodon Warhammer");
+				expect(card?.set).eq("mrd");
 				expect(Scry.error()).eq(undefined);
 			});
 		});
@@ -714,12 +716,12 @@ describe("Scry", function () {
 
 	describe("on errors", () => {
 		it("should return the error", async () => {
-			await Scry.Cards.byMultiverseId("bananas" as any);
+			await expect(Scry.Cards.byMultiverseId("bananas" as any)).rejected;
 			expect(Scry.error()).not.eq(undefined);
 		});
 
 		it("should overwrite the previous error", async () => {
-			await Scry.Cards.byMultiverseId("bananas" as any);
+			await expect(Scry.Cards.byMultiverseId("bananas" as any)).rejected;
 			expect(Scry.error()).not.eq(undefined);
 			await Scry.Cards.byMtgoId(48338);
 			expect(Scry.error()).eq(undefined);
@@ -731,9 +733,10 @@ describe("Scry", function () {
 			const timeout = 1000;
 			Scry.setRetry(attempts, timeout);
 			MagicQuerier.retry.forced = true;
-			await Scry.Cards.byMultiverseId("bananas" as any);
+			await expect(Scry.Cards.byMultiverseId("bananas" as any)).rejected;
 			MagicQuerier.retry.forced = false;
 			expect(Scry.error()).not.eq(undefined);
+			expect(MagicQuerier.lastRetries).eq(attempts);
 			expect(Date.now() - then).gt(attempts * timeout);
 		});
 

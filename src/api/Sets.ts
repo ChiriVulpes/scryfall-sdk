@@ -1,6 +1,7 @@
+import { AxiosRequestConfig } from "axios";
 import { SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
 import Cached from "../util/Cached";
-import MagicQuerier, { List } from "../util/MagicQuerier";
+import MagicQuerier, { List, TOrArrayOfT } from "../util/MagicQuerier";
 import { Card, SearchOptions } from "./Cards";
 
 enum SetType {
@@ -84,19 +85,21 @@ class Sets extends MagicQuerier {
 
 	@Cached
 	public async byCode (code: string) {
-		return this.query<Set>(["sets", code])
-			.then(Set.construct);
+		return this.querySet(["sets", code]);
 	}
 
 	@Cached
 	public async byId (id: string) {
-		return this.query<Set>(["sets", id])
-			.then(Set.construct);
+		return this.querySet(["sets", id]);
 	}
 
 	@Cached
 	public async byTcgPlayerId (id: number) {
-		return this.query<Set>(["sets/tcgplayer", id])
+		return this.querySet(["sets/tcgplayer", id]);
+	}
+
+	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<Set> {
+		return await this.query<Set>(apiPath, query, post, requestOptions)
 			.then(Set.construct);
 	}
 }

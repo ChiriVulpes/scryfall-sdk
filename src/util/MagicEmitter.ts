@@ -101,7 +101,7 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 
 	private generate (event: "data"): AsyncGenerator<T, void, unknown>;
 	private generate (event: "not_found"): AsyncGenerator<NOT_FOUND, void, unknown>;
-	private async *generate (event: string) {
+	private async *generate (event: string): AsyncGenerator<T | NOT_FOUND, void, unknown> {
 		// save the new data on each event
 		const unyielded: any[] = [];
 		this.on(event as never, data => unyielded.push(data));

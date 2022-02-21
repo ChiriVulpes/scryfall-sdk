@@ -1,7 +1,8 @@
+import { AxiosRequestConfig } from "axios";
 import { Color, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
 import Cached from "../util/Cached";
 import MagicEmitter from "../util/MagicEmitter";
-import MagicQuerier, { ApiCatalog, List } from "../util/MagicQuerier";
+import MagicQuerier, { ApiCatalog, List, TOrArrayOfT } from "../util/MagicQuerier";
 import { Ruling } from "./Rulings";
 import { Set } from "./Sets";
 
@@ -529,8 +530,10 @@ class Cards extends MagicQuerier {
 		return this;
 	}
 
-	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
-	public async byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
+	public async byName (name: string, fuzzy?: false): Promise<Card>;
+	public async byName (name: string, set?: string, fuzzy?: false): Promise<Card>;
+	public async byName (name: string, fuzzy: boolean): Promise<Card | undefined>;
+	public async byName (name: string, set: string, fuzzy: boolean): Promise<Card | undefined>;
 	@Cached
 	public async byName (name: string, set?: string | boolean, fuzzy = false) {
 		if (typeof set === "boolean") {
@@ -538,54 +541,51 @@ class Cards extends MagicQuerier {
 			set = undefined;
 		}
 
-		return this.query<Card>("cards/named", {
+		const promise = this.queryCard("cards/named", {
 			[fuzzy ? "fuzzy" : "exact"]: name,
 			set,
-		})
-			.then(Card.construct);
+		});
+
+		if (fuzzy)
+			return promise.catch(() => undefined);
+
+		return promise;
 	}
 
 	@Cached
 	public async byId (id: string) {
-		return this.query<Card>(["cards", id])
-			.then(Card.construct);
+		return this.queryCard(["cards", id]);
 	}
 
 	@Cached
 	public async bySet (setCode: string | Set, collectorNumber: number, lang?: string) {
 		const path = ["cards", typeof setCode === "string" ? setCode : setCode.code, collectorNumber];
 		if (lang) path.push(lang);
-		return this.query<Card>(path)
-			.then(Card.construct);
+		return this.queryCard(path);
 	}
 
 	@Cached
 	public async byMultiverseId (id: number) {
-		return this.query<Card>(["cards/multiverse", id])
-			.then(Card.construct);
+		return this.queryCard(["cards/multiverse", id]);
 	}
 
 	@Cached
 	public async byMtgoId (id: number) {
-		return this.query<Card>(["cards/mtgo", id])
-			.then(Card.construct);
+		return this.queryCard(["cards/mtgo", id]);
 	}
 
 	@Cached
 	public async byArenaId (id: number) {
-		return this.query<Card>(["cards/arena", id])
-			.then(Card.construct);
+		return this.queryCard(["cards/arena", id]);
 	}
 
 	@Cached
 	public async byTcgPlayerId (id: number) {
-		return this.query<Card>(["cards/tcgplayer", id])
-			.then(Card.construct);
+		return this.queryCard(["cards/tcgplayer", id]);
 	}
 
 	public async random () {
-		return this.query<Card>("cards/random")
-			.then(Card.construct);
+		return this.queryCard("cards/random");
 	}
 
 	/**
@@ -613,6 +613,11 @@ class Cards extends MagicQuerier {
 		void this.processCollection(emitter, identifiers);
 
 		return emitter;
+	}
+
+	private async queryCard (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<Card> {
+		return await this.query<Card>(apiPath, query, post, requestOptions)
+			.then(Card.construct);
 	}
 
 	private async processCollection (emitter: MagicEmitter<Card, CardIdentifier>, identifiers: CardIdentifier[]) {
