@@ -4,9 +4,9 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { Stream } from "stream";
 import { BulkDataDefinition } from "../api/BulkData";
-import { Card, SymbologyTransformer } from "../api/Cards";
-import { ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK } from "../IScry";
 import * as Scry from "../Scry";
+import { Card, ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK, SymbologyTransformer } from "../Scry";
+import Cached from "../util/Cached";
 import MagicQuerier from "../util/MagicQuerier";
 
 const expect = chai.expect;
@@ -669,5 +669,70 @@ describe("Scry", function () {
 		});
 
 		// todo figure out tests for the "can retry" stuff that doesn't rely on enabling 404/400 errors
+	});
+
+	describe("cache", () => {
+		it("should support custom cache times and disabling caching by setting the cache time to 0", async function () {
+			this.timeout(10000 * 3);
+			Cached.clear();
+			Cached.resetCacheDuration();
+			Cached.resetLimit();
+			expect(Cached.getObjectsCount()).eq(0, "Cache not cleared");
+			const card1 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card2 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			expect(Cached.getObjectsCount()).eq(1, "Default cache duration, wrong number of cards cached");
+			expect(card1).eq(card2, "Default cache duration, card not cached");
+			Scry.setCacheDuration(0);
+			expect(Cached.getObjectsCount()).eq(0, "Disabled caching, cards still cached");
+			const card3 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			expect(card3).not.eq(card1, "Disabled caching, card cached");
+			expect(Cached.getObjectsCount()).eq(0, "Disabled caching, card cached");
+			Scry.setCacheDuration(1000 * 10);
+			const card4 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card5 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			expect(card4).eq(card5, "10 second cache duration, card not cached");
+			expect(Cached.getObjectsCount()).eq(1, "10 second cache duration, wrong number of cards cached");
+			expect(Cached.isGarbageCollectorRunning()).true;
+			await new Promise(resolve => setTimeout(resolve, 1000 * 13));
+			expect(Cached.isGarbageCollectorRunning()).false;
+			expect(Cached.getObjectsCount()).eq(0, "10 second cache duration, cards still cached");
+			const card6 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			expect(card6).not.eq(card4, "10 second cache duration, waited for expiry, card still cached");
+		});
+
+		it("should support custom cache limits and disabling caching by setting the cache limit to 0", async function () {
+			this.timeout(10000 * 3);
+			Cached.clear();
+			Cached.resetCacheDuration();
+			Cached.resetLimit();
+			expect(Cached.getObjectsCount()).eq(0, "Cache not cleared");
+			Scry.setCacheDuration(1000 * 10);
+			const card1 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card2 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card3 = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+			const card4 = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+			expect(Cached.getObjectsCount()).eq(2, "Default cache amount, wrong number of cards cached");
+			expect(card1).eq(card2, "Default cache amount, first card not cached");
+			expect(card3).eq(card4, "Default cache amount, second card not cached");
+			Scry.setCacheLimit(0);
+			expect(Cached.getObjectsCount()).eq(0, "Disabled caching, cards still cached");
+			Scry.setCacheLimit(1);
+			const card5 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card6 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card7 = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+			expect(Cached.getObjectsCount()).eq(1, "Max 1 cards cached, wrong number cached");
+			const card8 = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+			const card9 = await Scry.Cards.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
+			const card10 = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+			expect(Cached.getObjectsCount()).eq(1, "Max 1 cards cached, wrong number cached");
+			expect(card5).eq(card6, "Max 1, first card not cached");
+			expect(card7).eq(card8, "Max 1, second card not cached");
+			expect(card9).not.eq(card6, "Max 1, first card still cached");
+			expect(card10).not.eq(card8, "Max 1, second card still cached");
+		});
+	});
+
+	this.afterAll(() => {
+		Scry.setCacheDuration(0);
 	});
 });

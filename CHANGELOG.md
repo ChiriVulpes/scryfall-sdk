@@ -1,7 +1,11 @@
 # v3.0.0 (TBD)
+## Breaking Changes
+- `Scry.error()` has been removed. When queries error, it now rejects the promise they return rather than returning `undefined` or `{ data: [], not_found: [] }`
+
+## Other Changes
 - Cards and sets now come with helper methods to make consuming the data a little bit more convenient.
 - You can now configure the request timeout with [`Scry.setTimeout`](./DOCUMENTATION.md#settimeout-timeout-number-void-)
-- Many (not all) query functions now have cached results. You can configure a project-wide cache duration with [`Scry.setCacheDuration`](./DOCUMENTATION.md#setcacheduration-timeout-number-void-)
+- Many (not all) query functions now have cached results. You can configure the cache duration with [`Scry.setCacheDuration`](./DOCUMENTATION.md#setcacheduration-timeout-number-void), and the max objects cached with [`Scry.setCacheLimit`](./DOCUMENTATION.md#setcachelimit-timeout-number-void)
 
 # v2.1.1 (January 5th, 2020)
 - Updated axios to [fix a security vulnerability](https://github.com/axios/axios/issues/3407)

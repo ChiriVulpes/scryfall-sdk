@@ -64,7 +64,7 @@
 - [Misc](#misc-)
   - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
   - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
-  - [`setCacheDuration (timeout: number): void;`](#setcacheduration-timeout-number-void-)
+  - [Caching](#caching-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
   - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
 
@@ -705,16 +705,36 @@ Scry.setTimeout(1000);
 ```
 
 
-### `setCacheDuration (timeout: number): void;` [🡅](#table-of-contents)
+### Caching [🡅](#table-of-contents)
 
-Many, but not all query functions cache their results. For example, trying to get a card by ID twice will return the cached copy, rather than requesting it from Scryfall again. The cache is stored individually, which means that after the cache duration passes, any queries will re-cache.
+Many, but not all query functions cache their results. For example, trying to get a card by ID twice will return the cached copy, rather than requesting it from Scryfall again. Each query's result is cached individually, so it won't be re-downloaded until the cached value expires.
 
-By default, scryfall-sdk uses a cache duration of 24 hours.
+#### Notes:
+- By default, scryfall-sdk uses a cache duration of 1 hour.
+- The minimum supported cache time is 10 seconds. Putting a value lower than this disables caching entirely.
+- **A cached value expiring does not immediately remove it.** If your application needs to conserve memory, consider lowering the cache limit with `setCacheMaxObjects`. If this is keeping your application open, use `Scry.clearCache()`
+
+#### `setCacheDuration (timeout: number): void;` [🡅](#table-of-contents)
 
 Example usage:
 ```ts
 // cache for five hours
 Scry.setCacheDuration(1000 * 60 * 60 * 5);
+// disable caching
+Scry.setCacheDuration(0);
+```
+
+#### `setCacheLimit (amount: number): void;` [🡅](#table-of-contents)
+
+Sets the maximum number of query results that can be cached at one time. By default, the maximum is 500 objects. 
+To disable caching entirely, set the amount to `0`.
+
+Example usage:
+```ts
+// cache only the 10 most recent queries
+Scry.setCacheLimit(10);
+// disable caching
+Scry.setCacheLimit(0);
 ```
 
 

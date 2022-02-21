@@ -40,9 +40,24 @@ export function setTimeout (timeout: number) {
 }
 
 /**
- * Sets the duration that most API calls will be cached. By default, the cache duration is 1 day. 
- * **Note:* The entire cache is cleared after this duration, not individual results.
+ * Clears the cache
  */
-export function setCacheDuration (timeout: number) {
-	Cached.duration = timeout;
+export function clearCache () {
+	Cached.clear();
+}
+
+/**
+ * Sets the duration that most API calls will be cached. By default, the cache duration is 1 day. 
+ * To disable caching entirely, set the timeout to `0`
+ */
+export function setCacheDuration (ms: number) {
+	Cached.setDuration(ms);
+}
+
+/**
+ * Sets the maximum number of query results that can be cached at one time. By default, the maximum is 500 objects. 
+ * To disable caching entirely, set the amount to `0`
+ */
+export function setCacheLimit (amount: number) {
+	Cached.setLimit(amount);
 }
