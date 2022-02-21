@@ -66,6 +66,21 @@ class Catalog extends MagicQuerier {
 	public async watermarks () {
 		return (await this.query<ApiCatalog>("catalog/watermarks")).data;
 	}
+
+	@Cached
+	public async keywordAbilities () {
+		return (await this.query<ApiCatalog>("catalog/keyword-abilities")).data;
+	}
+
+	@Cached
+	public async keywordActions () {
+		return (await this.query<ApiCatalog>("catalog/keyword-actions")).data;
+	}
+
+	@Cached
+	public async abilityWords () {
+		return (await this.query<ApiCatalog>("catalog/ability-words")).data;
+	}
 }
 
 export default new Catalog;

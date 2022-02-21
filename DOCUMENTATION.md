@@ -52,6 +52,9 @@
   - [`Catalog.toughnesses (): Promise<string[]>;`](#catalogtoughnesses--promisestring-)
   - [`Catalog.loyalties (): Promise<string[]>;`  ](#catalogloyalties--promisestring-)
   - [`Catalog.watermarks (): Promise<string[]>;` ](#catalogwatermarks--promisestring-)
+  - [`Catalog.keywordAbilities (): Promise<string[]>;` ](#catalogkeywordabilities--promisestring-)
+  - [`Catalog.keywordActions (): Promise<string[]>;` ](#catalogkeywordactions--promisestring-)
+  - [`Catalog.abilityWords (): Promise<string[]>;` ](#catalogabilitywords--promisestring-)
 - [Bulk Data](#bulk-data-)
   - [`BulkData.downloadByType (type: BulkDataType): Promise<Stream | undefined>;`](#bulkdatadownloadbytype-type-bulkdatatype-promisestream--undefined-)
   - [`BulkData.downloadById (id: string): Promise<Stream | undefined>;`](#bulkdatadownloadbyid-id-string-promisestream--undefined-)
@@ -580,6 +583,27 @@ console.log(loyalties.length); // 9
 ```ts
 const watermarks = await Scry.Catalog.watermarks();
 console.log(watermarks.length); // 50
+```
+
+### `Catalog.keywordAbilities (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+const keywordAbilities = await Scry.Catalog.keywordAbilities();
+console.log(keywordAbilities.length); // 176
+```
+
+### `Catalog.keywordActions (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+const keywordActions = await Scry.Catalog.keywordActions();
+console.log(keywordActions.length); // 46
+```
+
+### `Catalog.abilityWords (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+const abilityWords = await Scry.Catalog.abilityWords();
+console.log(abilityWords.length); // 49
 ```
 
 

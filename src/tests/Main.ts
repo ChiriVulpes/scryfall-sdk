@@ -643,6 +643,24 @@ describe("Scry", function () {
 			expect(result.length).gte(50);
 			expect(Scry.error()).eq(undefined);
 		});
+
+		it("keyword-abilities", async () => {
+			const result = await Scry.Catalog.keywordAbilities();
+			expect(result.length).gte(176);
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("keyword-actions", async () => {
+			const result = await Scry.Catalog.keywordActions();
+			expect(result.length).gte(46);
+			expect(Scry.error()).eq(undefined);
+		});
+
+		it("ability-words", async () => {
+			const result = await Scry.Catalog.abilityWords();
+			expect(result.length).gte(49);
+			expect(Scry.error()).eq(undefined);
+		});
 	});
 
 	describe("Bulk Data", () => {

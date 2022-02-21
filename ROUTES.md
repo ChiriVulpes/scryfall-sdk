@@ -36,6 +36,9 @@
 | [`/catalog/toughnesses`](./DOCUMENTATION.md#catalogtoughnesses--promisestring-) | Catalog |
 | [`/catalog/loyalties`](./DOCUMENTATION.md#catalogloyalties--promisestring-) | Catalog |
 | [`/catalog/watermarks`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/catalog/keyword-abilities`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/catalog/keyword-actions`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/catalog/ability-words`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
 | [`/bulk-data`](./DOCUMENTATION.md#bulkdatadefinitions--promisebulkdatadefinition-) | List\<BulkDataDefinition\> |
 | [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |
