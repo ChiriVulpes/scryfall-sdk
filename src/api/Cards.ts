@@ -571,10 +571,8 @@ class Cards extends MagicQuerier {
 		return this;
 	}
 
-	public async byName (name: string, fuzzy?: false): Promise<Card>;
-	public async byName (name: string, set?: string, fuzzy?: false): Promise<Card>;
-	public async byName (name: string, fuzzy: boolean): Promise<Card | undefined>;
-	public async byName (name: string, set: string, fuzzy: boolean): Promise<Card | undefined>;
+	public async byName (name: string, fuzzy?: boolean): Promise<Card>;
+	public async byName (name: string, set?: string, fuzzy?: boolean): Promise<Card>;
 	@Cached
 	public async byName (name: string, set?: string | boolean, fuzzy = false) {
 		if (typeof set === "boolean") {
@@ -586,9 +584,6 @@ class Cards extends MagicQuerier {
 			[fuzzy ? "fuzzy" : "exact"]: name,
 			set,
 		});
-
-		if (fuzzy)
-			return promise.catch(() => undefined);
 
 		return promise;
 	}

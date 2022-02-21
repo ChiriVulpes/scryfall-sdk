@@ -36,6 +36,7 @@ export interface SearchError extends Error {
 	status: number;
 	details: string;
 	warnings?: string[];
+	attempts: number;
 }
 
 export interface RetryStrategy {
@@ -52,8 +53,6 @@ export interface RetryStrategy {
 
 export default class MagicQuerier {
 	public static lastQuery = 0;
-	public static lastError: SearchError | undefined;
-	public static lastRetries = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
 	public static timeout = defaultRequestTimeout;
 	public static requestCount = 0;
@@ -62,30 +61,31 @@ export default class MagicQuerier {
 		if (Array.isArray(apiPath))
 			apiPath = apiPath.join("/");
 
-		let lastError: SearchError | undefined;
+		let lastError: Error | undefined;
 		let result: AxiosResponse | undefined;
 		let retries: number;
 		for (retries = 0; retries < MagicQuerier.retry.attempts; retries++) {
 			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post, requestOptions));
-			if (result || (!this.canRetry(lastError!) && !MagicQuerier.retry.forced)) break;
+			if (result || (!this.canRetry(lastError as SearchError) && !MagicQuerier.retry.forced)) break;
 			await sleep(MagicQuerier.retry.timeout);
 		}
 
-		MagicQuerier.lastError = lastError;
-		MagicQuerier.lastRetries = retries;
-
-		if (!result?.data)
-			throw lastError ?? new Error("No data");
+		if (!result?.data) {
+			lastError ??= new Error("No data");
+			(lastError as any).attempts = retries;
+			throw lastError;
+		}
 
 		return result.data;
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
+		let error: SearchError | undefined;
 		const results = await this.query<List<T>>(apiPath, { ...query, page })
-			.catch(err => undefined);
+			.catch(err => error = err);
 
 		const data = results?.data ?? [];
-		if (results?.object !== "list" && MagicQuerier.lastError === undefined) {
+		if (results?.object !== "list" && error === undefined) {
 			emitter.emit("error", new Error("Result object is not a list"));
 			return;
 		}
@@ -139,7 +139,7 @@ export default class MagicQuerier {
 	}
 
 	private canRetry (error: SearchError) {
-		if (error.code == "not_found" || error.code == "bad_request") return false;
+		if (error.code === "not_found" || error.code === "bad_request") return false;
 		return !MagicQuerier.retry.canRetry || MagicQuerier.retry.canRetry(error);
 	}
 }
