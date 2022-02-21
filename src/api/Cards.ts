@@ -97,6 +97,7 @@ enum Layout {
 	split,
 	flip,
 	transform,
+	modal_dfc,
 	meld,
 	leveler,
 	saga,
@@ -145,7 +146,9 @@ export interface ImageUris {
 export interface Prices {
 	usd?: string | null;
 	usd_foil?: string | null;
+	usd_etched?: string | null;
 	eur?: string | null;
+	eur_foil?: string | null;
 	tix?: string | null;
 }
 
@@ -339,6 +342,8 @@ export class Card implements CardFaceMethods {
 	mtgo_foil_id?: number | null;
 	multiverse_ids?: number[] | null;
 	tcgplayer_id?: number | null;
+	tcgplayer_etched_id?: number | null;
+	cardmarket_id?: number | null;
 	oracle_id: string;
 	prints_search_uri: string;
 	rulings_uri: string;
@@ -349,12 +354,13 @@ export class Card implements CardFaceMethods {
 	all_parts?: RelatedCard[] | null;
 	card_faces: CardFace[];
 	cmc: number;
-	colors?: Color[] | null;
 	color_identity: Color[];
 	color_indicator?: Color[] | null;
+	colors?: Color[] | null;
 	edhrec_rank?: number | null;
 	foil: boolean;
 	hand_modifier?: string | null;
+	keywords: string[];
 	layout: keyof typeof Layout;
 	legalities: Legalities;
 	life_modifier?: string | null;
@@ -365,6 +371,7 @@ export class Card implements CardFaceMethods {
 	oracle_text?: string | null;
 	oversized: boolean;
 	power?: string | null;
+	produced_mana?: Color[] | null;
 	reserved: boolean;
 	toughness?: string | null;
 	type_line: string;
@@ -376,7 +383,10 @@ export class Card implements CardFaceMethods {
 	border_color: keyof typeof Border;
 	card_back_id: string;
 	collector_number: string;
+	content_warning: boolean | null;
 	digital: boolean;
+	finishes: Array<"foil" | "nonfoil" | "etched" | "glossy">;
+	flavor_name?: string | null;
 	flavor_text?: string | null;
 	frame_effects?: (keyof typeof FrameEffect)[] | null;
 	frame: "1993" | "1997" | "2003" | "2015" | "Future";
@@ -384,6 +394,7 @@ export class Card implements CardFaceMethods {
 	games: (keyof typeof Game)[];
 	highres_image: boolean;
 	illustration_id?: string | null;
+	image_status: "missing" | "placeholder" | "lowres" | "highres_scan";
 	image_uris?: ImageUris | null;
 	prices: Prices;
 	printed_name?: string | null;
