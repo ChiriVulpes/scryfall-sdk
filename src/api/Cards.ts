@@ -6,13 +6,13 @@ import MagicQuerier, { ApiCatalog, List, TOrArrayOfT } from "../util/MagicQuerie
 import { Ruling } from "./Rulings";
 import { Set } from "./Sets";
 
-enum UniqueStrategy {
+export enum UniqueStrategy {
 	cards,
 	art,
 	prints,
 }
 
-enum Sort {
+export enum Sort {
 	name,
 	set,
 	released,
@@ -28,7 +28,7 @@ enum Sort {
 	artist,
 }
 
-enum SortDirection {
+export enum SortDirection {
 	auto,
 	asc,
 	desc,
@@ -47,14 +47,16 @@ export interface SearchOptions {
 	page?: number;
 }
 
-enum Rarity {
+export enum Rarity {
 	common,
 	uncommon,
 	rare,
+	special,
 	mythic,
+	bonus,
 }
 
-enum FrameEffect {
+export enum FrameEffect {
 	legendary,
 	miracle,
 	nyxtouched,
@@ -72,20 +74,20 @@ enum FrameEffect {
 	extendedart,
 }
 
-enum Game {
+export enum Game {
 	paper,
 	arena,
 	mtgo,
 }
 
-enum Legality {
+export enum Legality {
 	legal,
 	not_legal,
 	restricted,
 	banned,
 }
 
-enum Border {
+export enum Border {
 	black,
 	borderless,
 	gold,
@@ -93,7 +95,7 @@ enum Border {
 	white,
 }
 
-enum Layout {
+export enum Layout {
 	normal,
 	split,
 	flip,
@@ -115,7 +117,7 @@ enum Layout {
 	double_sided,
 }
 
-enum Format {
+export enum Format {
 	standard,
 	future,
 	historic,
@@ -163,12 +165,14 @@ export interface PurchaseUris {
 export interface RelatedUris {
 	gatherer?: string | null;
 	tcgplayer_decks?: string | null;
+	tcgplayer_infinite_decks?: string | null;
+	tcgplayer_infinite_articles?: string | null;
 	edhrec?: string | null;
 	mtgtop8?: string | null;
 	[key: string]: string | null | undefined;
 }
 
-enum RelatedCardComponent {
+export enum RelatedCardComponent {
 	token,
 	meld_part,
 	meld_result,
@@ -208,14 +212,17 @@ export interface CardFace extends CardFaceMethods {
 	object: "card_face";
 
 	artist?: string | null;
+	cmc?: number | null;
 	color_indicator?: Color[] | null;
 	colors?: Color[] | null;
 	flavor_text?: string | null;
 	illustration_id?: string | null;
 	image_uris?: ImageUris | null;
+	layout?: string;
 	loyalty?: string | null;
 	mana_cost?: string | null;
 	name: string;
+	oracle_id?: string | null;
 	oracle_text?: string | null;
 	power?: string | null;
 	printed_name?: string | null;
@@ -232,7 +239,7 @@ export interface Preview {
 	source?: string | null;
 }
 
-enum PromoType {
+export enum PromoType {
 	tourney,
 	prerelease,
 	datestamped,
@@ -258,6 +265,35 @@ enum PromoType {
 	playerrewards,
 	gateway,
 	arenaleague
+}
+
+export enum CardFinish {
+	foil,
+	nonfoil,
+	etched,
+	glossy,
+}
+
+export const CardFrame = {
+	"1993": 0,
+	"1997": 1,
+	"2003": 2,
+	"2015": 3,
+	"Future": 4,
+}
+
+export enum CardStatus {
+	missing,
+	placeholder,
+	lowres,
+	highres_scan,
+}
+
+export enum CardSecurityStamp {
+	oval,
+	triangle,
+	acorn,
+	arena,
 }
 
 export interface CardIdentifier {
@@ -332,6 +368,8 @@ function transform (self: Card,
 	return transformed;
 }
 
+export type Modifier = `+${bigint}` | `-${bigint}`;
+
 export class Card implements CardFaceMethods {
 	object: "card";
 
@@ -359,16 +397,14 @@ export class Card implements CardFaceMethods {
 	color_indicator?: Color[] | null;
 	colors?: Color[] | null;
 	edhrec_rank?: number | null;
-	foil: boolean;
-	hand_modifier?: string | null;
+	hand_modifier?: Modifier | null;
 	keywords: string[];
 	layout: keyof typeof Layout;
 	legalities: Legalities;
-	life_modifier?: string | null;
+	life_modifier?: Modifier | null;
 	loyalty?: string | null;
 	mana_cost?: string | null;
 	name: string;
-	nonfoil: boolean;
 	oracle_text?: string | null;
 	oversized: boolean;
 	power?: string | null;
@@ -379,23 +415,26 @@ export class Card implements CardFaceMethods {
 
 	// print fields
 	artist?: string | null;
-	artist_ids?: string[] | null;
 	booster: boolean;
 	border_color: keyof typeof Border;
 	card_back_id: string;
 	collector_number: string;
-	content_warning: boolean | null;
+	content_warning?: boolean | null;
 	digital: boolean;
-	finishes: Array<"foil" | "nonfoil" | "etched" | "glossy">;
+	finishes: (keyof typeof CardFinish)[];
 	flavor_name?: string | null;
 	flavor_text?: string | null;
+	/**
+	 * Note: This may return other values, I can't check if the possible strings have changed because the Scryfall docs
+	 * no longer list the possible frame effects.
+	 */
 	frame_effects?: (keyof typeof FrameEffect)[] | null;
-	frame: "1993" | "1997" | "2003" | "2015" | "Future";
+	frame: keyof typeof CardFrame;
 	full_art: boolean;
 	games: (keyof typeof Game)[];
 	highres_image: boolean;
 	illustration_id?: string | null;
-	image_status: "missing" | "placeholder" | "lowres" | "highres_scan";
+	image_status: keyof typeof CardStatus;
 	image_uris?: ImageUris | null;
 	prices: Prices;
 	printed_name?: string | null;
@@ -414,10 +453,12 @@ export class Card implements CardFaceMethods {
 	set_type: Set["set_type"];
 	set_uri: string;
 	set: string;
+	set_id: string;
 	story_spotlight: boolean;
 	textless: boolean;
 	variation: boolean;
 	variation_of?: string | null;
+	security_stamp?: (keyof typeof CardSecurityStamp)[] | null;
 	watermark?: string | null;
 	preview?: Preview | null;
 
