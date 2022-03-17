@@ -25,7 +25,7 @@
   - [`Sets.byCode (code: string): Promise<Set>;` ](#setsbycode-code-string-promiseset-)
   - [`Sets.byId (id: string): Promise<Set>;` ](#setsbyid-id-string-promiseset-)
   - [`Sets.byTcgPlayerId (id: number): Promise<Set>;` ](#setsbytcgplayerid-id-number-promiseset-)
-  - [`Sets.byName (name: string, fuzzy?: boolean): Promise<Set>;` ](#)
+  - [`Sets.byName (name: string, fuzzy?: boolean): Promise<Set>;` ](#setsbyname-name-string-fuzzy-boolean-promiseset-)
   - [`Sets.all (): Promise<Set[]>;` ](#setsall--promiseset-)
   - [`Set`](#set-)
     - [`Set.getCards (): Promise<Card[]>`](#setgetcards--promisecard-)
@@ -67,7 +67,7 @@
   - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
   - [Caching](#caching-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
-  - [`setFuzzySearch (search: <T>(search: string, targets: T[], key: keyof T) => T | undefined): void;`](#)
+  - [`setFuzzySearch (search: <T>(search: string, targets: T[], key: keyof T) => T | undefined): void;`](#setfuzzysearch-search-tsearch-string-targets-t-key-keyof-t--t--undefined-void-)
   - [`MagicEmitter<T, NOT_FOUND>`](#magicemittert-not_found-)
 
 
@@ -386,7 +386,7 @@ console.log(set.name); // Hour of Devastation
 
 ### `Sets.byName (name: string, fuzzy?: boolean): Promise<Set>;` [🡅](#table-of-contents)
 
-Gets a set by its name. The fuzzy search option is provided, but is not implemented into this module and must be provided via [`Scry.setFuzzySearch`](#). If fuzzy search is enabled, but a search function has not been provided, an exact match will be returned instead.
+Gets a set by its name. The fuzzy search option is provided, but is not implemented into this module and must be provided via [`Scry.setFuzzySearch`](#setfuzzysearch-search-tsearch-string-targets-t-key-keyof-t--t--undefined-void-). If fuzzy search is enabled, but a search function has not been provided, an exact match will be returned instead.
 
 ```ts
 const set = await Scry.Sets.byName("hour of devastation");
@@ -752,7 +752,7 @@ Scry.setCacheLimit(0);
 
 #### `setFuzzySearch (search: <T>(search: string, targets: T[], key: keyof T) => T | undefined): void;` [🡅](#table-of-contents)
 
-Sets a fuzzy search function for use in `Scry.Sets.byName`, and, potentially, other methods implemented in the future.
+Sets a fuzzy search function for use in [`Scry.Sets.byName`](#setsbyname-name-string-fuzzy-boolean-promiseset-), and, potentially, other methods implemented in the future.
 
 Example usage using [`fuzzysort`](https://www.npmjs.com/package/fuzzysort):
 ```ts

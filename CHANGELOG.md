@@ -1,6 +1,6 @@
 # v3.1.0 (March 18th, 2022)
-- `Scry.Sets.all` is now cached.
-- Added [`Scry.Sets.byName`](#) and [`Scry.setFuzzySearch`](#).
+- [`Scry.Sets.all`](#setsall--promiseset-) is now cached.
+- Added [`Scry.Sets.byName`](#setsbyname-name-string-fuzzy-boolean-promiseset-) and [`Scry.setFuzzySearch`](#setfuzzysearch-search-tsearch-string-targets-t-key-keyof-t--t--undefined-void-).
 
 # v3.0.0 (February 22nd, 2022)
 ## Breaking Changes
