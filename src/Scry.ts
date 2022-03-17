@@ -1,5 +1,6 @@
 import Cards from "./api/Cards";
 import Sets from "./api/Sets";
+import { IScry } from "./IScry";
 import Cached from "./util/Cached";
 import MagicQuerier, { minimumRequestTimeout, SearchError } from "./util/MagicQuerier";
 
@@ -60,4 +61,8 @@ export function setCacheDuration (ms: number) {
  */
 export function setCacheLimit (amount: number) {
 	Cached.setLimit(amount);
+}
+
+export function setFuzzySearch (search?: typeof IScry["fuzzySearch"]) {
+	IScry.fuzzySearch = search;
 }

@@ -26,6 +26,8 @@ describe("Scry", function () {
 			it("exact", async () => {
 				const card = await Scry.Cards.byName("Blood Scrivener");
 				expect(card.name).eq("Blood Scrivener");
+				await expect(Scry.Cards.byName("Bliid Scrivener")).rejected.then((value: any) =>
+					expect(typeof value === "object" && !!value && value.status === 404).true);
 			});
 
 			it("fuzzy", async () => {
@@ -296,29 +298,6 @@ describe("Scry", function () {
 				expect(rulings.length).eq(2);
 			});
 
-			it("getText", async () => {
-				const card = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
-				Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
-				expect(card.getText()).eq(":mana-1::mana-U:, :mana-T:: Target creature gains flying until end of turn.");
-			});
-
-			it("getCost", async () => {
-				const map = new Map<Card, string>();
-				map.set(await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b"), ":mana-U:");
-				map.set(await Scry.Cards.byId("3e7da55c-7f05-46b2-aa3c-17f8d5df46bb"), ":mana-12:");
-				map.set(await Scry.Cards.byId("a3f64ad2-4041-421d-baa2-206cedcecf0e"), ":mana-1::mana-WB::mana-WB:");
-
-				const transformers: (string | SymbologyTransformer)[] = [
-					":mana-$1$2:",
-					(type1, type2) => `:mana-${type1}${type2}:`,
-				];
-				for (const transformer of transformers) {
-					Scry.Cards.setSymbologyTransformer(transformer);
-					for (const [card, expected] of map)
-						expect(card.getCost()).eq(expected);
-				}
-			});
-
 			it("getPrints", async () => {
 				let prints!: Card[];
 				function validatePrints () {
@@ -359,6 +338,29 @@ describe("Scry", function () {
 				card = await Scry.Cards.byId("8c39f9b4-02b9-4d44-b8d6-4fd02ebbb0c5");
 				expect(card.isIllegal("standard")).true; // not legal
 				expect(card.isIllegal("vintage")).false; // restricted
+			});
+
+			it("getText", async () => {
+				const card = await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b");
+				Scry.Cards.setSymbologyTransformer(":mana-$1$2:");
+				expect(card.getText()).eq(":mana-1::mana-U:, :mana-T:: Target creature gains flying until end of turn.");
+			});
+
+			it("getCost", async () => {
+				const map = new Map<Card, string>();
+				map.set(await Scry.Cards.byId("41bd76f3-299d-4bc0-a603-2cc7db7dac7b"), ":mana-U:");
+				map.set(await Scry.Cards.byId("3e7da55c-7f05-46b2-aa3c-17f8d5df46bb"), ":mana-12:");
+				map.set(await Scry.Cards.byId("a3f64ad2-4041-421d-baa2-206cedcecf0e"), ":mana-1::mana-WB::mana-WB:");
+
+				const transformers: (string | SymbologyTransformer)[] = [
+					":mana-$1$2:",
+					(type1, type2) => `:mana-${type1}${type2}:`,
+				];
+				for (const transformer of transformers) {
+					Scry.Cards.setSymbologyTransformer(transformer);
+					for (const [card, expected] of map)
+						expect(card.getCost()).eq(expected);
+				}
 			});
 
 			it("getImageURI", async () => {
@@ -446,6 +448,26 @@ describe("Scry", function () {
 		it("all", async () => {
 			const sets = await Scry.Sets.all();
 			expect(sets.length).gte(394);
+		});
+
+		describe("byName", () => {
+			it("exact", async () => {
+				const result = await Scry.Sets.byName("hour of devastation");
+				expect(result?.name).eq("Hour of Devastation");
+				await expect(Scry.Sets.byName("hou")).rejected.then((value: any) =>
+					expect(typeof value === "object" && !!value && value.status === 404).true);
+			});
+
+			it("fuzzy", async () => {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				const fuzzysort = (require as any)("fuzzysort");
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				Scry.setFuzzySearch((search, targets, key) => fuzzysort.go(search, targets, { key })[0]?.obj);
+				const result = await Scry.Sets.byName("hou", true);
+				expect(result?.name).eq("Hour of Devastation");
+				await expect(Scry.Sets.byName("lskadjflaskdjfsladkfj", true)).rejected.then((value: any) =>
+					expect(typeof value === "object" && !!value && value.status === 404).true);
+			});
 		});
 
 		describe("methods", () => {

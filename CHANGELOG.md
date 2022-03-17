@@ -1,3 +1,7 @@
+# v3.1.0 (March 18th, 2022)
+- `Scry.Sets.all` is now cached.
+- Added [`Scry.Sets.byName`](#) and [`Scry.setFuzzySearch`](#).
+
 # v3.0.0 (February 22nd, 2022)
 ## Breaking Changes
 - `Scry.error()` has been removed. When queries error, it now rejects the promise they return rather than returning `undefined` or `{ data: [], not_found: [] }`

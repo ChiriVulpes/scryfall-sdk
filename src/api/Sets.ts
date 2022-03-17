@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
+import { IScry, SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
 import Cached from "../util/Cached";
 import MagicQuerier, { List, TOrArrayOfT } from "../util/MagicQuerier";
 import { Card, SearchOptions } from "./Cards";
@@ -78,6 +78,7 @@ class Sets extends MagicQuerier {
 		Scry = scry;
 	}
 
+	@Cached
 	public async all () {
 		return (await this.query<List<Set>>("sets")).data
 			.map(Set.construct);
@@ -96,6 +97,29 @@ class Sets extends MagicQuerier {
 	@Cached
 	public async byTcgPlayerId (id: number) {
 		return this.querySet(["sets/tcgplayer", id]);
+	}
+
+	/**
+	 * @param fuzzy This parameter only works if you've previously set a fuzzy comparer with `Scry.setFuzzySearch`. Otherwise it only returns exact matches.
+	 */
+	@Cached
+	public async byName (name: string, fuzzy?: boolean) {
+		const all = await this.all();
+		let result: Set | undefined;
+		if (fuzzy && IScry.fuzzySearch)
+			result = IScry.fuzzySearch(name, all, "name");
+		else {
+			name = name.toLowerCase();
+			result = all.find(set => set.name.toLowerCase() === name);
+		}
+
+		if (result)
+			return result;
+
+		const error = new Error(`No sets found matching “${name}”`) as any;
+		error.status = 404;
+		error.code = "not_found";
+		throw error;
 	}
 
 	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<Set> {

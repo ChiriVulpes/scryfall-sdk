@@ -52,6 +52,7 @@ export interface RetryStrategy {
 }
 
 export default class MagicQuerier {
+
 	public static lastQuery = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
 	public static timeout = defaultRequestTimeout;
