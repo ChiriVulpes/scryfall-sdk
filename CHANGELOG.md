@@ -1,3 +1,6 @@
+# v3.2.1 (September 3rd, 2022)
+- Undid that last fix and replaced with one that actually works how it was originally intended.
+
 # v3.2.0 (September 3rd, 2022)
 - Removed "homepage links" support as the API doesn't work for them anymore.
 - Fixed `.cancelAfterPage().waitForAll()` never resolving.

@@ -63,7 +63,6 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	public cancel () {
 		this._cancelled = true;
 		this.emit("cancel");
-		this.emit("end");
 		return this;
 	}
 
@@ -78,7 +77,7 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 			results.not_found = [];
 			this.on("data", result => { results.push(result); });
 			this.on("not_found", notFound => { results.not_found.push(notFound); });
-			this.on("end", () => resolve(results));
+			this.on("done", () => resolve(results));
 			this.on("error", reject);
 		});
 	}
