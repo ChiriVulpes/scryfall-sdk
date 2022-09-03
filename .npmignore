@@ -1,10 +1,10 @@
 .vscode/
+.github/
 src/
 out/tests/
 
 .gitattributes
 .gitignore
-.travis.yml
 gulpfile.ts
 tsconfig.json
 .eslintrc.ts
