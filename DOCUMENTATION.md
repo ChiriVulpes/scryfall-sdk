@@ -63,7 +63,6 @@
   - [`BulkData.definitionByType (type: BulkDataType): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-)
   - [`BulkData.definitionById (id: string): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-)
 - [Misc](#misc-)
-  - [`homepageLinks (): Promise<string[]>;`](#homepagelinks--promisestring-)
   - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
   - [Caching](#caching-)
   - [`setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;`](#setretry-attempts-number-timeout-number-canretry-error-searcherror--boolean-void-)
@@ -680,14 +679,6 @@ console.log(definition.object, definition.type); // "bulk_data rulings"
 
 
 ## Misc [🡅](#table-of-contents)
-
-### `homepageLinks (): Promise<string[]>;` [🡅](#table-of-contents)
-
-```ts
-const homepageLinks = await Scry.Misc.homepageLinks();
-console.log(homepageLinks.length); // 4
-```
-
 
 ### `setRetry (attempts: number, timeout?: number, canRetry?: (error: SearchError) => boolean): void;` [🡅](#table-of-contents)
 

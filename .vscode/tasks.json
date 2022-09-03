@@ -6,7 +6,7 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "npx gulp watch",
+			"command": "npm run watch",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -16,7 +16,7 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "npx gulp build",
+			"command": "npm run build",
 			"group": "build",
 			"problemMatcher": []
 		}

@@ -42,4 +42,3 @@
 | [`/bulk-data`](./DOCUMENTATION.md#bulkdatadefinitions--promisebulkdatadefinition-) | List\<BulkDataDefinition\> |
 | [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |
-| [`/homepage-links`](./DOCUMENTATION.md#cataloghomepagelinks--promisestring-) | List\<HomepageLink\> |

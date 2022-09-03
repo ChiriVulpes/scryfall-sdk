@@ -63,6 +63,7 @@ export default class MagicEmitter<T, NOT_FOUND = never> extends EventEmitter {
 	public cancel () {
 		this._cancelled = true;
 		this.emit("cancel");
+		this.emit("end");
 		return this;
 	}
 

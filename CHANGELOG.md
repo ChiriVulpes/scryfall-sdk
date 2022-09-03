@@ -1,3 +1,7 @@
+# v3.2.0 (September 3rd, 2022)
+- Removed "homepage links" support as the API doesn't work for them anymore.
+- Fixed `.cancelAfterPage().waitForAll()` never resolving.
+
 # v3.1.0 (March 18th, 2022)
 - [`Scry.Sets.all`](#setsall--promiseset-) is now cached.
 - Added [`Scry.Sets.byName`](#setsbyname-name-string-fuzzy-boolean-promiseset-) and [`Scry.setFuzzySearch`](#setfuzzysearch-search-tsearch-string-targets-t-key-keyof-t--t--undefined-void-).

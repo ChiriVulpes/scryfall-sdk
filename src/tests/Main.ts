@@ -179,6 +179,11 @@ describe("Scry", function () {
 			expect(cardNames).include("Blood Scrivener");
 		});
 
+		it("should allow cancelling after a single page of results", async () => {
+			const result = await Scry.Cards.search("cmc>0").cancelAfterPage().waitForAll();
+			expect(result.length).eq(175);
+		});
+
 		it("should return an empty array on an invalid search", async () => {
 			const result = await Scry.Cards.search("cmc>cmc").cancelAfterPage().waitForAll();
 			expect(result.length).eq(0);
@@ -667,13 +672,6 @@ describe("Scry", function () {
 					expect(result).eq(undefined);
 				});
 			});
-		});
-	});
-
-	describe("Misc", () => {
-		it("homepage links", async () => {
-			const result = await Scry.Misc.homepageLinks();
-			expect(result).satisfies(Array.isArray);
 		});
 	});
 

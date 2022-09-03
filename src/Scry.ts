@@ -9,8 +9,6 @@ export * from "./api/Cards";
 export { default as Cards } from "./api/Cards";
 export * from "./api/Catalog";
 export { default as Catalog } from "./api/Catalog";
-export * from "./api/Misc";
-export { default as Misc } from "./api/Misc";
 export * from "./api/Rulings";
 export { default as Rulings } from "./api/Rulings";
 export * from "./api/Sets";
