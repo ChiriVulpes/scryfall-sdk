@@ -38,7 +38,7 @@
 		"del": "6.0.0",
 		"even-more-min": "1.0.1",
 		"gulp": "4.0.2",
-		"gulp-mocha": "7.0.2",
+		"gulp-mocha": "8.0.0",
 		"chalk": "4.1.0",
 		"mocha": "8.2.1",
 		"ts-node": "9.1.1",
