@@ -13,6 +13,7 @@ export interface CardSymbol {
 	appears_in_mana_costs: boolean;
 	funny: boolean;
 	gatherer_alternates?: string[] | null;
+	svg_uri: string;
 }
 
 export interface ManaCost {
