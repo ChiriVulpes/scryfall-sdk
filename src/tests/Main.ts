@@ -55,6 +55,11 @@ describe("Scry", function () {
 			expect(card.name).eq("Blood Scrivener");
 		});
 
+		it("by set - string collectorNumber", async () => {
+			const card = await Scry.Cards.bySet("unf", "200a");
+			expect(card.name).eq("Balloon Stand");
+		});
+
 		it("by multiverse id", async () => {
 			const card = await Scry.Cards.byMultiverseId(369030);
 			expect(card.name).eq("Blood Scrivener");

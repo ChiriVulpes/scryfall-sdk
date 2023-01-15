@@ -6,6 +6,8 @@ import MagicQuerier, { ApiCatalog, List, TOrArrayOfT } from "../util/MagicQuerie
 import { Ruling } from "./Rulings";
 import { Set } from "./Sets";
 
+export type CollectorNumber = string | number
+
 export enum UniqueStrategy {
 	cards,
 	art,
@@ -332,7 +334,7 @@ export namespace CardIdentifier {
 		return { name, set };
 	}
 
-	export function bySet (set: string, collectorNumber: string | number): CardIdentifier {
+	export function bySet (set: string, collectorNumber: CollectorNumber): CardIdentifier {
 		return { collector_number: `${collectorNumber}`, set };
 	}
 }
@@ -594,7 +596,7 @@ class Cards extends MagicQuerier {
 	}
 
 	@Cached
-	public async bySet (setCode: string | Set, collectorNumber: number, lang?: string) {
+	public async bySet (setCode: string | Set, collectorNumber: CollectorNumber, lang?: string) {
 		const path = ["cards", typeof setCode === "string" ? setCode : setCode.code, collectorNumber];
 		if (lang) path.push(lang);
 		return this.queryCard(path);
