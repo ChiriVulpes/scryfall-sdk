@@ -55,6 +55,11 @@ describe("Scry", function () {
 			expect(card.name).eq("Blood Scrivener");
 		});
 
+		it("by set - string collectorNumber", async () => {
+			const card = await Scry.Cards.bySet("unf", "200a");
+			expect(card.name).eq("Balloon Stand");
+		});
+
 		it("by multiverse id", async () => {
 			const card = await Scry.Cards.byMultiverseId(369030);
 			expect(card.name).eq("Blood Scrivener");
@@ -370,23 +375,23 @@ describe("Scry", function () {
 
 			it("getImageURI", async () => {
 				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
-				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
 				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
-				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+				expect(card.getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
 			});
 
 			it("getFrontImageURI", async () => {
 				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
-				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
 				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
-				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+				expect(card.getFrontImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
 			});
 
 			it("getBackImageURI", async () => {
 				let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
 				expect(card.getBackImageURI("normal")).eq(RESOURCE_GENERIC_CARD_BACK);
 				card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
-				expect(card.getBackImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+				expect(card.getBackImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
 			});
 
 			describe("on faces", () => {
@@ -411,12 +416,12 @@ describe("Scry", function () {
 				it("getImageURI", async () => {
 					let card = await Scry.Cards.byId("d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7");
 					expect(card.card_faces.length).eq(2);
-					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
-					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
+					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/d/2/d2f3035c-ca27-40f3-ad73-c4e54bb2bcd7.jpg?1549941722`);
 					card = await Scry.Cards.byId("c4ac7570-e74e-4081-ac53-cf41e695b7eb");
 					expect(card.card_faces.length).eq(2);
-					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
-					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/scryfall-cards/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+					expect(card.card_faces[0].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/front/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
+					expect(card.card_faces[1].getImageURI("normal")).eq(`${ENDPOINT_FILE_1}/normal/back/c/4/c4ac7570-e74e-4081-ac53-cf41e695b7eb.jpg?1562563598`);
 				});
 			});
 
@@ -630,7 +635,7 @@ describe("Scry", function () {
 				const result = await Scry.BulkData.definitionById(definitions[0].id);
 
 				expect(result.object).eq("bulk_data");
-				expect(result.compressed_size).gte(10000);
+				expect(result.size).gte(10000);
 			});
 
 			it("by type", async () => {
@@ -638,7 +643,7 @@ describe("Scry", function () {
 
 				expect(result.object).eq("bulk_data");
 				expect(result.type).eq("all_cards");
-				expect(result.compressed_size).gte(10000);
+				expect(result.size).gte(10000);
 			});
 		});
 

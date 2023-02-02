@@ -1,5 +1,5 @@
 export const ENDPOINT_API = "https://api.scryfall.com";
-export const ENDPOINT_FILE_1 = "https://c1.scryfall.com/file";
+export const ENDPOINT_FILE_1 = "https://cards.scryfall.io";
 export const ENDPOINT_FILE_2 = "https://c2.scryfall.com/file";
 export const ENDPOINT_FILE_3 = "https://c3.scryfall.com/file";
 export const RESOURCE_GENERIC_CARD_BACK = `${ENDPOINT_FILE_2}/scryfall-errors/missing.jpg` as const;

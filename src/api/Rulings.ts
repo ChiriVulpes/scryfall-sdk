@@ -1,5 +1,6 @@
 import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
+import {CollectorNumber} from "./Cards";
 
 export interface Ruling {
 	source: string;
@@ -15,7 +16,7 @@ class Rulings extends MagicQuerier {
 	}
 
 	@Cached
-	public async bySet (setCode: string, collectorNumber: string | number) {
+	public async bySet (setCode: string, collectorNumber: CollectorNumber) {
 		return (await this.query<List<Ruling>>(["cards", setCode, `${collectorNumber}`, "rulings"])).data;
 	}
 
