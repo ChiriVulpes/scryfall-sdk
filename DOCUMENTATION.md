@@ -3,7 +3,7 @@
 - [Cards](#cards-)
   - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
   - [`Cards.byName (name: string, set?: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-set-string-fuzzy--false-promisecard-)
-  - [`Cards.bySet (code: string, collectorNumber: CollectorNumber, lang?: string): Promise<Card>;`](#cardsbyset-setcode-string-collectornumber-number-lang-string-promisecard-)
+  - [`Cards.bySet (code: string, collectorNumber: string | number, lang?: string): Promise<Card>;`](#cardsbyset-setcode-string-collectornumber-string--number-lang-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
@@ -32,7 +32,7 @@
     - [`Set.search (query: string, options?: SearchOptions): Promise<Card[]>`](#setsearch-query-string-options-searchoptions-promisecard-)
 - [Rulings](#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](#rulingsbyid-id-string-promiseruling-)
-  - [`Rulings.bySet (code: string, collectorNumber: CollectorNumber): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectornumber-string--number-promiseruling-)
+  - [`Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` ](#rulingsbyset-code-string-collectornumber-string--number-promiseruling-)
   - [`Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` ](#rulingsbymultiverseid-id-number-promiseruling-)
   - [`Rulings.byMtgoId (id: number): Promise<Ruling[]>;` ](#rulingsbymtgoid-id-number-promiseruling-)
   - [`Rulings.byArenaId (id: number): Promise<Ruling[]>;` ](#rulingsbyarenaid-id-number-promiseruling-)
@@ -109,7 +109,7 @@ card = await Scry.Cards.byName("Warhammer", "MRD", true);
 console.log(card.name, card.set); // Loxodon Warhammer, mrd
 ```
 
-### `Cards.bySet (setCode: string, collectorNumber: CollectorNumber, lang?: string): Promise<Card>;` [🡅](#table-of-contents)
+### `Cards.bySet (setCode: string, collectorNumber: string | number, lang?: string): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a card based on its set and collector id. You can use the optional `lang` argument to get cards in another language. See the [Scryfall Documentation for a list of all languages](https://scryfall.com/docs/api/languages).
 
@@ -228,7 +228,7 @@ In order to assist with manual requests, this method comes with a new set of fac
 - `Scry.CardIdentifier.byIllustrationId(id: string): CardIdentifier;`
 - `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
 - `Scry.CardIdentifier.byName(string: string, set?: string): CardIdentifier;`
-- `Scry.CardIdentifier.bySet(set: string, collectorNumber: CollectorNumber): CardIdentifier;`
+- `Scry.CardIdentifier.bySet(set: string, collectorNumber: string | number): CardIdentifier;`
 
 Example:
 ```ts
@@ -439,7 +439,7 @@ const rulings = await Scry.Rulings.byId("9ea8179a-d3c9-4cdc-a5b5-68cc73279050");
 console.log(rulings.length); // 2
 ```
 
-### `Rulings.bySet (code: string, collectorNumber: CollectorNumber): Promise<Ruling[]>;` [🡅](#table-of-contents)
+### `Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` [🡅](#table-of-contents)
 
 Gets the rulings for a card based on its set and collector id.
 

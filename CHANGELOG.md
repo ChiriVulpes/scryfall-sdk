@@ -101,7 +101,7 @@ New features:
 New features:
 - [Rulings](./DOCUMENTATION.md#rulings-)
   - [`Rulings.byId (id: string): Promise<Ruling[]>;` ](./DOCUMENTATION.md#rulingsbyid-id-string-promiseruling-)
-  - [`Rulings.bySet (code: string, collectorNumber: CollectorNumber): Promise<Ruling[]>;` ](./DOCUMENTATION.md#rulingsbyset-code-string-collectorid-string-promiseruling-)
+  - [`Rulings.bySet (code: string, collectorNumber: string | number): Promise<Ruling[]>;` ](./DOCUMENTATION.md#rulingsbyset-code-string-collectornumber-string--number-promiseruling-)
   - [`Rulings.byMultiverseId (id: number): Promise<Ruling[]>;` ](./DOCUMENTATION.md#rulingsbymultiverseid-id-number-promiseruling-)
   - [`Rulings.byMtgoId (id: number): Promise<Ruling[]>;` ](./DOCUMENTATION.md#rulingsbymtgoid-id-number-promiseruling-)
 - [Catalogs](./DOCUMENTATION.md#catalogs-)

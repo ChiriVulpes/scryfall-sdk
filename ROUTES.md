@@ -20,7 +20,7 @@
 | [`/cards/multiverse/:id/rulings`](./DOCUMENTATION.md#rulingsbymultiverseid-id-number-promiseruling-) | List\<Ruling\> |
 | [`/cards/mtgo/:id/rulings`](./DOCUMENTATION.md#rulingsbymtgoid-id-number-promiseruling-) | List\<Ruling\> |
 | [`/cards/arena/:id/rulings`](./DOCUMENTATION.md#rulingsbyarenaid-id-number-promiseruling-) | List\<Ruling\> |
-| [`/cards/:code/:number/rulings`](./DOCUMENTATION.md#rulingsbyset-code-string-collectorid-string-promiseruling-) | List\<Ruling\> |
+| [`/cards/:code/:number/rulings`](./DOCUMENTATION.md#rulingsbyset-code-string-collectornumber-string--number-promiseruling-) | List\<Ruling\> |
 | [`/cards/:id/rulings`](./DOCUMENTATION.md#rulingsbyid-id-string-promiseruling-) | List\<Ruling\> |
 | [`/symbology`](./DOCUMENTATION.md#symbologyall--promisecardsymbol-) | List\<CardSymbol\> |
 | [`/symbology/parse-mana?cost=<shorthand mana cost>`](./DOCUMENTATION.md#symbologyparsemana-mana-string-promisemanacost-) | ManaCost |
