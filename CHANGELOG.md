@@ -1,3 +1,13 @@
+# v3.3.0 (February 2nd, 2023)
+- Added [support](./DOCUMENTATION.md#migrations-) for [Scryfall's new "migrations" endpoint](https://scryfall.com/docs/api/migrations). Note that this endpoint is still in beta, so something might break in the future with it.
+- Added [support](./DOCUMENTATION.md#cardsbycardmarketid-id-number-promisecard-) for querying cards by their Cardmarket IDs.
+- Bumped axios dependency up to v1.3.1.
+Updates and fixes provided by [furgin](https://github.com/furgin) — thank you!
+- Added missing `svg_uri` field to CardSymbol interface.
+- Updated `compressed_size` field to `size`.
+- Both strings and numbers are now accepted in all places requiring a collector number.
+- Fixed tests. (Scryfall's returned card images uri changed.)
+
 # v3.2.1 (September 3rd, 2022)
 - Undid that last fix and replaced with one that actually works how it was originally intended.
 
