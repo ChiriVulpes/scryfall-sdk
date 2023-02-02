@@ -3,7 +3,6 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { Stream } from "stream";
-import { BulkDataDefinition } from "../api/BulkData";
 import * as Scry from "../Scry";
 import { Card, ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK, SymbologyTransformer } from "../Scry";
 import Cached from "../util/Cached";
@@ -621,7 +620,7 @@ describe("Scry", function () {
 	});
 
 	describe("Bulk Data", () => {
-		let definitions: BulkDataDefinition[];
+		let definitions: Scry.BulkDataDefinition[];
 
 		describe("definitions", () => {
 			it("all", async () => {
@@ -677,6 +676,18 @@ describe("Scry", function () {
 					expect(result).eq(undefined);
 				});
 			});
+		});
+	});
+
+	describe("migrations", () => {
+		it("all", async () => {
+			const migrations = await Scry.Migrations.all().waitForAll();
+			expect(migrations.length).gte(433);
+		});
+
+		it("by id", async () => {
+			const migration = await Scry.Migrations.byId("2c970867-aec5-4d55-91ac-3a117b0da4c4");
+			expect(migration.old_scryfall_id).eq("d5bab733-6f20-4def-af19-534b3f9f54c4");
 		});
 	});
 

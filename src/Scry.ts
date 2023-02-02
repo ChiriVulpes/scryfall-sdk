@@ -4,11 +4,14 @@ import { IScry } from "./IScry";
 import Cached from "./util/Cached";
 import MagicQuerier, { minimumRequestTimeout, SearchError } from "./util/MagicQuerier";
 
+export * from "./api/BulkData";
 export { default as BulkData } from "./api/BulkData";
 export * from "./api/Cards";
 export { default as Cards } from "./api/Cards";
 export * from "./api/Catalog";
 export { default as Catalog } from "./api/Catalog";
+export * from "./api/Migrations";
+export { default as Migrations } from "./api/Migrations";
 export * from "./api/Rulings";
 export { default as Rulings } from "./api/Rulings";
 export * from "./api/Sets";

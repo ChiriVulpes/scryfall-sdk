@@ -62,6 +62,9 @@
   - [`BulkData.definitions (): Promise<BulkDataDefinition[]>;`](#bulkdatadefinitions--promisebulkdatadefinition-)
   - [`BulkData.definitionByType (type: BulkDataType): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-)
   - [`BulkData.definitionById (id: string): Promise<BulkDataDefinition>;`](#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-)
+- [Migrations](#migrations-)
+  - [`Migrations.all (page?: number): MagicEmitter<Migration>;`](#migrationsall-page-number-magicemittermigration-)
+  - [`Migrations.byId (id: string): Promise<Migration>;`](#migrationsall-id-string-promisemigration-)
 - [Misc](#misc-)
   - [`setTimeout (timeout: number): void;`](#settimeout-timeout-number-void-)
   - [Caching](#caching-)
@@ -674,6 +677,43 @@ Returns a single bulk data file definition by its id.
 const id = "<an id here>"; // a UUID identifying the bulk data definition
 const definition = await Scry.BulkData.definitionById(id);
 console.log(definition.object, definition.type); // "bulk_data rulings"
+```
+
+
+## Migrations [🡅](#table-of-contents)
+When Scryfall discovers invalid cards, they're removed and reported through the migrations API. Using scryfall-sdk, you can iterate through the recent migrations and update local data as necessary.
+
+### `Migrations.all (page?: number): MagicEmitter<Migration>;` [🡅](#table-of-contents)
+
+```ts
+// Somewhere in your application, store the last time you checked migrations.
+declare lastMigrationCheck: Date;
+
+// To apply migrations:
+for await (const migration of Scry.Migrations.all()) {
+    if (new Date(migration.performed_at) < lastMigrationCheck)
+        // This migration is older than the last time migrations were checked, so it can be safely ignored.
+        // Since migrations are returned newest-first, the moment you've run into an old migration, you can safely exit.
+        break; 
+        
+    // This migration is new, so it needs to be applied.
+    // Here you'd update any local data — for example, stored Scryfall IDs — for the removed cards.
+    // For example, say your application stores decks that your clients have created via Scryfall IDs,
+    // but Scryfall has removed one or more of the cards in your clients' decks.
+    // Your migration code would go through those Scryfall IDs to see if any of them match this migration,
+    // and either delete them from the deck (in case of the `migration_strategy` being `delete`)
+    // or replace the ID with the new ID (in case of the `migration_strategy` being `merge`)
+}
+
+// Update lastMigrationCheck with the current time.
+```
+
+### `Migrations.byId (id: string): Promise<Migration>;` [🡅](#table-of-contents)
+I'm not sure when exactly this would be necessary, but in case you ever need it, you can query Scryfall for details on a specific migration by its migration ID.
+
+```ts
+const migration = await Scry.Migrations.byId("2c970867-aec5-4d55-91ac-3a117b0da4c4");
+console.log(migration.migration_strategy); // "delete"
 ```
 
 
