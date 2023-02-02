@@ -96,7 +96,7 @@ export default class MagicQuerier {
 			emitter.emit("data", card);
 		}
 
-		if (results?.has_more) {
+		if (results?.has_more && data.length !== 0) { // check if there was no data to workaround scryfall being buggy and returning true for invalid pages
 			if (!emitter.cancelled) {
 				if (emitter.willCancelAfterPage) emitter.cancel();
 				else return this.queryPage(emitter, apiPath, query, page + 1)
