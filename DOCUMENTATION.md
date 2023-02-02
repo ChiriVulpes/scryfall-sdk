@@ -8,6 +8,7 @@
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
   - [`Cards.byTcgPlayerId (id: number): Promise<Card>;` ](#cardsbytcgplayerid-id-number-promisecard-)
+  - [`Cards.byCardmarketId (id: number): Promise<Card>;` ](#cardsbycardmarketid-id-number-promisecard-)
   - [`Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions--number-magicemittercard-)
   - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
@@ -158,6 +159,15 @@ Gets a card based on its TCG Player id.
 ```ts
 const card = await Scry.Cards.byTcgPlayerId(1030);
 console.log(card.name); // Ankh of Mishra
+```
+
+### `Cards.byCardmarketId (id: number): Promise<Card>;` [🡅](#table-of-contents)
+
+Gets a card based on its Cardmarket id.
+
+```ts
+const card = await Scry.Cards.byCardmarketId(681770);
+console.log(card.name); // Phyrexian Fleshgorger
 ```
 
 ### `Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` [🡅](#table-of-contents)

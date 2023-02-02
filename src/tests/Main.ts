@@ -79,6 +79,11 @@ describe("Scry", function () {
 			expect(card.name).eq("Ankh of Mishra");
 		});
 
+		it("by cardmarket id", async () => {
+			const card = await Scry.Cards.byCardmarketId(681770);
+			expect(card.name).eq("Phyrexian Fleshgorger");
+		});
+
 		it("in lang", async () => {
 			const card = await Scry.Cards.bySet("dom", 1, "ja");
 			expect(card.printed_name).eq("ウルザの後継、カーン");

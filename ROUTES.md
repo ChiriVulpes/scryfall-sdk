@@ -9,6 +9,7 @@
 | [`/cards/mtgo/:mtgo_id`](./DOCUMENTATION.md#cardsbymtgoid-id-number-promisecard-) | Card |
 | [`/cards/arena/:id`](./DOCUMENTATION.md#cardsbyarenaid-id-number-promisecard-) | Card |
 | [`/cards/tcgplayer/:id`](./DOCUMENTATION.md#cardsbytcgplayerid-id-number-promisecard-) | Card |
+| [`/cards/cardmarket/:id`](./DOCUMENTATION.md#cardsbycardmarketid-id-number-promisecard-) | Card |
 | [`/cards/random`](./DOCUMENTATION.md#cardsrandom-id-number-promisecard-) | Card |
 | [`/cards/search?q=<https://scryfall.com/docs/reference>`](./DOCUMENTATION.md#cardssearch-query-string-magicemittercard-) | List\<Card\> |
 | [`/cards/autocomplete?q=<autocomplete to a card name>`](./DOCUMENTATION.md#cardsautocompletename-name-string-promisestring-) | Catalog |
@@ -25,6 +26,7 @@
 | [`/symbology`](./DOCUMENTATION.md#symbologyall--promisecardsymbol-) | List\<CardSymbol\> |
 | [`/symbology/parse-mana?cost=<shorthand mana cost>`](./DOCUMENTATION.md#symbologyparsemana-mana-string-promisemanacost-) | ManaCost |
 | [`/catalog/card-names`](./DOCUMENTATION.md#catalogcardnames--promisestring-) | Catalog |
+| [`/catalog/artist-names`](./DOCUMENTATION.md#catalogartistnames--promisestring-) | Catalog |
 | [`/catalog/word-bank`](./DOCUMENTATION.md#catalogwordbank--promisestring-) | Catalog |
 | [`/catalog/creature-types`](./DOCUMENTATION.md#catalogcreaturetypes--promisestring-) | Catalog |
 | [`/catalog/planeswalker-types`](./DOCUMENTATION.md#catalogplaneswalkertypes--promisestring-) | Catalog |
@@ -42,3 +44,5 @@
 | [`/bulk-data`](./DOCUMENTATION.md#bulkdatadefinitions--promisebulkdatadefinition-) | List\<BulkDataDefinition\> |
 | [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |
+| [`/migrations`](./DOCUMENTATION.md#migrationsall-page-number-magicemittermigration-) | MagicEmitter<Migration> |
+| [`/migrations/:id`](./DOCUMENTATION.md#migrationsall-id-string-promisemigration-) | Promise<Migration> |

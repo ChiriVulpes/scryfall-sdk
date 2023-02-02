@@ -620,6 +620,11 @@ class Cards extends MagicQuerier {
 		return this.queryCard(["cards/tcgplayer", id]);
 	}
 
+	@Cached
+	public async byCardmarketId (id: number) {
+		return this.queryCard(["cards/cardmarket", id]);
+	}
+
 	public async random () {
 		return this.queryCard("cards/random");
 	}
