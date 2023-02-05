@@ -1,3 +1,6 @@
+# v4.0.0 (February 5th, 2023)
+- Removed axios dependency in favour of native `fetch`, thanks to [mlavina](https://github.com/mlavina). This requires at least node v18, hence a major bump!
+
 # v3.3.0 (February 2nd, 2023)
 - Added [support](./DOCUMENTATION.md#migrations-) for [Scryfall's new "migrations" endpoint](https://scryfall.com/docs/api/migrations). Note that this endpoint is still in beta, so something might break in the future with it.
 - Added [support](./DOCUMENTATION.md#cardsbycardmarketid-id-number-promisecard-) for querying cards by their Cardmarket IDs.
