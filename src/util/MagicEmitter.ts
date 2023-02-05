@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "node:events";
 
 export interface MagicArray<T, NOT_FOUND = never> extends Array<T> {
 	not_found: NOT_FOUND[];

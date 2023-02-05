@@ -1,5 +1,3 @@
-import Axios from "axios";
-import { Stream } from "stream";
 import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
 
@@ -76,13 +74,11 @@ class BulkData extends MagicQuerier {
 		if (new Date(lastDownload).getTime() > new Date(definition.updated_at).getTime())
 			return undefined;
 
-		const result = await Axios.request<Stream>({
+		const result = await fetch(definition.download_uri, {
 			method: "GET",
-			url: definition.download_uri,
-			responseType: "stream",
 		});
 
-		return result.data;
+		return result.body;
 	}
 
 	private definition (idOrType: string) {
