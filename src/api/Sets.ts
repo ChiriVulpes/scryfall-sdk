@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from "axios";
 import { IScry, SYMBOL_CARDS, SYMBOL_SET } from "../IScry";
 import Cached from "../util/Cached";
 import MagicQuerier, { List, TOrArrayOfT } from "../util/MagicQuerier";
@@ -122,7 +121,7 @@ class Sets extends MagicQuerier {
 		throw error;
 	}
 
-	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<Set> {
+	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<Set> {
 		return await this.query<Set>(apiPath, query, post, requestOptions)
 			.then(Set.construct);
 	}

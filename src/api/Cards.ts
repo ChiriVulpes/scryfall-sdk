@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from "axios";
 import { Color, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
 import Cached from "../util/Cached";
 import MagicEmitter from "../util/MagicEmitter";
@@ -656,7 +655,7 @@ class Cards extends MagicQuerier {
 		return emitter;
 	}
 
-	private async queryCard (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<Card> {
+	private async queryCard (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<Card> {
 		return await this.query<Card>(apiPath, query, post, requestOptions)
 			.then(Card.construct);
 	}

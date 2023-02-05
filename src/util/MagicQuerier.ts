@@ -1,4 +1,3 @@
-import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ENDPOINT_API } from "../IScry";
 import MagicEmitter from "./MagicEmitter";
 
@@ -58,12 +57,12 @@ export default class MagicQuerier {
 	public static timeout = defaultRequestTimeout;
 	public static requestCount = 0;
 
-	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig): Promise<T> {
+	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<T> {
 		if (Array.isArray(apiPath))
 			apiPath = apiPath.join("/");
 
 		let lastError: Error | undefined;
-		let result: AxiosResponse | undefined;
+		let result: Response | undefined;
 		let retries: number;
 		for (retries = 0; retries < MagicQuerier.retry.attempts; retries++) {
 			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post, requestOptions));
@@ -71,13 +70,13 @@ export default class MagicQuerier {
 			await sleep(MagicQuerier.retry.timeout);
 		}
 
-		if (!result?.data) {
+		if (!result || !result.body) {
 			lastError ??= new Error("No data");
 			(lastError as any).attempts = retries;
 			throw lastError;
 		}
 
-		return result.data;
+		return result.json();
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
@@ -108,7 +107,7 @@ export default class MagicQuerier {
 		emitter.emit("done");
 	}
 
-	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any, requestOptions?: AxiosRequestConfig) {
+	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit) {
 		const now = Date.now();
 		const timeSinceLastQuery = now - lastQuery;
 		if (timeSinceLastQuery >= MagicQuerier.timeout) {
@@ -124,17 +123,31 @@ export default class MagicQuerier {
 
 		MagicQuerier.requestCount++;
 
-		const result = await Axios.request({
-			data: post,
+		const cleanParams = query ? Object.entries(query).reduce((acc, [key, value]) => {
+			if (value) {
+				acc[key] = value
+			}
+			return acc
+		}, {} as Record<string, any>) : {}
+		const searchParams = query ? `?${new URLSearchParams(cleanParams).toString()}` : ''
+
+		const url = `${ENDPOINT_API}/${apiPath}` + searchParams
+
+		let result: Response | undefined = await fetch(url, {
+			body: JSON.stringify(post),
+			headers: {
+				'Content-Type': 'application/json',
+			},
 			method: post ? "POST" : "GET",
-			params: query,
-			url: `${ENDPOINT_API}/${apiPath}`,
 			...requestOptions,
-		}).catch(({ response }: { response: { data: any } }) => {
-			const error = response.data as SearchError;
+		})
+	
+		if (result !== undefined && !result.ok) {
+			const error = await result.json() as SearchError;
 			lastError = new Error(error.details ?? error.code) as SearchError;
-			Object.assign(lastError, response.data);
-		}) || undefined;
+			Object.assign(lastError, error);
+			result = undefined
+		}
 
 		return { result, lastError };
 	}
