@@ -1,3 +1,6 @@
+# v4.0.1
+Was a bit too fast on the draw with the 4.0.0 release, did not build it locally and just ended up publishing 3.3.0 as 4.0.0 instead. Whoops.
+
 # v4.0.0 (February 5th, 2023)
 - Removed axios dependency in favour of native `fetch`, thanks to [mlavina](https://github.com/mlavina). This requires at least node v18, hence a major bump!
 
