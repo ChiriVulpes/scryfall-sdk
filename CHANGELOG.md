@@ -1,3 +1,6 @@
+# v4.0.2
+- Wrote a lil polyfill for node:events when it doesn't exist, should make the module work in browser with no fancy rollup type stuff needed.
+
 # v4.0.1
 Was a bit too fast on the draw with the 4.0.0 release, did not build it locally and just ended up publishing 3.3.0 as 4.0.0 instead. Whoops.
 
