@@ -655,8 +655,8 @@ class Cards extends MagicQuerier {
 		return emitter;
 	}
 
-	private async queryCard (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<Card> {
-		return await this.query<Card>(apiPath, query, post, requestOptions)
+	private async queryCard (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any): Promise<Card> {
+		return await this.query<Card>(apiPath, query, post)
 			.then(Card.construct);
 	}
 

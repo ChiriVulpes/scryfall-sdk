@@ -82,6 +82,9 @@ In the documentation below, requiring the package is assumed.
 import Scry = require("scryfall-sdk");
 ```
 
+### Using a node.js version older than v18?
+Install the [`axios`](https://www.npmjs.com/package/axios) dependency alongside scryfall-sdk and it will automatically use it.
+
 
 
 ## Cards [🡅](#table-of-contents)

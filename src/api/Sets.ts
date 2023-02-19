@@ -121,8 +121,8 @@ class Sets extends MagicQuerier {
 		throw error;
 	}
 
-	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<Set> {
-		return await this.query<Set>(apiPath, query, post, requestOptions)
+	private async querySet (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any): Promise<Set> {
+		return await this.query<Set>(apiPath, query, post)
 			.then(Set.construct);
 	}
 }

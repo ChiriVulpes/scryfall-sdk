@@ -1,14 +1,15 @@
-# v4.1.0
+# v4.1.0 (February 19th, 2023)
+- Scryfall-sdk is now once again compatible with older node versions. If you install axios alongside scryfall-sdk, it will automatically use it. Trying to use scryfall-sdk with an older node version without having axios installed will throw an error.
 - Thanks to [Kevin Lowe](https://github.com/kevinlowe0x3F7) via [#62](https://github.com/ChiriVulpes/scryfall-sdk/pull/62), added full-text query support to the `Scry.Cards.random` function.
 
-# v4.0.2
+# v4.0.2 (February 11th, 2023)
 - Wrote a lil polyfill for node:events when it doesn't exist, should make the module work in browser with no fancy rollup type stuff needed.
 
 # v4.0.1
 Was a bit too fast on the draw with the 4.0.0 release, did not build it locally and just ended up publishing 3.3.0 as 4.0.0 instead. Whoops.
 
 # v4.0.0 (February 5th, 2023)
-- Removed axios dependency in favour of native `fetch`, thanks to [mlavina](https://github.com/mlavina). This requires at least node v18, hence a major bump!
+- Removed axios dependency in favour of native `fetch`, thanks to [mlavina](https://github.com/mlavina) via [#59](https://github.com/ChiriVulpes/scryfall-sdk/pull/59). This requires at least node v18, hence a major bump!
 
 # v3.3.0 (February 2nd, 2023)
 - Added [support](./DOCUMENTATION.md#migrations-) for [Scryfall's new "migrations" endpoint](https://scryfall.com/docs/api/migrations). Note that this endpoint is still in beta, so something might break in the future with it.

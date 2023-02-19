@@ -1,6 +1,8 @@
 /// <reference types="mocha" />
 import * as chai from "chai";
+import { assert } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
+import { Stream } from "stream";
 import * as Scry from "../Scry";
 import { Card, ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK, SymbologyTransformer } from "../Scry";
 import Cached from "../util/Cached";
@@ -664,7 +666,7 @@ describe("Scry", function () {
 			describe("by id", () => {
 				it("no matter the last download time", async () => {
 					const result = await Scry.BulkData.downloadById(definitions[0].id, 0);
-					expect(result).instanceOf(ReadableStream);
+					assert(result instanceof Stream || result instanceof ReadableStream, "Expected result to be a Stream or ReadableStream");
 				});
 
 				it("with the last download time more recent than the last update time", async () => {
@@ -676,7 +678,7 @@ describe("Scry", function () {
 			describe("by type", () => {
 				it("no matter the last download time", async () => {
 					const result = await Scry.BulkData.downloadByType("rulings", 0);
-					expect(result).instanceOf(ReadableStream);
+					assert(result instanceof Stream || result instanceof ReadableStream, "Expected result to be a Stream or ReadableStream");
 				});
 
 				it("with the last download time more recent than the last update time", async () => {

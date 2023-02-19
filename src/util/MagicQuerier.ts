@@ -1,6 +1,15 @@
 import { ENDPOINT_API } from "../IScry";
 import MagicEmitter from "./MagicEmitter";
 
+let axios: typeof import("axios")["default"] | undefined;
+if (typeof fetch === "undefined") {
+	try {
+		axios = require("axios").default;
+	} catch {
+		throw new Error("[scryfall-sdk] If the global `fetch` function is undefined (any node.js version older than v18), the axios peerDependency is required.");
+	}
+}
+
 // the api requests 50-100 ms between calls, we go on the generous side and never wait less than 100 ms between calls
 export const defaultRequestTimeout = 100;
 export const minimumRequestTimeout = 50;
@@ -57,26 +66,26 @@ export default class MagicQuerier {
 	public static timeout = defaultRequestTimeout;
 	public static requestCount = 0;
 
-	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit): Promise<T> {
+	protected async query<T> (apiPath: TOrArrayOfT<string | number | undefined>, query?: { [key: string]: any }, post?: any): Promise<T> {
 		if (Array.isArray(apiPath))
 			apiPath = apiPath.join("/");
 
 		let lastError: Error | undefined;
-		let result: Response | undefined;
+		let result: T | undefined;
 		let retries: number;
 		for (retries = 0; retries < MagicQuerier.retry.attempts; retries++) {
-			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post, requestOptions));
+			({ result, lastError } = await this.tryQuery(`${apiPath}`, query, post));
 			if (result || (!this.canRetry(lastError as SearchError) && !MagicQuerier.retry.forced)) break;
 			await sleep(MagicQuerier.retry.timeout);
 		}
 
-		if (!result || !result.body) {
+		if (!result) {
 			lastError ??= new Error("No data");
 			(lastError as any).attempts = retries;
 			throw lastError;
 		}
 
-		return result.json();
+		return result;
 	}
 
 	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
@@ -107,7 +116,7 @@ export default class MagicQuerier {
 		emitter.emit("done");
 	}
 
-	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any, requestOptions?: RequestInit) {
+	private async tryQuery (apiPath: string, query?: { [key: string]: any }, post?: any) {
 		const now = Date.now();
 		const timeSinceLastQuery = now - lastQuery;
 		if (timeSinceLastQuery >= MagicQuerier.timeout) {
@@ -119,19 +128,22 @@ export default class MagicQuerier {
 			await sleep(timeUntilNextQuery);
 		}
 
-		let lastError: SearchError | undefined;
-
 		MagicQuerier.requestCount++;
 
-		const cleanParams = query ? Object.entries(query).reduce((acc, [key, value]) => {
-			if (value) {
-				acc[key] = value
-			}
-			return acc
-		}, {} as Record<string, any>) : {}
-		const searchParams = query ? `?${new URLSearchParams(cleanParams).toString()}` : ''
+		if (axios)
+			return this.queryAxios(apiPath, query, post);
+		else
+			return this.queryFetch(apiPath, query, post);
+	}
 
-		const url = `${ENDPOINT_API}/${apiPath}` + searchParams
+	private async queryFetch (apiPath: string, query?: { [key: string]: any }, post?: any) {
+		const cleanParams: Record<string, any> = {};
+		for (const [key, value] of Object.entries(query ?? {}))
+			if (value !== undefined)
+				cleanParams[key] = value;
+		const searchParams = query ? `?${new URLSearchParams(cleanParams).toString()}` : '';
+
+		const url = `${ENDPOINT_API}/${apiPath}` + searchParams;
 
 		let result: Response | undefined = await fetch(url, {
 			body: JSON.stringify(post),
@@ -139,17 +151,34 @@ export default class MagicQuerier {
 				'Content-Type': 'application/json',
 			},
 			method: post ? "POST" : "GET",
-			...requestOptions,
-		})
-	
+		});
+
+		let lastError: SearchError | undefined;
 		if (result !== undefined && !result.ok) {
 			const error = await result.json() as SearchError;
 			lastError = new Error(error.details ?? error.code) as SearchError;
 			Object.assign(lastError, error);
-			result = undefined
+			result = undefined;
 		}
 
-		return { result, lastError };
+		return { result: await result?.json(), lastError };
+	}
+
+	private async queryAxios (apiPath: string, query?: { [key: string]: any }, post?: any) {
+		let lastError: SearchError | undefined;
+
+		const result = await axios!.request({
+			data: post,
+			method: post ? "POST" : "GET",
+			params: query,
+			url: `${ENDPOINT_API}/${apiPath}`,
+		}).catch(({ response }: { response: { data: any } }) => {
+			const error = response.data as SearchError;
+			lastError = new Error(error.details ?? error.code) as SearchError;
+			Object.assign(lastError, response.data);
+		}) || undefined;
+
+		return { result: result?.data, lastError };
 	}
 
 	private canRetry (error: SearchError) {

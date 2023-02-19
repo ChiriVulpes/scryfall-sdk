@@ -14,6 +14,9 @@ As of [February 2nd, 2023](./CHANGELOG.md), all features described in the [Scryf
 npm install scryfall-sdk
 ```
 
+### Using a node.js version older than v18?
+Install the [`axios`](https://www.npmjs.com/package/axios) dependency alongside scryfall-sdk and it will automatically use it.
+
 
 ## Basic Example Usage
 ```ts

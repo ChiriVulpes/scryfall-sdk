@@ -6,10 +6,14 @@ import { series, src, task, watch } from "gulp";
 import mocha from "gulp-mocha";
 import * as path from "path";
 
+task("test", () => src("out/tests/Main.js", { read: false })
+	.pipe(mocha({ reporter: "even-more-min" }))
+	.on("error", () => process.exitCode = 1));
+
 task("build", series(
 	clean,
 	compile,
-	test));
+	"test"));
 
 task("watch", series("build", done =>
 	watch("./src/**/*.ts", series("build"))
@@ -21,12 +25,6 @@ async function compile () {
 
 async function clean () {
 	await del("out");
-}
-
-function test () {
-	return src("out/tests/Main.js", { read: false })
-		.pipe(mocha({ reporter: "even-more-min" }))
-		.on("error", () => process.exitCode = 1);
 }
 
 export default class TypescriptWatch {
