@@ -181,6 +181,12 @@ describe("Scry", function () {
 			expect(card).not.eq(undefined);
 		});
 
+		it("random with query", async () => {
+			const card = await Scry.Cards.random("type:planeswalker");
+			expect(card).not.eq(undefined);
+			expect(card.type_line).to.include("Planeswalker")
+		});
+
 		it("autocomplete name", async () => {
 			const cardNames = await Scry.Cards.autoCompleteName("bloodsc");
 			expect(cardNames).include("Blood Scrivener");
