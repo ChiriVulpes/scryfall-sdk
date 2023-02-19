@@ -1,3 +1,6 @@
+# v4.1.0
+- Thanks to [Kevin Lowe](https://github.com/kevinlowe0x3F7) via [#62](https://github.com/ChiriVulpes/scryfall-sdk/pull/62), added full-text query support to the `Scry.Cards.random` function.
+
 # v4.0.2
 - Wrote a lil polyfill for node:events when it doesn't exist, should make the module work in browser with no fancy rollup type stuff needed.
 

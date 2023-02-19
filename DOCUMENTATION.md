@@ -10,7 +10,7 @@
   - [`Cards.byTcgPlayerId (id: number): Promise<Card>;` ](#cardsbytcgplayerid-id-number-promisecard-)
   - [`Cards.byCardmarketId (id: number): Promise<Card>;` ](#cardsbycardmarketid-id-number-promisecard-)
   - [`Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` ](#cardssearch-query-string-options-searchoptions--number-magicemittercard-)
-  - [`Cards.random (id: number): Promise<Card>;` ](#cardsrandom-id-number-promisecard-)
+  - [`Cards.random (query?: string): Promise<Card>;` ](#cardsrandom-query-string-promisecard-)
   - [`Cards.autoCompleteName (name: string): Promise<string[]>;` ](#cardsautocompletename-name-string-promisestring-)
   - [`Cards.collection (...collection: CardIdentifier[]): MagicEmitter<Card>;`](#cardscollection-collection-cardidentifier-magicemittercard-)
   - [`Cards.setSymbologyTransformer (transformer?: string | SymbologyTransformer): void`](#cardssetsymbologytransformer-transformer-string--symbologytransformer-void-)
@@ -172,7 +172,7 @@ console.log(card.name); // Phyrexian Fleshgorger
 
 ### `Cards.search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;` [🡅](#table-of-contents)
 
-Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/reference).
+Queries for a card using the [Scryfall Search API](https://scryfall.com/docs/syntax).
 
 ```ts
 Scry.Cards.search("type:planeswalker")
@@ -195,13 +195,20 @@ const cardsFromPage7 = await Scry.Cards.search("type:creature", 7).cancelAfterPa
 console.log(cardsFromPage7.length); // 175
 ```
 
-### `Cards.random (id: number): Promise<Card>;` [🡅](#table-of-contents)
+### `Cards.random (query?: string): Promise<Card>;` [🡅](#table-of-contents)
 
 Gets a random card.
 
 ```ts
 const card = Scry.Cards.random();
-console.log(card.name); // TODO come up with a MTG meme to put here
+console.log(card.name); // some random card from all of magic
+```
+
+Passing a query string parameter filters the pool of possible cards using the [Scryfall Search API](https://scryfall.com/docs/syntax) before selecting the random one to return.
+
+```ts
+const card = Scry.Cards.random("type:planeswalker");
+console.log(card.name); // some random planeswalker card
 ```
 
 ### `Cards.autoCompleteName (name: string): Promise<string[]>;` [🡅](#table-of-contents)
