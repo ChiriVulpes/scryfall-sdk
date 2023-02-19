@@ -624,8 +624,8 @@ class Cards extends MagicQuerier {
 		return this.queryCard(["cards/cardmarket", id]);
 	}
 
-	public async random () {
-		return this.queryCard("cards/random");
+	public async random (query?: string) {
+		return this.queryCard("cards/random", { q: query });
 	}
 
 	/**
