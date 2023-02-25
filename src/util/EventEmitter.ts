@@ -3,6 +3,10 @@ let EventEmitter: typeof import("node:events");
 
 try {
 	EventEmitter = require("node:events");
+	if (!("EventEmitter" in EventEmitter))
+		// force an error if the module isn't as expected
+		throw new Error();
+
 } catch {
 
 	type Listener = (...args: any[]) => void;

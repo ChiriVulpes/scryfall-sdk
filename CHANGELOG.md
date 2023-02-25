@@ -1,3 +1,6 @@
+# v4.1.1 (February 25th, 2023)
+- Workaround some bundlers [doing dumb things](https://github.com/ChiriVulpes/scryfall-sdk/issues/61)
+
 # v4.1.0 (February 19th, 2023)
 - Scryfall-sdk is now once again compatible with older node versions. If you install axios alongside scryfall-sdk, it will automatically use it. Trying to use scryfall-sdk with an older node version without having axios installed will throw an error.
 - Thanks to [Kevin Lowe](https://github.com/kevinlowe0x3F7) via [#62](https://github.com/ChiriVulpes/scryfall-sdk/pull/62), added full-text query support to the `Scry.Cards.random` function.
