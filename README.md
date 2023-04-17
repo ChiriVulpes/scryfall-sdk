@@ -33,8 +33,8 @@ console.log(prints.length); // 7
 This module supports all features of Scryfall, along with automatically paginating through results, downloading bulk data streams, etc. There's also documentation on every single part of the SDK:
 
 
-## [`Full Documentation`](./DOCUMENTATION.md)
-### [`Scryfall-SDK Equivalents for Scryfall Routes`](./ROUTES.md)
+## [Full Documentation](./DOCUMENTATION.md)
+### [Scryfall-SDK Equivalents for Scryfall Routes](./ROUTES.md)
 
 
 ## Contributing
