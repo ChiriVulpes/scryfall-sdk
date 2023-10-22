@@ -71,6 +71,14 @@ export enum FrameEffect {
 	moonreversemoondfc,
 	showcase,
 	extendedart,
+	companion,
+	etched,
+	snow,
+	lesson,
+	shatteredglass,
+	convertdfc,
+	fandfc,
+	upsidedowndfc,
 }
 
 export enum Game {
@@ -120,15 +128,22 @@ export enum Format {
 	standard,
 	future,
 	historic,
+	gladiator,
 	pioneer,
+	explorer,
 	modern,
 	legacy,
 	pauper,
 	vintage,
 	penny,
 	commander,
+	oathbreaker,
 	brawl,
+	historicbrawl,
+	alchemy,
+	paupercommander,
 	duel,
+	premodern,
 	oldschool,
 }
 
@@ -211,13 +226,15 @@ export interface CardFace extends CardFaceMethods {
 	object: "card_face";
 
 	artist?: string | null;
+	artist_id?: string | null;
 	cmc?: number | null;
 	color_indicator?: Color[] | null;
 	colors?: Color[] | null;
+	defense?: string | null;
 	flavor_text?: string | null;
 	illustration_id?: string | null;
 	image_uris?: ImageUris | null;
-	layout?: string;
+	layout?: string | null;
 	loyalty?: string | null;
 	mana_cost?: string | null;
 	name: string;
@@ -228,7 +245,7 @@ export interface CardFace extends CardFaceMethods {
 	printed_text?: string | null;
 	printed_type_line?: string | null;
 	toughness?: string | null;
-	type_line: string;
+	type_line?: string | null;
 	watermark?: string | null;
 }
 
@@ -292,7 +309,9 @@ export enum CardSecurityStamp {
 	oval,
 	triangle,
 	acorn,
+	circle,
 	arena,
+	heart,
 }
 
 export interface CardIdentifier {
@@ -369,6 +388,8 @@ function transform (self: Card,
 
 export type Modifier = `+${bigint}` | `-${bigint}`;
 
+export type AttractionLight = 1 | 2 | 3 | 4 | 5 | 6;
+
 export class Card implements CardFaceMethods {
 	object: "card";
 
@@ -383,6 +404,7 @@ export class Card implements CardFaceMethods {
 	tcgplayer_etched_id?: number | null;
 	cardmarket_id?: number | null;
 	oracle_id: string;
+	layout: keyof typeof Layout;
 	prints_search_uri: string;
 	rulings_uri: string;
 	scryfall_uri: string;
@@ -398,14 +420,13 @@ export class Card implements CardFaceMethods {
 	edhrec_rank?: number | null;
 	hand_modifier?: Modifier | null;
 	keywords: string[];
-	layout: keyof typeof Layout;
 	legalities: Legalities;
 	life_modifier?: Modifier | null;
 	loyalty?: string | null;
 	mana_cost?: string | null;
 	name: string;
 	oracle_text?: string | null;
-	oversized: boolean;
+	penny_rank?: number | null;
 	power?: string | null;
 	produced_mana?: Color[] | null;
 	reserved: boolean;
@@ -414,6 +435,8 @@ export class Card implements CardFaceMethods {
 
 	// print fields
 	artist?: string | null;
+	artist_ids?: string[] | null;
+	attraction_lights?: AttractionLight[] | null;
 	booster: boolean;
 	border_color: keyof typeof Border;
 	card_back_id: string;
@@ -423,10 +446,6 @@ export class Card implements CardFaceMethods {
 	finishes: (keyof typeof CardFinish)[];
 	flavor_name?: string | null;
 	flavor_text?: string | null;
-	/**
-	 * Note: This may return other values, I can't check if the possible strings have changed because the Scryfall docs
-	 * no longer list the possible frame effects.
-	 */
 	frame_effects?: (keyof typeof FrameEffect)[] | null;
 	frame: keyof typeof CardFrame;
 	full_art: boolean;
@@ -435,13 +454,18 @@ export class Card implements CardFaceMethods {
 	illustration_id?: string | null;
 	image_status: keyof typeof CardStatus;
 	image_uris?: ImageUris | null;
+	oversized: boolean;
 	prices: Prices;
 	printed_name?: string | null;
 	printed_text?: string | null;
 	printed_type_line?: string | null;
 	promo: boolean;
+	/**
+	 * Note: This may return other values, I can't check if the possible strings have changed because the Scryfall docs
+	 * no longer list the possible promo types.
+	 */
 	promo_types?: (keyof typeof PromoType)[] | null;
-	purchase_uris: PurchaseUris;
+	purchase_uris?: PurchaseUris | null;
 	rarity: keyof typeof Rarity;
 	related_uris: RelatedUris;
 	released_at: string;

@@ -13,6 +13,8 @@ export enum MigrationStrategy {
 }
 
 export interface Migration {
+	object: "migration";
+
 	uri: string;
 	id: string;
 	performed_at: string;
@@ -20,6 +22,10 @@ export interface Migration {
 	old_scryfall_id: string;
 	new_scryfall_id?: string | null;
 	note?: string | null;
+	/**
+	 * Do not rely on this data. This is additional context Scryfall has provided for this migration, designed to be human-read only.
+	 */
+	metadata?: unknown;
 }
 
 class Migrations extends MagicQuerier {

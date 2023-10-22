@@ -3,20 +3,24 @@ import Cached from "../util/Cached";
 import MagicQuerier, { List } from "../util/MagicQuerier";
 
 export interface CardSymbol {
+	object: "card_symbol";
+
 	symbol: string;
 	loose_variant?: string | null;
 	english: string;
 	transposable: boolean;
 	represents_mana: boolean;
-	converted_mana_cost?: number | null;
-	colors: Color[];
+	mana_value?: number | null;
 	appears_in_mana_costs: boolean;
 	funny: boolean;
+	colors: Color[];
 	gatherer_alternates?: string[] | null;
-	svg_uri: string;
+	svg_uri?: string | null;
 }
 
 export interface ManaCost {
+	object: "mana_cost";
+
 	cost: string;
 	cmc: number;
 	colors: Color[];

@@ -23,13 +23,13 @@ export interface BulkDataDefinition {
 	object: "bulk_data";
 
 	id: string;
-	type: BulkDataType;
-	updated_at: string;
 	uri: string;
+	type: BulkDataType;
 	name: string;
 	description: string;
-	size: number;
 	download_uri: string;
+	updated_at: string;
+	size: number;
 	content_type: string;
 	content_encoding: string;
 }

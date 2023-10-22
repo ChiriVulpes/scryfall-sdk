@@ -5,7 +5,7 @@
 
 A Node.js SDK for [Scryfall](https://scryfall.com/docs/api) written in Typescript.
 
-As of [February 2nd, 2023](./CHANGELOG.md), all features described in the [Scryfall documentation](https://scryfall.com/docs/api) are supported. If you see something that isn't supported, make an issue!
+As of [October 23rd, 2023](./CHANGELOG.md), all features described in the [Scryfall documentation](https://scryfall.com/docs/api) are supported. If you see something that isn't supported, make an issue!
 
 
 ## Installation

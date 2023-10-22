@@ -7,7 +7,9 @@ enum SetType {
 	core,
 	expansion,
 	masters,
+	alchemy,
 	masterpiece,
+	arsenal,
 	from_the_vault,
 	spellbook,
 	premium_deck,
@@ -24,6 +26,7 @@ enum SetType {
 	promo,
 	token,
 	memorabilia,
+	minigame,
 }
 
 type SetSearchOptions = Omit<SearchOptions, "page">;
@@ -31,9 +34,12 @@ type SetSearchOptions = Omit<SearchOptions, "page">;
 let Scry!: typeof import("../Scry");
 
 export class Set {
+	object: "set";
+
 	id: string;
 	code: string;
 	mtgo_code?: string | null;
+	arena_code?: string | null;
 	tcgplayer_id?: number | null;
 	name: string;
 	set_type: keyof typeof SetType;
@@ -42,8 +48,10 @@ export class Set {
 	block?: string | null;
 	parent_set_code?: string | null;
 	card_count: number;
+	printed_size?: number | null;
 	digital: boolean;
 	foil_only: boolean;
+	nonfoil_only: boolean;
 	scryfall_uri: string;
 	uri: string;
 	icon_svg_uri: string;

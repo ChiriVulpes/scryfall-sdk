@@ -41,6 +41,7 @@
 | [`/catalog/keyword-abilities`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
 | [`/catalog/keyword-actions`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
 | [`/catalog/ability-words`](./DOCUMENTATION.md#catalogwatermarks--promisestring-) | Catalog |
+| [`/catalog/supertypes`](./DOCUMENTATION.md#catalogsupertypes--promisestring-) | Catalog |
 | [`/bulk-data`](./DOCUMENTATION.md#bulkdatadefinitions--promisebulkdatadefinition-) | List\<BulkDataDefinition\> |
 | [`/bulk-data/:type`](./DOCUMENTATION.md#bulkdatadefinitionbytype-type-bulkdatatype-promisebulkdatadefinition-) | BulkDataDefinition |
 | [`/bulk-data/:id`](./DOCUMENTATION.md#bulkdatadefinitionbyid-id-string-promisebulkdatadefinition-) | BulkDataDefinition |

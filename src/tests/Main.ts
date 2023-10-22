@@ -621,6 +621,11 @@ describe("Scry", function () {
 			const result = await Scry.Catalog.abilityWords();
 			expect(result.length).gte(49);
 		});
+
+		it("supertypes", async () => {
+			const result = await Scry.Catalog.supertypes();
+			expect(result.length).gte(7);
+		});
 	});
 
 	describe("Bulk Data", () => {

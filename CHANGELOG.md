@@ -1,3 +1,9 @@
+# v4.2.0 (October 23rd, 2023)
+- Fixed [Cards.search](./DOCUMENTATION.md#cardssearch-query-string-options-searchoptions--number-magicemittercard-) not working with an explicit page number, thanks to [thejoecode](https://github.com/thejoecode) via [#68](https://github.com/ChiriVulpes/scryfall-sdk/pull/68).
+- Workaround some bundlers [doing dumb things still](https://github.com/ChiriVulpes/scryfall-sdk/issues/65)
+- Added many missing or modified fields returned by Scryfall.
+- Added support for [Catalog.supertypes](./DOCUMENTATION#catalogsupertypes--promisestring-)
+
 # v4.1.1 (February 25th, 2023)
 - Workaround some bundlers [doing dumb things](https://github.com/ChiriVulpes/scryfall-sdk/issues/61)
 

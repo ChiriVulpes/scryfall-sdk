@@ -81,6 +81,11 @@ class Catalog extends MagicQuerier {
 	public async abilityWords () {
 		return (await this.query<ApiCatalog>("catalog/ability-words")).data;
 	}
+
+	@Cached
+	public async supertypes () {
+		return (await this.query<ApiCatalog>("catalog/supertypes")).data;
+	}
 }
 
 export default new Catalog;

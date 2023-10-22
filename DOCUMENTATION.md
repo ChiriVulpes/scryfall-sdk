@@ -57,6 +57,7 @@
   - [`Catalog.keywordAbilities (): Promise<string[]>;` ](#catalogkeywordabilities--promisestring-)
   - [`Catalog.keywordActions (): Promise<string[]>;` ](#catalogkeywordactions--promisestring-)
   - [`Catalog.abilityWords (): Promise<string[]>;` ](#catalogabilitywords--promisestring-)
+  - [`Catalog.supertypes (): Promise<string[]>;` ](#catalogsupertypes--promisestring-)
 - [Bulk Data](#bulk-data-)
   - [`BulkData.downloadByType (type: BulkDataType): Promise<Stream | undefined>;`](#bulkdatadownloadbytype-type-bulkdatatype-promisestream--undefined-)
   - [`BulkData.downloadById (id: string): Promise<Stream | undefined>;`](#bulkdatadownloadbyid-id-string-promisestream--undefined-)
@@ -638,6 +639,13 @@ console.log(keywordActions.length); // 46
 ```ts
 const abilityWords = await Scry.Catalog.abilityWords();
 console.log(abilityWords.length); // 49
+```
+
+### `Catalog.supertypes (): Promise<string[]>;` [🡅](#table-of-contents)
+
+```ts
+const supertypes = await Scry.Catalog.supertypes();
+console.log(supertypes.length); // 7
 ```
 
 
