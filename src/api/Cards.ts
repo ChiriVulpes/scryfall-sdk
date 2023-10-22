@@ -631,19 +631,20 @@ class Cards extends MagicQuerier {
 	/**
 	 * Returns a MagicEmitter of every card in the Scryfall database that matches the given query.
 	 */
+	public search (query: string, options?: SearchOptions): MagicEmitter<Card>;
+	/**
+	 * Returns a MagicEmitter of every card in the Scryfall database that matches the given query.
+	 */
+	public search (query: string, page?: number): MagicEmitter<Card>;
+	/**
+	 * Returns a MagicEmitter of every card in the Scryfall database that matches the given query.
+	 */
+	public search (query: string, options?: SearchOptions | number): MagicEmitter<Card>;
 	public search (query: string, options?: SearchOptions | number) {
 		const emitter = new MagicEmitter<Card>()
 			.map(Card.construct);
 
-		let page = 1;
-		if (typeof options === "number") {
-			page = options;
-			options = {};
-		} else if (options) {
-			page = options.page ?? 1;
-		}
-			
-		this.queryPage(emitter, "cards/search", { q: query, ...options }, page)
+		this.queryPage(emitter, "cards/search", { q: query, ...typeof options === "number" ? { page: options } : options })
 			.catch(err => emitter.emit("error", err));
 
 		return emitter;
