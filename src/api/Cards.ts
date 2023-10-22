@@ -635,7 +635,15 @@ class Cards extends MagicQuerier {
 		const emitter = new MagicEmitter<Card>()
 			.map(Card.construct);
 
-		this.queryPage(emitter, "cards/search", { q: query, ...typeof options === "number" ? { page: options } : options })
+		let page = 1;
+		if (typeof options === "number") {
+			page = options;
+			options = {};
+		} else if (options) {
+			page = options.page ?? 1;
+		}
+			
+		this.queryPage(emitter, "cards/search", { q: query, ...options }, page)
 			.catch(err => emitter.emit("error", err));
 
 		return emitter;

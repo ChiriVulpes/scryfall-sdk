@@ -88,7 +88,7 @@ export default class MagicQuerier {
 		return result;
 	}
 
-	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page = 1): Promise<void> {
+	protected async queryPage<T> (emitter: MagicEmitter<T>, apiPath: string, query: any, page: number): Promise<void> {
 		let error: SearchError | undefined;
 		const results = await this.query<List<T>>(apiPath, { ...query, page })
 			.catch(err => error = err);

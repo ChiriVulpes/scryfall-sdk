@@ -168,7 +168,7 @@ describe("Scry", function () {
 				}),
 				new Promise((resolve, reject) => {
 					const emitter = Scry.Cards.search("type:creature", 2).cancelAfterPage();
-					emitter.on("data", card => secondPageCard = card)
+					emitter.on("data", card => (secondPageCard = card, emitter.cancel()))
 						.on("end", () => reject(new Error("Did not expect to reach this point")))
 						.on("cancel", resolve)
 						.on("error", reject);
