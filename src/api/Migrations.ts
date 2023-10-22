@@ -23,7 +23,7 @@ export interface Migration {
 }
 
 class Migrations extends MagicQuerier {
-	public all (page?: number) {
+	public all (page = 1) {
 		const emitter = new MagicEmitter<Migration>();
 
 		this.queryPage(emitter, "migrations", {}, page)
