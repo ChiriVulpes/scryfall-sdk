@@ -2,6 +2,7 @@
 import * as chai from "chai";
 import { assert } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
+import { create as Domain } from "domain";
 import { Stream } from "stream";
 import * as Scry from "../Scry";
 import { Card, ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK, SymbologyTransformer } from "../Scry";
@@ -11,6 +12,45 @@ import MagicQuerier from "../util/MagicQuerier";
 const expect = chai.expect;
 chai.use(chaiAsPromised);
 
+const baseIt = it;
+it = function (title: string, fn?: Mocha.Func) {
+	return baseIt(title, async function () {
+		const context = this;
+		await new Promise<void>((resolve, reject) => {
+			const domain = Domain();
+			domain.on("error", err => {
+				domain.exit();
+				process.nextTick(() => reject(err));
+			})
+
+			domain.run(() => {
+				process.nextTick(() => {
+					const result: any = fn?.call(context, (err => {
+						if (err)
+							throw err;
+
+						domain.exit();
+						resolve();
+					}));
+					if (result instanceof Promise) {
+						result
+							.then(() => {
+								domain.exit();
+								resolve();
+							})
+							.catch(err => {
+								domain.exit();
+								reject(err);
+							});
+					}
+				})
+			});
+		});
+	});
+} as Mocha.TestFunction;
+it.only = baseIt.only;
+it.skip = baseIt.skip;
+it.retries = baseIt.retries;
 
 describe("Scry", function () {
 	this.timeout(10000);
@@ -104,6 +144,10 @@ describe("Scry", function () {
 
 			expect(results.length).gte(97);
 		});
+
+		it("search without adding event listeners", async () =>
+			new Promise<void>(resolve => Scry.Cards.search("is:commander legal:commander game:paper")
+				.on('end', resolve)));
 
 		it("search waitForAll", async () => {
 			const matches = await Scry.Cards.search("!smoker").waitForAll();
