@@ -1,3 +1,6 @@
+# v4.2.1 (December 9th, 2023)
+- Fixed `MagicEmitters` (IE, what's returned by `Cards.search()`) erroring if not every possible event has a listener registered, thanks to [#69](https://github.com/ChiriVulpes/scryfall-sdk/pull/69) by [lordnox](https://github.com/lordnox).
+
 # v4.2.0 (October 23rd, 2023)
 - Fixed [Cards.search](./DOCUMENTATION.md#cardssearch-query-string-options-searchoptions--number-magicemittercard-) not working with an explicit page number, thanks to [thejoecode](https://github.com/thejoecode) via [#68](https://github.com/ChiriVulpes/scryfall-sdk/pull/68).
 - Workaround some bundlers [doing dumb things still](https://github.com/ChiriVulpes/scryfall-sdk/issues/65)
