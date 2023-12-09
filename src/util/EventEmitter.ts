@@ -74,7 +74,7 @@ class EventEmitter implements NodeEventEmitter {
 	}
 
 	public emit (eventName: string | symbol, ...args: any[]): boolean {
-		if(this._listeners[eventName]) 
+		if (this._listeners[eventName]) 
 			for (const listener of this._listeners[eventName])
 				listener(...args);
 		return true;
