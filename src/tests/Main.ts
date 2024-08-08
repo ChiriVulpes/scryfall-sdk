@@ -9,6 +9,8 @@ import { Card, ENDPOINT_FILE_1, RESOURCE_GENERIC_CARD_BACK, SymbologyTransformer
 import Cached from "../util/Cached";
 import MagicQuerier from "../util/MagicQuerier";
 
+Scry.setAgent("ScryfallSDKTests", "1.0");
+
 const expect = chai.expect;
 chai.use(chaiAsPromised);
 

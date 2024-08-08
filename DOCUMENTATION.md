@@ -1,9 +1,10 @@
 ## Table of Contents
 - [Usage](#usage-)
+  - [`Scry.setAgent (agent: string, version: string): void;`](#scrysetagent-agent-string-version-string-void-)
 - [Cards](#cards-)
   - [`Cards.byId (id: string): Promise<Card>;`](#cardsbyid-id-string-promisecard-)
   - [`Cards.byName (name: string, set?: string, fuzzy = false): Promise<Card>;`](#cardsbyname-name-string-set-string-fuzzy--false-promisecard-)
-  - [`Cards.bySet (code: string, collectorNumber: string | number, lang?: string): Promise<Card>;`](#cardsbyset-setcode-string-collectornumber-string--number-lang-string-promisecard-)
+  - [`Cards.bySet (setCode: string, collectorNumber: string | number, lang?: string): Promise<Card>;`](#cardsbyset-setcode-string-collectornumber-string--number-lang-string-promisecard-)
   - [`Cards.byMultiverseId (id: number): Promise<Card>;` ](#cardsbymultiverseid-id-number-promisecard-)
   - [`Cards.byMtgoId (id: number): Promise<Card>;` ](#cardsbymtgoid-id-number-promisecard-)
   - [`Cards.byArenaId (id: number): Promise<Card>;` ](#cardsbyarenaid-id-number-promisecard-)
@@ -86,7 +87,12 @@ import Scry = require("scryfall-sdk");
 ### Using a node.js version older than v18?
 Install the [`axios`](https://www.npmjs.com/package/axios) dependency alongside scryfall-sdk and it will automatically use it.
 
-
+### `Scry.setAgent (agent: string, version: string): void;` [🡅](#table-of-contents)
+> [!IMPORTANT]  
+> Scryfall *requires* that all applications provide an agent, except if they are executing on clientside in a browser.
+```ts
+Scry.setAgent("MyAmazingAppName", "1.0.0");
+```
 
 ## Cards [🡅](#table-of-contents)
 

@@ -1,3 +1,6 @@
+# v5.0.0 (August 8th, 2024)
+- Added support for setting the agent name due to [Scryfall's new requirements](https://scryfall.com/blog/user-agent-and-accept-header-now-required-on-the-api-225) via `Scry.setAgent(name, version)`(./DOCUMENTATION.md#scrysetagent-agent-string-version-string-void-). All applications using scryfall-sdk that are not running on clientside in the browser must provide an agent name & version.
+
 # v4.2.1 (December 9th, 2023)
 - Fixed `MagicEmitters` (IE, what's returned by `Cards.search()`) erroring if not every possible event has a listener registered, thanks to [#69](https://github.com/ChiriVulpes/scryfall-sdk/pull/69) by [lordnox](https://github.com/lordnox).
 

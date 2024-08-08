@@ -26,6 +26,13 @@ Sets["Scry"] = exports;
 
 
 /**
+ * Sets the name and version of this agent. This is required for all non-browser applications.
+ */
+export function setAgent (agent: string, version: string) {
+	MagicQuerier.agent = `${agent}/${version}`;
+}
+
+/**
  * Sets the API calls to retry if they fail, for any reason.
  * @param attempts The number of attempts that can be made (includes the initial call).
  * @param timeout The time that the query should wait before attempting the request again.

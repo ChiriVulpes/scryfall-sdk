@@ -94,6 +94,12 @@ class BulkData extends MagicQuerier {
 		} else {
 			const result = await fetch(definition.download_uri, {
 				method: "GET",
+				headers: {
+					...!MagicQuerier.agent ? undefined : {
+						'User-Agent': MagicQuerier.agent,
+					},
+					Accept: "*/*",
+				},
 			});
 
 			return result.body;

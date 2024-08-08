@@ -63,6 +63,7 @@ export default class MagicQuerier {
 
 	public static lastQuery = 0;
 	public static retry: RetryStrategy = { attempts: 1 };
+	public static agent?: string;
 	public static timeout = defaultRequestTimeout;
 	public static requestCount = 0;
 
@@ -149,6 +150,10 @@ export default class MagicQuerier {
 			body: JSON.stringify(post),
 			headers: {
 				'Content-Type': 'application/json',
+				...!MagicQuerier.agent ? undefined : {
+					'User-Agent': MagicQuerier.agent,
+				},
+				Accept: "*/*",
 			},
 			method: post ? "POST" : "GET",
 		});

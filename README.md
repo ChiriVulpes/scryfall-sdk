@@ -5,7 +5,7 @@
 
 A Node.js SDK for [Scryfall](https://scryfall.com/docs/api) written in Typescript.
 
-As of [October 23rd, 2023](./CHANGELOG.md), all features described in the [Scryfall documentation](https://scryfall.com/docs/api) are supported. If you see something that isn't supported, make an issue!
+As of [August 8th, 2024](./CHANGELOG.md), all features described in the [Scryfall documentation](https://scryfall.com/docs/api) should be supported. If you see something that isn't, make an issue!
 
 
 ## Installation
@@ -30,11 +30,18 @@ const prints = await chalice.getPrints();
 console.log(prints.length); // 7
 ```
 
-This module supports all features of Scryfall, along with automatically paginating through results, downloading bulk data streams, etc. There's also documentation on every single part of the SDK:
-
+> [!IMPORTANT]  
+> Scryfall [requires](https://scryfall.com/docs/api#required-headers) that all applications provide an agent, except if they are executing from web browser JavaScript.
+>
+> If this is true for your application, you must set your agent before making any requests:
+> ```ts
+> Scry.setAgent("MyAmazingAppName", "1.0.0");
+> ```
 
 ## [Full Documentation](./DOCUMENTATION.md)
-### [Scryfall-SDK Equivalents for Scryfall Routes](./ROUTES.md)
+scryfall-sdk supports all features of Scryfall, along with automatically paginating through results, downloading bulk data streams, and more. See the [documentation](./DOCUMENTATION.md) for information on everything you can do.
+
+Know the endpoint you want, but not sure what it looks like in scryfall-sdk? Well, you're in luck: [Scryfall-SDK Equivalents for Scryfall Routes](./ROUTES.md)
 
 
 ## Contributing
@@ -59,4 +66,4 @@ gulp watch
 
 ## MIT License
 
-[Copyright 2017-2022 Chiri Vulpes](./LICENSE)
+[Copyright 2017-2024 Chiri Vulpes](./LICENSE)
