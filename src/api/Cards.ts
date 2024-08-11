@@ -1,4 +1,4 @@
-import { Color, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
+import { Color, ColorOrColorless, RESOURCE_GENERIC_CARD_BACK, SYMBOL_COST, SYMBOL_PRINTS, SYMBOL_RULINGS, SYMBOL_SET, SYMBOL_TEXT } from "../IScry";
 import Cached from "../util/Cached";
 import MagicEmitter from "../util/MagicEmitter";
 import MagicQuerier, { ApiCatalog, List, TOrArrayOfT } from "../util/MagicQuerier";
@@ -428,7 +428,7 @@ export class Card implements CardFaceMethods {
 	oracle_text?: string | null;
 	penny_rank?: number | null;
 	power?: string | null;
-	produced_mana?: Color[] | null;
+	produced_mana?: ColorOrColorless[] | null;
 	reserved: boolean;
 	toughness?: string | null;
 	type_line: string;

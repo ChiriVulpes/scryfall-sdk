@@ -20,6 +20,7 @@ enum Colors {
 }
 
 export type Color = keyof typeof Colors;
+export type ColorOrColorless = keyof typeof Colors | "C";
 
 export namespace IScry {
 	export let fuzzySearch: (<T>(search: string, targets: T[], key: keyof T) => T | undefined) | undefined;

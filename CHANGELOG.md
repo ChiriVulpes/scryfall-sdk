@@ -1,3 +1,6 @@
+# v5.0.1 (August 11th, 2024)
+- Add the potentiality of colourless mana (`"C"`) to `Card.produced_mana`.
+
 # v5.0.0 (August 8th, 2024)
 - Added support for setting the agent name due to [Scryfall's new requirements](https://scryfall.com/blog/user-agent-and-accept-header-now-required-on-the-api-225) via `Scry.setAgent(name, version)`(./DOCUMENTATION.md#scrysetagent-agent-string-version-string-void-). All applications using scryfall-sdk that are not running on clientside in the browser must provide an agent name & version.
 
