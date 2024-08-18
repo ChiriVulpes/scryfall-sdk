@@ -14,6 +14,8 @@ export interface CardSymbol {
 	appears_in_mana_costs: boolean;
 	funny: boolean;
 	colors: Color[];
+	hybrid: boolean;
+	phyrexian: boolean;
 	gatherer_alternates?: string[] | null;
 	svg_uri?: string | null;
 }

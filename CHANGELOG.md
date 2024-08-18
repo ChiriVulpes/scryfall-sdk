@@ -1,3 +1,6 @@
+# v5.0.2 (August 18th, 2024)
+- Fixed missing `hybrid` field in card symbols.
+
 # v5.0.1 (August 11th, 2024)
 - Add the potentiality of colourless mana (`"C"`) to `Card.produced_mana`.
 
