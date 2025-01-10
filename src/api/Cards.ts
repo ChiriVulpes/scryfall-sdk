@@ -279,6 +279,7 @@ export enum PromoType {
 	wizardsplaynetwork,
 	premiereshop,
 	playerrewards,
+	playtest,
 	gateway,
 	arenaleague
 }
