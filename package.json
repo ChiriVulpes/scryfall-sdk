@@ -1,6 +1,6 @@
 {
 	"name": "scryfall-sdk",
-	"version": "5.0.2",
+	"version": "5.0.3",
 	"main": "./out/Scry.js",
 	"types": "./out/Scry.d.ts",
 	"description": "A Node.js SDK for https://scryfall.com/docs/api written in Typescript.",

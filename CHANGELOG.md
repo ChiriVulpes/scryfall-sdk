@@ -1,3 +1,6 @@
+# v5.0.3 (January 11th, 2025)
+- Updated `PromoType` to reflect the current Scryfall dataset. (Thanks [mcgrue](https://github.com/mcgrue)!)
+
 # v5.0.2 (August 18th, 2024)
 - Fixed missing `hybrid` field in card symbols.
 
